@@ -33,4 +33,4 @@ measurements
 Gemfile.*
 
 ## PROJECT::SPECIFIC
-spec/db/
+db/*
