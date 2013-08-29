@@ -1,4 +1,4 @@
-= Ardm-property
+# Ardm-property
 
 ActiveRecord plugin to provide a smooth migration from DataMapper to ActiveRecord.
 
