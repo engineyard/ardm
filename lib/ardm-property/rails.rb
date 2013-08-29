@@ -146,7 +146,7 @@ module Ardm
             def #{name}
               return #{instance_variable_name} if defined?(#{instance_variable_name})
               property = self.class.properties[#{name.inspect}]
-              #{instance_variable_name} = property ? read_attribute(property.name) : nil
+              #{instance_variable_name} = property ? property.load(read_attribute(property.name)) : nil
             end
           RUBY
 
@@ -175,7 +175,7 @@ module Ardm
             #{writer_visibility}
             def #{writer_name}(value)
               property = self.class.properties[#{name.inspect}]
-              write_attribute(property.name, value)
+              write_attribute(property.name, property.dump(value))
               read_attribute(property.name)
             end
           RUBY

@@ -36,7 +36,6 @@ try_spec do
     describe 'with a blank URI' do
       before :all do
         @uri = ''
-        Ardm::PropertyFixtures::Bookmark.auto_migrate!
         @resource = Ardm::PropertyFixtures::Bookmark.new(
           :title  => 'Check this out',
           :uri    => @uri,

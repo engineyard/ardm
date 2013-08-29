@@ -1,5 +1,6 @@
 require 'bigdecimal'
 require 'time'
+require 'virtus'
 
 require 'ardm-property/support/ext/blank'
 require 'ardm-property/support/ext/hash'
