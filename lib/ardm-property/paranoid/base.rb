@@ -36,7 +36,7 @@ module Ardm
         end
 
         # @api public
-        def with_deleted
+        def with_deleted(&block)
           with_exclusive_scope({}) { block_given? ? yield : all }
         end
 

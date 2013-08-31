@@ -57,8 +57,10 @@ module Ardm
             descendant.properties << property
           end
 
+          set_primary_key_for(property)
           create_reader_for(property)
           create_writer_for(property)
+          add_validations_for(property)
 
           # FIXME: explicit return needed for YARD to parse this properly
           return property
@@ -133,6 +135,12 @@ module Ardm
           end
         end
 
+        def set_primary_key_for(property)
+          if property.key? || property.serial?
+            self.primary_key = property.name
+          end
+        end
+
         # defines the reader method for the property
         #
         # @api private
@@ -175,10 +183,23 @@ module Ardm
             #{writer_visibility}
             def #{writer_name}(value)
               property = self.class.properties[#{name.inspect}]
-              write_attribute(property.name, property.dump(value))
+              dumped = property.dump(value)
+              property.set(self, dumped)
+              write_attribute(property.name, dumped)
               read_attribute(property.name)
             end
           RUBY
+        end
+
+        def add_validations_for(property)
+          return if property.key? || property.serial?
+          if property.required?
+            validates property.name, :presence => true
+          end
+
+          if property.unique?
+            validates property.name, :uniqueness => true
+          end
         end
 
         # @api public
@@ -193,19 +214,13 @@ module Ardm
 
       module InstanceMethods
 
+        #noted skepticism: when exactly does a datamapper default property get set?
         def initialize_ardm_property_defaults
-          #noted skepticism: when exactly does a datamapper default property get set?
           return unless new_record?
           self.class.properties.each do |property|
             attr = property.name
             value = property.default
             next if value.nil?
-            if self.respond_to?(attr)
-              if self.method(attr).arity != 0
-                puts "Couldn't initialize #{attr} with #{value} on #{self}"
-                next
-              end
-            end
             next unless read_attribute(attr).nil?
             if Proc === value
               send("#{attr}=", value.to_proc.call(self, attr))
