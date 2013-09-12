@@ -1,7 +1,7 @@
 module Ardm
   module PropertyFixtures
     class SoftwarePackage < ActiveRecord::Base
-      self.table_name = "softwark_packages"
+      self.table_name = "software_packages"
 
       property :id, Serial
       property :node_number, Integer, :index => true
