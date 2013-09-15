@@ -25,13 +25,13 @@ module Ardm
       end
 
       def load(value)
-        flag_map[value]
+        flag_map[value.to_i]
       end
 
       def dump(value)
         case value
         when ::Array then value.collect { |v| dump(v) }
-        else              flag_map.invert[value]
+        else              flag_map.invert[typecast(value)]
         end
       end
 

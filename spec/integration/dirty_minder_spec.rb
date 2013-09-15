@@ -34,7 +34,7 @@ try_spec do
 
       describe "when I change positions" do
         before :all do
-          @resource.clean?.should == true
+          @resource.changed?.should == false
           @resource.positions['title'] = 'Chief Layer of People'
           @resource.save
           @resource.reload
@@ -47,7 +47,7 @@ try_spec do
 
       describe "when I add a new attribute of the position" do
         before :all do
-          @resource.clean?.should == true
+          @resource.changed?.should == false
           @resource.positions['pays_buttloads_of_money'] = true
           @resource.save
           @resource.reload
@@ -60,7 +60,7 @@ try_spec do
 
       describe "when I change the details of the position" do
         before :all do
-          @resource.clean?.should == true
+          @resource.changed?.should == false
           @resource.positions['details'].merge!('awesome' => "VERY TRUE")
           @resource.save
           @resource.reload
@@ -107,7 +107,7 @@ try_spec do
 
       describe "when I remove the position" do
         before :all do
-          @resource.clean?.should == true
+          @resource.changed?.should == false
           @resource.positions.pop
           @resource.save
           @resource.reload
@@ -120,7 +120,7 @@ try_spec do
 
       describe "when I add a new position" do
         before :all do
-          @resource.clean?.should == true
+          @resource.changed?.should == false
           @resource.positions << {
             'company' => "Down and Dirty, LP",
             'title'   => "Porn Star",
@@ -161,7 +161,7 @@ try_spec do
 
       describe "when I remove the position with a block-based mutator" do
         before :all do
-          @resource.clean?.should == true
+          @resource.changed?.should == false
           @resource.positions.reject! { |_| true }
           @resource.save
           @resource.reload
@@ -174,7 +174,7 @@ try_spec do
 
       describe "when I mutate positions through a reference" do
         before :all do
-          @resource.clean?.should == true
+          @resource.changed?.should == false
           @positions = @resource.positions
           @positions << {
             'company' => "Ooga Booga, Inc",

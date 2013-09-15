@@ -22,6 +22,17 @@ ActiveRecord::Schema.define do
     t.text       :tags
   end
 
+  create_table :images, :force => true, :id => false do |t|
+    t.string   :md5hash, :length => 32
+    t.index    :md5hash, :unique => true
+    t.string   :title
+    t.text     :description, :length => 1024
+    t.integer  :width
+    t.integer  :height
+    t.string   :format
+    t.time     :taken_at
+  end
+
   create_table :network_nodes, :force => true do |t|
     t.string     :ip_address
     t.integer    :cidr_subnet_bits
@@ -45,14 +56,24 @@ ActiveRecord::Schema.define do
     t.string   :version
     t.datetime :released_at
     t.boolean  :security_update
-    t.datetime :nstalled_at
-    t.string   :nstalled_by
+    t.datetime :installed_at
+    t.string   :installed_by
   end
 
   create_table :tickets, :force => true do |t|
     t.string   :title
     t.text     :body
-    t.text     :status
+    t.integer  :status
+  end
+
+  create_table :tracks, :force => true do |t|
+    t.string   :artist
+    t.string   :name
+    t.string   :album
+    t.string   :musicbrainz_hash
+    t.index    [:artist, :album]
+    t.index    :name
+    t.index    :musicbrainz_hash, :unique => true
   end
 
   create_table :tshirts, :force => true do |t|
