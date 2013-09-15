@@ -12,7 +12,6 @@ require 'ardm-property/support/ext/array'
 require 'ardm-property/support/ext/try_dup'
 
 require 'ardm-property/support/mash'
-require 'ardm-property/support/chainable'
 require 'ardm-property/support/deprecate'
 require 'ardm-property/support/descendant_set'
 require 'ardm-property/support/equalizer'
