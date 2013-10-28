@@ -21,13 +21,10 @@ module Ardm
           end
         end
 
-        def assign_attributes(*a)
-          #binding.pry
-          super
-        end
-
         def type_cast_attribute_for_write(column, value)
-          if column && property = properties[column.name]
+          property = properties[column.name]
+          property ||= properties.detect { |p| p.field == column.name.to_s }
+          if property
             property.dump(value)
           else
             super
@@ -35,7 +32,9 @@ module Ardm
         end
 
         def _field_changed?(attr, old, value)
-          if properties[attr.to_sym]
+          property = properties[attr]
+          property ||= properties.detect { |p| p.field == attr.to_s }
+          if property
             old != value
           else
             super
@@ -59,27 +58,29 @@ module Ardm
           }
         end
 
-        def write_attribute(attr_name, value)
-          attr_name = attr_name.to_s
-          attr_name = self.class.primary_key if attr_name == 'id' && self.class.primary_key
+        #def write_attribute(attr_name, value)
+        #  attr_name = attr_name.to_s
+        #  attr_name = self.class.primary_key if attr_name == 'id' && self.class.primary_key
+        #  if property = properties[attr_name]
+        #    attr_name = property.field
+        #  end
 
-          if property = properties[attr_name]
-            attr_name = property.field
-          end
+        #  if attribute_changed?(attr_name)
+        #    old = @changed_attributes[attr_name]
+        #    @changed_attributes.delete(attr_name) unless _field_changed?(attr_name, old, value)
+        #  else
+        #    old = clone_attribute_value(:read_attribute, attr_name)
+        #    @changed_attributes[attr_name] = old if _field_changed?(attr_name, old, value)
+        #  end
 
-          @attributes_cache.delete(attr_name)
+        #  @attributes_cache.delete(attr_name)
 
-          column = column_for_attribute(attr_name)
-          if property && !column
-            binding.pry
-          end
-
-          if column || property || @attributes.has_key?(attr_name)
-            @attributes[property.field] = property.dump(value)
-          else
-            raise ActiveModel::MissingAttributeError, "can't write unknown attribute `#{attr_name}'"
-          end
-        end
+        #  if column || property || @attributes.has_key?(attr_name)
+        #    @attributes[property.field] = property.dump(value)
+        #  else
+        #    raise ActiveModel::MissingAttributeError, "can't write unknown attribute `#{attr_name}'"
+        #  end
+        #end
 
         # Real version (something isn't right with above)
         #
@@ -104,6 +105,7 @@ module Ardm
 
         def read_attribute_before_type_cast(attr_name)
           property = properties[attr_name]
+          property ||= properties.detect { |p| p.field == attr_name.to_s }
           property.dump(super)
         end
 
@@ -118,11 +120,16 @@ module Ardm
         end
 
         def typecasted_attribute_value(name)
-          #property = properties[name]
-          #property.load(@attributes[property.field])
-          super
+          property = properties[name]
+          property ||= properties.detect { |p| p.field == attr_name.to_s }
+          @attributes[property.field]
+          #super
         end
 
+        #def create_record(*a)
+        #  binding.pry
+        #  super
+        #end
 
 
         # This not the same as read_attribute in AR

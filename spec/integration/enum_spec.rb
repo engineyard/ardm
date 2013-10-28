@@ -45,12 +45,12 @@ try_spec do
       end
 
       it 'supports queries with equality operator on enumeration property' do
-        Ardm::PropertyFixtures::Ticket.all(:status => :confirmed).
+        Ardm::PropertyFixtures::Ticket.where(:status => :confirmed).
           should include(@resource)
       end
 
       it 'supports queries with inequality operator on enumeration property' do
-        Ardm::PropertyFixtures::Ticket.all(:status.not => :confirmed).
+        Ardm::PropertyFixtures::Ticket.where.not(:status => :confirmed).
           should_not include(@resource)
       end
     end

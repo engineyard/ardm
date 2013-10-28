@@ -16,27 +16,29 @@ try_spec do
   require './spec/fixtures/person'
 
   describe Ardm::PropertyFixtures::Person do
-    before :all do
+    before :each do
       @resource = Ardm::PropertyFixtures::Person.new(:name => 'Thomas Edison')
     end
 
     describe 'with positions indirectly mutated as a hash' do
-      before :all do
+      before :each do
         @resource.positions = {
           'company' => "Soon To Be Dirty, LLC",
           'title'   => "Layperson",
           'details' => { 'awesome' => true },
         }
-        @resource.save
+        binding.pry
+        @resource.save!
         @resource.reload
         @resource.positions['title'].should == 'Layperson'
       end
 
       describe "when I change positions" do
-        before :all do
+        before :each do
           @resource.changed?.should == false
           @resource.positions['title'] = 'Chief Layer of People'
-          @resource.save
+          @resource.save!
+          binding.pry
           @resource.reload
         end
 
@@ -46,10 +48,10 @@ try_spec do
       end
 
       describe "when I add a new attribute of the position" do
-        before :all do
+        before :each do
           @resource.changed?.should == false
           @resource.positions['pays_buttloads_of_money'] = true
-          @resource.save
+          @resource.save!
           @resource.reload
         end
 
@@ -59,27 +61,28 @@ try_spec do
       end
 
       describe "when I change the details of the position" do
-        before :all do
+        before :each do
           @resource.changed?.should == false
           @resource.positions['details'].merge!('awesome' => "VERY TRUE")
-          @resource.save
+          @resource.save!
           @resource.reload
         end
 
         it "should remember the changed detail" do
-          pending "not supported (YET)" do
+          # Works in active record (unless something is fooling me)
+          #pending "not supported (YET)" do
             # TODO: Not supported (yet?) -- this is a much harder problem to
             # solve: using mutating accessors of nested objects.  We could
             # detect it from #dirty? (using the #hash method), but #dirty?
             # only returns the status of known-mutated properties (not full,
             # on-demand scan of object dirty-ness).
             @resource.positions['details']['awesome'].should == 'VERY TRUE'
-          end
+          #end
         end
       end
 
       describe "when I reload the resource while the property is dirty" do
-        before :all do
+        before :each do
           @resource.positions['title'] = 'Chief Layer of People'
           @resource.reload
         end
@@ -93,23 +96,23 @@ try_spec do
     end # positions indirectly mutated as a hash
 
     describe 'with positions indirectly mutated as an array' do
-      before :all do
+      before :each do
         @resource.positions = [
           { 'company' => "Soon To Be Dirty, LLC",
             'title'   => "Layperson",
             'details' => { 'awesome' => true },
           },
         ]
-        @resource.save
+        @resource.save!
         @resource.reload
         @resource.positions.first['title'].should == 'Layperson'
       end
 
       describe "when I remove the position" do
-        before :all do
+        before :each do
           @resource.changed?.should == false
           @resource.positions.pop
-          @resource.save
+          @resource.save!
           @resource.reload
         end
 
@@ -119,14 +122,14 @@ try_spec do
       end
 
       describe "when I add a new position" do
-        before :all do
+        before :each do
           @resource.changed?.should == false
           @resource.positions << {
             'company' => "Down and Dirty, LP",
             'title'   => "Porn Star",
             'details' => { 'awesome' => "also true" },
           }
-          @resource.save
+          @resource.save!
           @resource.reload
         end
 
@@ -140,30 +143,31 @@ try_spec do
         end
 
         describe "when I change the details of one of the positions" do
-          before :all do
+          before :each do
             @resource.positions.last['details'].merge!('high_risk' => true)
-            @resource.save
+            @resource.save!
             @resource.reload
           end
 
           it "should remember the changed detail" do
-            pending "not supported (YET)" do
+            # Works in active record (unless something is fooling me)
+            #pending "not supported (YET)" do
               # TODO: Not supported (yet?) -- this is a much harder problem to
               # solve: using mutating accessors of nested objects.  We could
               # detect it from #dirty? (using the #hash method), but #dirty?
               # only returns the status of known-mutated properties (not full,
               # on-demand scan of object dirty-ness).
               @resource.positions.last['details']['high_risk'].should == true
-            end
+            #end
           end
         end
       end # when I add a new position
 
       describe "when I remove the position with a block-based mutator" do
-        before :all do
+        before :each do
           @resource.changed?.should == false
           @resource.positions.reject! { |_| true }
-          @resource.save
+          @resource.save!
           @resource.reload
         end
 
@@ -173,7 +177,7 @@ try_spec do
       end
 
       describe "when I mutate positions through a reference" do
-        before :all do
+        before :each do
           @resource.changed?.should == false
           @positions = @resource.positions
           @positions << {

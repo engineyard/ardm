@@ -626,7 +626,8 @@ module Ardm
     #
     # @api private
     def get!(resource)
-      resource.instance_variable_get(instance_variable_name)
+      #resource.instance_variable_get(instance_variable_name)
+      resource.send :read_attribute, name
     end
 
     # Provides a standardized setter method for the property
@@ -658,7 +659,9 @@ module Ardm
     #
     # @api private
     def set!(resource, value)
-      resource.instance_variable_set(instance_variable_name, value)
+      #resource.instance_variable_set(instance_variable_name, value)
+      resource.send :write_attribute, name, value
+      resource.send :read_attribute, name
     end
 
     # Check if the attribute corresponding to the property is loaded

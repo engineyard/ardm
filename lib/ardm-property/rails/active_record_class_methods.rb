@@ -98,7 +98,7 @@ module Ardm
             column = ActiveRecord::ConnectionAdapters::Column.new(
               property.name.to_s,
               #property.field.to_s,
-              property.dump(property.default),
+              nil,#property.dump(property.default),
               sql_type,
               property.allow_nil?
             )
@@ -184,9 +184,10 @@ module Ardm
           property_module.module_eval <<-RUBY, __FILE__, __LINE__ + 1
             #{reader_visibility}
             def #{name}
-              return #{instance_variable_name} if defined?(#{instance_variable_name})
+              #return #{instance_variable_name} if defined?(#{instance_variable_name})
               property = self.class.properties[#{name.inspect}]
-              #{instance_variable_name} = property ? read_attribute(property.name) : nil
+              ##{instance_variable_name} = property ? property.get(self) : nil
+              property ? property.get(self) : nil
             end
           RUBY
 
@@ -214,8 +215,7 @@ module Ardm
             #{writer_visibility}
             def #{writer_name}(value)
               property = self.class.properties[#{name.inspect}]
-              write_attribute(property.name, value)
-              read_attribute(property.name)
+              property.set(self, value)
             end
           RUBY
         end
