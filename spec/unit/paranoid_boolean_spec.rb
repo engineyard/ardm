@@ -40,7 +40,8 @@ describe Ardm::Property::ParanoidBoolean do
       end
 
       it 'should run the destroy hook' do
-        @resource.should_receive(:before_destroy).with(no_args)
+        # NOTE: changed behavior because AR doesn't call hooks on destroying new objects
+        @resource.should_not_receive(:before_destroy).with(no_args)
         subject
       end
     end

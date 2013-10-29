@@ -5,39 +5,46 @@ module Ardm
         def self.included(model)
           model.extend ClassMethods
           model.instance_variable_set(:@paranoid_properties, {})
+          model.instance_variable_set(:@paranoid_scopes, [])
         end
 
         def paranoid_destroy
-          model.paranoid_properties.each do |name, block|
+          self.class.paranoid_properties.each do |name, block|
             attribute_set(name, block.call(self))
           end
-          save_self
-          self.persistence_state = Resource::PersistenceState::Immutable.new(self)
+          save
+          @readonly = true
           true
         end
 
-      private
-
-        # @api private
-        def _destroy(execute_hooks = true)
-          return false unless saved?
+        def destroy(execute_hooks = true)
+          # NOTE: changed behavior because AR doesn't call hooks on destroying new objects
+          return false if new_record?
           if execute_hooks
-            paranoid_destroy
+            run_callbacks :destroy do
+              paranoid_destroy
+            end
           else
             super
           end
         end
+
       end # module Base
 
       module ClassMethods
         def inherited(model)
           model.instance_variable_set(:@paranoid_properties, @paranoid_properties.dup)
+          model.instance_variable_set(:@paranoid_scopes, @paranoid_scopes.dup)
           super
         end
 
         # @api public
         def with_deleted(&block)
-          with_exclusive_scope({}) { block_given? ? yield : all }
+          with_deleted_scope = self.scoped.with_default_scope
+          paranoid_scopes.each do |cond|
+            with_deleted_scope.where_values.delete(cond)
+          end
+          with_deleted_scope.scoped { block_given? ? yield : all }
         end
 
         # @api private
@@ -45,9 +52,19 @@ module Ardm
           @paranoid_properties
         end
 
+        def paranoid_scopes
+          @paranoid_scopes
+        end
+
         # @api private
         def set_paranoid_property(name, &block)
           paranoid_properties[name] = block
+        end
+
+        def set_paranoid_scope(conditions)
+          paranoid_scope = conditions.to_sql
+          paranoid_scopes << paranoid_scope
+          default_scope { where(paranoid_scope) }
         end
       end # module ClassMethods
     end # module Paranoid
