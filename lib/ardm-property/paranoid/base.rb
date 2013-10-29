@@ -62,7 +62,7 @@ module Ardm
         end
 
         def set_paranoid_scope(conditions)
-          paranoid_scope = conditions.to_sql
+          paranoid_scope = conditions
           paranoid_scopes << paranoid_scope
           default_scope { where(paranoid_scope) }
         end
