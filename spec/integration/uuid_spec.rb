@@ -6,7 +6,7 @@ try_spec do
 
   describe Ardm::PropertyFixtures::NetworkNode do
     describe 'with UUID set as UUID object' do
-      before :all do
+      before :each do
         @uuid_string = 'b0fc632e-d744-4821-afe3-4ea0701859ee'
         @uuid        = UUIDTools::UUID.parse(@uuid_string)
         @resource    = Ardm::PropertyFixtures::NetworkNode.new(:uuid => @uuid)
@@ -15,7 +15,7 @@ try_spec do
       end
 
       describe 'when reloaded' do
-        before :all do
+        before :each do
           @resource.reload
         end
 
@@ -30,13 +30,14 @@ try_spec do
     end
 
     describe 'with UUID set as a valid UUID string' do
-      before :all do
+      before :each do
         @uuid  = 'b0fc632e-d744-4821-afe3-4ea0701859ee'
         @resource = Ardm::PropertyFixtures::NetworkNode.new(:uuid => @uuid)
+        @resource.save.should be(true)
       end
 
       describe 'when reloaded' do
-        before :all do
+        before :each do
           @resource.reload
         end
 
@@ -51,7 +52,7 @@ try_spec do
     end
 
     describe 'with UUID set as invalid UUID string' do
-      before :all do
+      before :each do
         @uuid  = 'meh'
         @operation = lambda do
           Ardm::PropertyFixtures::NetworkNode.new(:uuid => @uuid)
@@ -66,7 +67,7 @@ try_spec do
     end
 
     describe 'with UUID set as a blank string' do
-      before :all do
+      before :each do
         @uuid  = ''
         @operation = lambda do
           Ardm::PropertyFixtures::NetworkNode.new(:uuid => @uuid)
@@ -81,13 +82,14 @@ try_spec do
     end
 
     describe 'with missing UUID' do
-      before :all do
+      before :each do
         @uuid  = nil
         @resource = Ardm::PropertyFixtures::NetworkNode.new(:uuid => @uuid)
+        @resource.save.should be(true)
       end
 
       describe 'when reloaded' do
-        before :all do
+        before :each do
           @resource.reload
         end
 

@@ -18,10 +18,10 @@ Gem::Specification.new do |gem|
 
   gem.add_runtime_dependency('bcrypt-ruby', '~> 3.0.0')
   gem.add_runtime_dependency('fastercsv',   '~> 1.5.4')
-  gem.add_runtime_dependency('multi_json',  '~> 1.3.2')
-  gem.add_runtime_dependency('stringex',    '~> 1.4')
+  gem.add_runtime_dependency('multi_json',  '> 1.3.2')
+  gem.add_runtime_dependency('stringex',    '~> 1.3.3')
   gem.add_runtime_dependency('uuidtools',   '~> 2.1.2')
-  gem.add_runtime_dependency('virtus')
+  gem.add_runtime_dependency('coercible')
 
   gem.add_development_dependency('rake',  '~> 0.9.2')
   gem.add_development_dependency('rspec', '~> 2.0')
