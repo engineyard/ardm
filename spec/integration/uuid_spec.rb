@@ -11,7 +11,6 @@ try_spec do
         @uuid        = UUIDTools::UUID.parse(@uuid_string)
         @resource    = Ardm::PropertyFixtures::NetworkNode.new(:uuid => @uuid)
 
-        binding.pry
         @resource.save.should be(true)
       end
 

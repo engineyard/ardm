@@ -21,6 +21,7 @@ module Ardm
           end
         end
 
+=begin
         def type_cast_attribute_for_write(column, value)
           property = properties[column.name]
           property ||= properties.detect { |p| p.field == column.name.to_s }
@@ -125,6 +126,7 @@ module Ardm
           @attributes[property.field]
           #super
         end
+=end
 
         #def create_record(*a)
         #  binding.pry

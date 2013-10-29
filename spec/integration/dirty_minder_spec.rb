@@ -27,7 +27,6 @@ try_spec do
           'title'   => "Layperson",
           'details' => { 'awesome' => true },
         }
-        binding.pry
         @resource.save!
         @resource.reload
         @resource.positions['title'].should == 'Layperson'
@@ -38,7 +37,6 @@ try_spec do
           @resource.changed?.should == false
           @resource.positions['title'] = 'Chief Layer of People'
           @resource.save!
-          binding.pry
           @resource.reload
         end
 

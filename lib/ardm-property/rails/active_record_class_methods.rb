@@ -55,6 +55,8 @@ module Ardm
             descendant.properties << property
           end
 
+          serialize(property.field, property)
+
           set_primary_key_for(property)
           create_reader_for(property)
           create_writer_for(property)
@@ -229,13 +231,13 @@ module Ardm
         end
 
         # @api public
-        def method_missing(method, *args, &block)
-          if property = properties[method]
-            return property
-          end
+        #def method_missing(method, *args, &block)
+        #  if property = properties[method]
+        #    return property
+        #  end
 
-          super
-        end
+        #  super
+        #end
       end # module ClassMethods
     end # module Rails
   end # class Property

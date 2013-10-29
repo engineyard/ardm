@@ -1,12 +1,12 @@
 module Ardm
   class Property
     class Discriminator < Class
-      default   lambda { |resource, property| resource.model }
+      default   lambda { |resource, property| resource.class }
       required  true
 
       # @api private
       def bind
-        model.extend Model unless model < Model
+        model.inheritance_column = field
       end
 
       module Model
@@ -35,8 +35,7 @@ module Ardm
 
         def set_discriminator_scope_for(model)
           discriminator = self.properties.discriminator
-          default_scope = model.default_scope
-          default_scope.update(discriminator.name => model.descendants.dup << model)
+          model.unscoped.update_all(discriminator.field => model.descendants.dup << model)
         end
       end
     end # class Discriminator
