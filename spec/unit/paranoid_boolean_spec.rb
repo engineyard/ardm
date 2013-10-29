@@ -1,26 +1,24 @@
 require 'spec_helper'
 
+module ::ParanoidBooleanBlog
+  class Draft < ActiveRecord::Base
+    self.table_name = "articles"
+    property :id,      Serial
+    property :deleted, ParanoidBoolean
+
+    before_destroy :before_destroy
+
+    def before_destroy; end
+  end
+
+  class Article < Draft; end
+
+  class Review < Article; end
+end
+
 describe Ardm::Property::ParanoidBoolean do
-  before :all do
-    Object.send(:remove_const, :Blog) if defined?(Blog)
-
-    module ::Blog
-      class Draft < ActiveRecord::Base
-        self.table_name = "articles"
-        property :id,      Serial
-        property :deleted, ParanoidBoolean
-
-        before_destroy :before_destroy
-
-        def before_destroy; end
-      end
-
-      class Article < Draft; end
-
-      class Review < Article; end
-    end
-
-    @model = Blog::Article
+  before do
+    @model = ParanoidBooleanBlog::Article
   end
 
   describe 'Property#destroy' do
@@ -137,8 +135,8 @@ describe Ardm::Property::ParanoidBoolean do
 
   describe 'Model.inherited' do
     it 'sets @paranoid_properties' do
-      ::Blog::Review.instance_variable_get(:@paranoid_properties).should ==
-        ::Blog::Article.instance_variable_get(:@paranoid_properties)
+      ::ParanoidBooleanBlog::Review.instance_variable_get(:@paranoid_properties).should ==
+        ::ParanoidBooleanBlog::Article.instance_variable_get(:@paranoid_properties)
     end
   end
 end

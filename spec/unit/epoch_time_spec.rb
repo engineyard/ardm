@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Ardm::Property::EpochTime do
-  before :all do
+  before do
     class ::User < ActiveRecord::Base
       property :id,   Serial
       property :bday, EpochTime

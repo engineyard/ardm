@@ -6,7 +6,7 @@ try_spec do
 
   describe Ardm::PropertyFixtures::Bookmark do
     describe 'without URI' do
-      before :all do
+      before do
         @uri = nil
         @resource = Ardm::PropertyFixtures::Bookmark.new(
           :title  => 'Check this out',
@@ -23,7 +23,7 @@ try_spec do
       end
 
       describe 'when reloaded' do
-        before :all do
+        before do
           @resource.reload
         end
 
@@ -34,7 +34,7 @@ try_spec do
     end
 
     describe 'with a blank URI' do
-      before :all do
+      before do
         @uri = ''
         @resource = Ardm::PropertyFixtures::Bookmark.new(
           :title  => 'Check this out',
@@ -51,7 +51,7 @@ try_spec do
       end
 
       describe 'when reloaded' do
-        before :all do
+        before do
           @resource.reload
         end
 
@@ -66,7 +66,7 @@ try_spec do
     end
 
     describe 'with invalid URI' do
-      before :all do
+      before do
         @uri = 'this is def. not URI'
         @resource = Ardm::PropertyFixtures::Bookmark.new(
           :title  => 'Check this out',
@@ -106,7 +106,7 @@ try_spec do
     http://www.hulu.com/watch/62475/the-simpsons-gone-maggie-gone#s-p1-so-i0
     ].each do |uri|
       describe "with URI set to '#{uri}'" do
-        before :all do
+        before do
           @resource = Ardm::PropertyFixtures::Bookmark.new(
             :title  => 'Check this out',
             :uri    => uri,
@@ -122,7 +122,7 @@ try_spec do
         end
 
         describe 'when reloaded' do
-          before :all do
+          before do
             @resource.reload
           end
 

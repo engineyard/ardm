@@ -22,7 +22,7 @@ describe Ardm::Property do
     end
 
     describe "with property subclasses" do
-      before :all do
+      before do
         Object.send(:remove_const, :CustomProps) if Object.const_defined?(:CustomProps)
 
         module ::CustomProps

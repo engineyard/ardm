@@ -6,7 +6,7 @@ try_spec do
 
   describe Ardm::PropertyFixtures::Ticket do
     describe 'that is dumped and then loaded' do
-      before :all do
+      before do
         @resource = Ardm::PropertyFixtures::Ticket.new(
           :title  => "Can't order by aggregated fields",
           :id     => 789,
@@ -24,7 +24,7 @@ try_spec do
     end
 
     describe 'that is supplied a matching enumeration value' do
-      before :all do
+      before do
         @resource = Ardm::PropertyFixtures::Ticket.new(:status => :assigned)
       end
 
@@ -34,7 +34,7 @@ try_spec do
     end
 
     describe '#get' do
-      before :all do
+      before do
         @resource = Ardm::PropertyFixtures::Ticket.new(
           :title  => '"sudo make install" of drizzle fails because it tries to chown mysql',
           :id     => 257497,
@@ -56,7 +56,7 @@ try_spec do
     end
 
     describe 'with value unknown to enumeration property' do
-      before :all do
+      before do
         @resource = Ardm::PropertyFixtures::Ticket.new(:status => :undecided)
       end
 

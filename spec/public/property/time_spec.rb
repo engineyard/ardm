@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Ardm::Property::Time do
-  before :all do
+  before do
     @name          = :deleted_at
     @type          = described_class
     @load_as     = Time

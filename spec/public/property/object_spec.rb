@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Ardm::Property, 'Object type' do
-  before :all do
+  before do
     module ::Blog
       class Article < ActiveRecord::Base
         self.table_name = "articles"
@@ -90,7 +90,7 @@ describe Ardm::Property, 'Object type' do
   end
 
   describe 'persistable' do
-    before :all do
+    before do
       @resource = @model.create(:title => 'Test', :meta => { 'lang' => 'en_CA' })
     end
 

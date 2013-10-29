@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Ardm::Property::Lookup do
-  before :all do
+  before do
     Object.send(:remove_const, :Foo) if defined?(Foo)
     @klass = Class.new(ActiveRecord::Base) do
       self.table_name = "articles"

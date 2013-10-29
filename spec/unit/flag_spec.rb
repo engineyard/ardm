@@ -5,7 +5,7 @@ require './spec/fixtures/tshirt'
 try_spec do
   describe Ardm::Property::Flag do
     describe '.dump' do
-      before :all do
+      before do
         @flag = Ardm::PropertyFixtures::TShirt.property(
           :stuff, Ardm::Property::Flag[:first, :second, :third, :fourth, :fifth])
 
@@ -15,7 +15,7 @@ try_spec do
     it_should_behave_like "A property with flags"
 
       describe 'when argument matches a value in the flag map' do
-        before :all do
+        before do
           @result = @flag.dump(:first)
         end
 
@@ -25,7 +25,7 @@ try_spec do
       end
 
       describe 'when argument matches 2nd value in the flag map' do
-        before :all do
+        before do
           @result = @flag.dump(:second)
         end
 
@@ -35,7 +35,7 @@ try_spec do
       end
 
       describe 'when argument matches multiple Symbol values in the flag map' do
-        before :all do
+        before do
           @result = @flag.dump([ :second, :fourth ])
         end
 
@@ -45,7 +45,7 @@ try_spec do
       end
 
       describe 'when argument matches multiple string values in the flag map' do
-        before :all do
+        before do
           @result = @flag.dump(['first', 'second', 'third', 'fourth', 'fifth'])
         end
 
@@ -55,7 +55,7 @@ try_spec do
       end
 
       describe 'when argument does not match a single value in the flag map' do
-        before :all do
+        before do
           @result = @flag.dump(:zero)
         end
 
@@ -65,7 +65,7 @@ try_spec do
       end
 
       describe 'when argument contains duplicate flags' do
-        before :all do
+        before do
           @result = @flag.dump([ :second, :fourth, :second ])
         end
 
@@ -76,12 +76,12 @@ try_spec do
     end
 
     describe '.load' do
-      before :all do
+      before do
         @flag = Ardm::PropertyFixtures::TShirt.property(:stuff, Ardm::Property::Flag, :flags => [:uno, :dos, :tres, :cuatro, :cinco])
       end
 
       describe 'when argument matches a key in the flag map' do
-        before :all do
+        before do
           @result = @flag.load(4)
         end
 
@@ -91,7 +91,7 @@ try_spec do
       end
 
       describe 'when argument matches multiple keys in the flag map' do
-        before :all do
+        before do
           @result = @flag.load(10)
         end
 
@@ -101,7 +101,7 @@ try_spec do
       end
 
       describe 'when argument does not match a single key in the flag map' do
-        before :all do
+        before do
           @result = @flag.load(nil)
         end
 

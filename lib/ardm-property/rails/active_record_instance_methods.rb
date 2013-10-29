@@ -7,132 +7,21 @@ module Ardm
         def initialize_ardm_property_defaults
           return unless new_record?
           self.class.properties.each do |property|
-            name = property.name
+            field = property.field
+
+            next unless property.get(self).nil?
+
             value = property.default
 
             next if value.nil?
-            next unless read_attribute(name).nil?
 
             if Proc === value
-              write_attribute(name, value.to_proc.call(self, name))
+              property.set!(self, value.call(self, property.name))
             else
-              write_attribute(name, value)
+              property.set!(self, value)
             end
           end
         end
-
-=begin
-        def type_cast_attribute_for_write(column, value)
-          property = properties[column.name]
-          property ||= properties.detect { |p| p.field == column.name.to_s }
-          if property
-            property.dump(value)
-          else
-            super
-          end
-        end
-
-        def _field_changed?(attr, old, value)
-          property = properties[attr]
-          property ||= properties.detect { |p| p.field == attr.to_s }
-          if property
-            old != value
-          else
-            super
-          end
-        end
-
-        def read_attribute(attr_name)
-          property = properties[attr_name]
-          property ||= properties.detect { |p| p.field == attr_name.to_s }
-          name = property.field
-          @attributes_cache[name] || @attributes_cache.fetch(name) {
-            value = @attributes.fetch(name) {
-              return block_given? ? yield(name) : nil
-            }
-
-            if self.class.cache_attribute?(name)
-              @attributes_cache[name] = property.load(value)
-            else
-              property.load value
-            end
-          }
-        end
-
-        #def write_attribute(attr_name, value)
-        #  attr_name = attr_name.to_s
-        #  attr_name = self.class.primary_key if attr_name == 'id' && self.class.primary_key
-        #  if property = properties[attr_name]
-        #    attr_name = property.field
-        #  end
-
-        #  if attribute_changed?(attr_name)
-        #    old = @changed_attributes[attr_name]
-        #    @changed_attributes.delete(attr_name) unless _field_changed?(attr_name, old, value)
-        #  else
-        #    old = clone_attribute_value(:read_attribute, attr_name)
-        #    @changed_attributes[attr_name] = old if _field_changed?(attr_name, old, value)
-        #  end
-
-        #  @attributes_cache.delete(attr_name)
-
-        #  if column || property || @attributes.has_key?(attr_name)
-        #    @attributes[property.field] = property.dump(value)
-        #  else
-        #    raise ActiveModel::MissingAttributeError, "can't write unknown attribute `#{attr_name}'"
-        #  end
-        #end
-
-        # Real version (something isn't right with above)
-        #
-        #def write_attribute(attr_name, value)
-        #  attr_name = attr_name.to_s
-        #  attr_name = self.class.primary_key if attr_name == 'id' && self.class.primary_key
-        #  @attributes_cache.delete(attr_name)
-        #  column = column_for_attribute(attr_name)
-
-        #  # If we're dealing with a binary column, write the data to the cache
-        #  # so we don't attempt to typecast multiple times.
-        #  if column && column.binary?
-        #    @attributes_cache[attr_name] = value
-        #  end
-
-        #  if column || @attributes.has_key?(attr_name)
-        #    @attributes[attr_name] = type_cast_attribute_for_write(column, value)
-        #  else
-        #    raise ActiveModel::MissingAttributeError, "can't write unknown attribute `#{attr_name}'"
-        #  end
-        #end
-
-        def read_attribute_before_type_cast(attr_name)
-          property = properties[attr_name]
-          property ||= properties.detect { |p| p.field == attr_name.to_s }
-          property.dump(super)
-        end
-
-        def attributes_before_type_cast
-          super.dup.tap do |attributes|
-            properties.each do |property|
-              if attributes.key?(property.field)
-                attributes[property.field] = property.dump(attributes[property.field])
-              end
-            end
-          end
-        end
-
-        def typecasted_attribute_value(name)
-          property = properties[name]
-          property ||= properties.detect { |p| p.field == attr_name.to_s }
-          @attributes[property.field]
-          #super
-        end
-=end
-
-        #def create_record(*a)
-        #  binding.pry
-        #  super
-        #end
-
 
         # This not the same as read_attribute in AR
         def attribute_get(name)

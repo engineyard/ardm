@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Ardm::Property::Decimal do
-  before :all do
+  before do
     @name          = :rate
     @type          = described_class
     @options       = { :precision => 5, :scale => 2 }

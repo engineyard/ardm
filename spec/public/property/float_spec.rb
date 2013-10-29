@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Ardm::Property::Float do
-  before :all do
+  before do
     @name          = :rating
     @type          = described_class
     @load_as     = Float

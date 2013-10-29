@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Ardm::Property::Text do
-  before :all do
+  before do
     @name          = :title
     @type          = described_class
     @load_as     = String

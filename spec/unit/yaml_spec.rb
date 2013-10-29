@@ -6,7 +6,7 @@ try_spec do
   require './spec/fixtures/person'
 
   describe Ardm::Property::Yaml do
-    before :all do
+    before do
       @property = Ardm::PropertyFixtures::Person.properties[:inventions]
     end
 
@@ -70,7 +70,7 @@ try_spec do
       end
 
       describe 'given a number' do
-        before :all do
+        before do
           @input  = 15
           @result = 15
         end
@@ -79,7 +79,7 @@ try_spec do
       end
 
       describe 'given an Array instance' do
-        before :all do
+        before do
           @input  = ['ardm-property', 'dm-more']
           @result = ['ardm-property', 'dm-more']
         end
@@ -88,7 +88,7 @@ try_spec do
       end
 
       describe 'given a Hash instance' do
-        before :all do
+        before do
           @input  = { :format => 'yaml' }
           @result = { :format => 'yaml' }
         end
@@ -97,7 +97,7 @@ try_spec do
       end
 
       describe 'given a plain old Ruby object' do
-        before :all do
+        before do
           @input      = SerializeMe.new
           @input.name = 'yamly'
 

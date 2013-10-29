@@ -13,7 +13,7 @@ try_spec do
       be_runs_ipv6
     end
 
-    before :all do
+    before do
       @resource = Ardm::PropertyFixtures::NetworkNode.new(
         :node_uuid        => '25a44800-21c9-11de-8c30-0800200c9a66',
         :ip_address       => nil,
@@ -22,12 +22,12 @@ try_spec do
     end
 
     describe 'with IP address fe80::ab8:e8ff:fed7:f8c9' do
-      before :all do
+      before do
         @resource.ip_address = 'fe80::ab8:e8ff:fed7:f8c9'
       end
 
       describe 'when dumped and loaded' do
-        before :all do
+        before do
           @resource.save.should be(true)
           @resource.reload
         end
@@ -39,12 +39,12 @@ try_spec do
     end
 
     describe 'with IP address 127.0.0.1' do
-      before :all do
+      before do
         @resource.ip_address = '127.0.0.1'
       end
 
       describe 'when dumped and loaded' do
-        before :all do
+        before do
           @resource.save.should be(true)
           @resource.reload
         end
@@ -56,12 +56,12 @@ try_spec do
     end
 
     describe 'with IP address 218.43.243.136' do
-      before :all do
+      before do
         @resource.ip_address = '218.43.243.136'
       end
 
       describe 'when dumped and loaded' do
-        before :all do
+        before do
           @resource.save.should be(true)
           @resource.reload
         end
@@ -73,12 +73,12 @@ try_spec do
     end
 
     describe 'with IP address 221.186.184.68' do
-      before :all do
+      before do
         @resource.ip_address = '221.186.184.68'
       end
 
       describe 'when dumped and loaded' do
-        before :all do
+        before do
           @resource.save.should be(true)
           @resource.reload
         end
@@ -90,12 +90,12 @@ try_spec do
     end
 
     describe 'with IP address given as CIDR' do
-      before :all do
+      before do
         @resource.ip_address = '218.43.243.0/24'
       end
 
       describe 'when dumped and loaded' do
-        before :all do
+        before do
           @resource.save.should be(true)
           @resource.reload
         end
@@ -111,12 +111,12 @@ try_spec do
     end
 
     describe 'with a blank string used as IP address' do
-      before :all do
+      before do
         @resource.ip_address = ''
       end
 
       describe 'when dumped and loaded' do
-        before :all do
+        before do
           @resource.save.should be(true)
           @resource.reload
         end
@@ -132,12 +132,12 @@ try_spec do
     end
 
     describe 'with NO IP address' do
-      before :all do
+      before do
         @resource.ip_address = nil
       end
 
       describe 'when dumped and loaded' do
-        before :all do
+        before do
           @resource.save.should be(true)
           @resource.reload
         end

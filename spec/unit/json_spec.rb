@@ -6,7 +6,7 @@ try_spec do
   require './spec/fixtures/person'
 
   describe Ardm::Property::Json do
-    before :all do
+    before do
       @property = Ardm::PropertyFixtures::Person.properties[:positions]
     end
 
@@ -71,7 +71,7 @@ try_spec do
       end
 
       describe 'when given instance of a Hash' do
-        before :all do
+        before do
           @input = { :library => 'Ardm' }
 
           @result = @property.typecast(@input)
@@ -81,7 +81,7 @@ try_spec do
       end
 
       describe 'when given instance of an Array' do
-        before :all do
+        before do
           @input = %w[ ardm-property dm-more ]
 
           @result = @property.typecast(@input)
@@ -91,7 +91,7 @@ try_spec do
       end
 
       describe 'when given nil' do
-        before :all do
+        before do
           @input = nil
 
           @result = @property.typecast(@input)
@@ -101,7 +101,7 @@ try_spec do
       end
 
       describe 'when given JSON encoded value' do
-        before :all do
+        before do
           @input = '{ "value": 11 }'
 
           @result = @property.typecast(@input)
@@ -113,7 +113,7 @@ try_spec do
       end
 
       describe 'when given instance of a custom class' do
-        before :all do
+        before do
           @input      = SerializeMe.new
           @input.name = 'Hello!'
 

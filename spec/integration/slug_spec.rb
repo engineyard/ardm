@@ -8,7 +8,7 @@ try_spec do
 
   describe Ardm::PropertyFixtures::Article do
     describe "persisted with title and slug set to 'New Ardm Type'" do
-      before :all do
+      before do
         @input    = 'New Ardm Type'
         @resource = Ardm::PropertyFixtures::Article.create(:title => @input, :slug => @input)
 
@@ -39,7 +39,7 @@ try_spec do
         [ "L'Etat américain du Texas s'apprête à interdire Windows Vista",  'letat-americain-du-texas-sapprete-a-interdire-windows-vista'           ],
       ].each do |title, slug|
         describe "set with title '#{title}'" do
-          before :all do
+          before do
             @resource = Ardm::PropertyFixtures::Article.new(:title => title)
             @resource.valid?.should be(true)
           end
@@ -49,7 +49,7 @@ try_spec do
           end
 
           describe "and persisted" do
-            before :all do
+            before do
               @resource.save.should be(true)
               @resource.reload
             end

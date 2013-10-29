@@ -1,26 +1,26 @@
 require 'spec_helper'
 
+module ::ParanoidDateTimeBlog
+  class Draft < ActiveRecord::Base
+    self.table_name = "articles"
+
+    property :id,         Serial
+    property :deleted_at, ParanoidDateTime
+
+    before_destroy :before_destroy
+
+    def before_destroy; end
+  end
+
+  class Article < Draft; end
+
+  class Review < Article; end
+end
+
+
 describe Ardm::Property::ParanoidDateTime do
-  before :all do
-    Object.send(:remove_const, :Blog) if defined?(Blog)
-    module ::Blog
-      class Draft < ActiveRecord::Base
-        self.table_name = "articles"
-
-        property :id,         Serial
-        property :deleted_at, ParanoidDateTime
-
-        before_destroy :before_destroy
-
-        def before_destroy; end
-      end
-
-      class Article < Draft; end
-
-      class Review < Article; end
-    end
-
-    @model = Blog::Article
+  before do
+    @model = ::ParanoidDateTimeBlog::Article
   end
 
   describe 'Model#destroy' do
@@ -142,8 +142,8 @@ describe Ardm::Property::ParanoidDateTime do
 
   describe 'Model.inherited' do
     it 'sets @paranoid_properties' do
-      ::Blog::Review.instance_variable_get(:@paranoid_properties).should ==
-        ::Blog::Article.instance_variable_get(:@paranoid_properties)
+      ::ParanoidDateTimeBlog::Review.instance_variable_get(:@paranoid_properties).should ==
+        ::ParanoidDateTimeBlog::Article.instance_variable_get(:@paranoid_properties)
     end
   end
 end

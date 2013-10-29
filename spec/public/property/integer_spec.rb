@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Ardm::Property::Integer do
-  before :all do
+  before do
     @name          = :age
     @type          = described_class
     @load_as     = Integer

@@ -16,7 +16,7 @@ end
 
 
 describe Ardm::Property::Discriminator do
-  before :all do
+  before do
     @content_model      = DiscBlog::Content
     @article_model      = DiscBlog::Article
     @announcement_model = DiscBlog::Announcement
@@ -37,7 +37,7 @@ describe Ardm::Property::Discriminator do
 
   describe 'Model#new' do
     describe 'when provided a String discriminator in the attributes' do
-      before :all do
+      before do
         @resource = @article_model.new(:type => 'DiscBlog::Release')
       end
 
@@ -51,7 +51,7 @@ describe Ardm::Property::Discriminator do
     end
 
     describe 'when provided a Class discriminator in the attributes' do
-      before :all do
+      before do
         @resource = @article_model.new(:type => DiscBlog::Release)
       end
 
@@ -65,7 +65,7 @@ describe Ardm::Property::Discriminator do
     end
 
     describe 'when not provided a discriminator in the attributes' do
-      before :all do
+      before do
         @resource = @article_model.new
       end
 
@@ -111,7 +111,7 @@ describe Ardm::Property::Discriminator do
     end
   end
 
-  before :all do
+  before do
     @announcement = @announcement_model.create(:title => 'Announcement')
   end
 

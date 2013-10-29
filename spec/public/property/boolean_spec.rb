@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Ardm::Property::Boolean do
-  before :all do
+  before do
     @name          = :active
     @type          = described_class
     @load_as     = TrueClass

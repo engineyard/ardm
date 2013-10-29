@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Ardm::Property::Discriminator do
-  before :all do
+  before do
     Object.send(:remove_const, :Foo) if defined?(Foo)
     Object.send(:remove_const, :Bar) if defined?(Bar)
 

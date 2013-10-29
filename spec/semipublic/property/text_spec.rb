@@ -13,7 +13,7 @@ describe Ardm::Property::Text do
   it_should_behave_like 'A semipublic Property'
 
   describe '#load' do
-    before :all do
+    before do
       @value = 'value'
     end
 

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Ardm::Property::Serial do
-  before :all do
+  before do
     @name          = :id
     @type          = described_class
     @load_as     = Integer

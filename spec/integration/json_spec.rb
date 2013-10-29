@@ -5,17 +5,17 @@ try_spec do
   require './spec/fixtures/person'
 
   describe Ardm::PropertyFixtures::Person do
-    before :all do
+    before do
       @resource = Ardm::PropertyFixtures::Person.new(:name => 'Thomas Edison')
     end
 
     describe 'with no positions information' do
-      before :all do
+      before do
         @resource.positions = nil
       end
 
       describe 'when dumped and loaded again' do
-        before :all do
+        before do
           @resource.save.should be_true
           @resource.reload
         end
@@ -27,7 +27,7 @@ try_spec do
     end
 
     describe 'with a few items on the positions list' do
-      before :all do
+      before do
         @resource.positions = [
           { :company => 'The Death Star, Inc', :title => 'Light sabre engineer'    },
           { :company => 'Sane Little Company', :title => 'Chief Curiosity Officer' },
@@ -35,7 +35,7 @@ try_spec do
       end
 
       describe 'when dumped and loaded again' do
-        before :all do
+        before do
           @resource.save.should be_true
           @resource.reload
         end
@@ -50,12 +50,12 @@ try_spec do
     end
 
     describe 'with positions information given as empty list' do
-      before :all do
+      before do
         @resource.positions = []
       end
 
       describe 'when dumped and loaded again' do
-        before :all do
+        before do
           @resource.save.should be_true
           @resource.reload
         end

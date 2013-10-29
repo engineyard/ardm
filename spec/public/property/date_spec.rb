@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe Ardm::Property::Date do
-  before :all do
+  before do
     @name          = :created_on
     @type          = described_class
     @load_as     = Date

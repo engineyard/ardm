@@ -2,7 +2,7 @@ require 'spec_helper'
 
 try_spec do
   describe Ardm::Property::Regexp  do
-    before :all do
+    before do
       class ::User < ActiveRecord::Base
         property :id, Serial
         property :regexp, Regexp
@@ -13,7 +13,7 @@ try_spec do
 
     describe '.load' do
       describe 'when argument is a string' do
-        before :all do
+        before do
           @input  = '[a-z]\d+'
           @result = @property.load(@input)
         end
@@ -24,7 +24,7 @@ try_spec do
       end
 
       describe 'when argument is nil' do
-        before :all do
+        before do
           @input  = nil
           @result = @property.load(@input)
         end
@@ -37,7 +37,7 @@ try_spec do
 
     describe '.dump' do
       describe 'when argument is a regular expression' do
-        before :all do
+        before do
           @input  = /\d+/
           @result = @property.dump(@input)
         end
@@ -48,7 +48,7 @@ try_spec do
       end
 
       describe 'when argument is nil' do
-        before :all do
+        before do
           @input = nil
           @result = @property.dump(@input)
         end

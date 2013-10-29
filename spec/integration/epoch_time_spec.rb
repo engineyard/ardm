@@ -5,12 +5,12 @@ try_spec do
   require './spec/fixtures/person'
 
   describe Ardm::PropertyFixtures::Person do
-    before :all do
+    before do
       @resource = Ardm::PropertyFixtures::Person.new(:name => '')
     end
 
     describe 'with a birthday' do
-      before :all do
+      before do
         @resource.birthday = '1983-05-03'
       end
 
@@ -21,7 +21,7 @@ try_spec do
       end
 
       describe 'when dumped and loaded again' do
-        before :all do
+        before do
           @resource.save.should be_true
           @resource.reload
         end
@@ -33,7 +33,7 @@ try_spec do
     end
 
     describe 'without a birthday' do
-      before :all do
+      before do
         @resource.birthday = nil
       end
 
@@ -44,7 +44,7 @@ try_spec do
       end
 
       describe 'when dumped and loaded again' do
-        before :all do
+        before do
           @resource.save.should be_true
           @resource.reload
         end

@@ -4,7 +4,7 @@ require './spec/fixtures/network_node'
 
 try_spec do
   describe Ardm::Property::IPAddress do
-    before :all do
+    before do
       @stored = '81.20.130.1'
       @input  = IPAddr.new(@stored)
       @property = Ardm::PropertyFixtures::NetworkNode.properties[:ip_address]
@@ -12,7 +12,7 @@ try_spec do
 
     describe '.dump' do
       describe 'when argument is an IP address given as Ruby object' do
-        before :all do
+        before do
           @result = @property.dump(@input)
         end
 
@@ -22,7 +22,7 @@ try_spec do
       end
 
       describe 'when argument is nil' do
-        before :all do
+        before do
           @result = @property.dump(nil)
         end
 
@@ -32,7 +32,7 @@ try_spec do
       end
 
       describe 'when input is a blank string' do
-        before :all do
+        before do
           @result = @property.dump('')
         end
 
@@ -44,7 +44,7 @@ try_spec do
 
     describe '.load' do
       describe 'when argument is a valid IP address as a string' do
-        before :all do
+        before do
           @result = @property.load(@stored)
         end
 
@@ -54,7 +54,7 @@ try_spec do
       end
 
       describe 'when argument is nil' do
-        before :all do
+        before do
           @result = @property.load(nil)
         end
 
@@ -64,7 +64,7 @@ try_spec do
       end
 
       describe 'when argument is a blank string' do
-        before :all do
+        before do
           @result = @property.load('')
         end
 
@@ -74,7 +74,7 @@ try_spec do
       end
 
       describe 'when argument is an Array instance' do
-        before :all do
+        before do
           @operation = lambda { @property.load([]) }
         end
 
@@ -86,7 +86,7 @@ try_spec do
 
     describe '.typecast' do
       describe 'when argument is an IpAddr object' do
-        before :all do
+        before do
           @result = @property.typecast(@input)
         end
 
@@ -96,7 +96,7 @@ try_spec do
       end
 
       describe 'when argument is a valid IP address as a string' do
-        before :all do
+        before do
           @result = @property.typecast(@stored)
         end
 

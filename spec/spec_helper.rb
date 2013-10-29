@@ -1,6 +1,7 @@
 require 'pry'
 
 require 'active_record'
+require 'database_cleaner'
 require 'ardm-property'
 require 'ardm-property/rails'
 
@@ -23,11 +24,17 @@ end
 Dir["#{Pathname(__FILE__).dirname.expand_path}/shared/*.rb"].each { |file| require file }
 
 RSpec.configure do |config|
-  config.around do |example|
-    ActiveRecord::Base.transaction do
-      example.run
-      raise ActiveRecord::Rollback
-    end
+  config.before(:suite) do
+    DatabaseCleaner.strategy = :transaction
+    DatabaseCleaner.clean_with(:truncation)
+  end
+
+  config.before(:each) do
+    DatabaseCleaner.start
+  end
+
+  config.after(:each) do
+    DatabaseCleaner.clean
   end
 end
 

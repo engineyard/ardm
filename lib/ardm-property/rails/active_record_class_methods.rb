@@ -81,7 +81,7 @@ module Ardm
 
           properties.each do |property|
             if attributes.key?(property.name)
-              attributes[property.field] = property.dump(attributes[property.field])
+              attributes[property.field] = attributes[property.name]
             end
           end
 
@@ -98,8 +98,8 @@ module Ardm
             )
 
             column = ActiveRecord::ConnectionAdapters::Column.new(
-              property.name.to_s,
-              #property.field.to_s,
+              #property.name.to_s,
+              property.field.to_s,
               nil,#property.dump(property.default),
               sql_type,
               property.allow_nil?
