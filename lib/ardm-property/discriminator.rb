@@ -1,8 +1,25 @@
 module Ardm
   class Property
     class Discriminator < Class
+      load_as   ::Class
+      dump_as   ::String
       default   lambda { |resource, property| resource.class }
       required  true
+
+      # ActiveRecord just stores the string name of the class.
+      # We dump false for a bad value because it results in a
+      # class that isn't in the "dump_as".
+      #
+      # Expects the class name to be a valid class name that is
+      # loaded and available.
+      def dump(value)
+        dumped = typecast(value)
+        dumped.name if dumped.is_a?(::Class)
+      end
+
+      def load(value)
+        typecast(value)
+      end
 
       # @api private
       def bind
@@ -13,7 +30,7 @@ module Ardm
       module Model
         def inherited(model)
           super  # setup self.descendants
-          set_discriminator_scope_for(model)
+          #set_discriminator_scope_for(model)
         end
 
         def new(*args, &block)
