@@ -25,12 +25,14 @@ module Ardm
 
         # This not the same as read_attribute in AR
         def attribute_get(name)
-          send name
+          property = self.class.properties[name]
+          property.get(self)
         end
 
         # This not the same as write_attribute in AR
         def attribute_set(name, value)
-          send "#{name}=", value
+          property = self.class.properties[name]
+          property.set(self, value)
         end
 
         # Retrieve the key(s) for this resource.

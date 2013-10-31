@@ -110,6 +110,23 @@ module Ardm
           end
         end
 
+        # Hook into the query system when we would be finding composed_of
+        # fields in active record. This lets us mangle the query as needed.
+        #
+        # Every DM property needs to be dumped when it's being sent to a query.
+        # This also gives us a chance to handle aliased fields
+        def expand_hash_conditions_for_aggregates(*args)
+          new_attrs = {}
+          super.each do |key, value|
+            if property = properties[key]
+              new_attrs[property.field] = property.dump(value)
+            else
+              new_attrs[key] = value
+            end
+          end
+          new_attrs
+        end
+
         # Gets the list of key fields for this Model
         #
         # @return [Array]
@@ -186,9 +203,7 @@ module Ardm
           property_module.module_eval <<-RUBY, __FILE__, __LINE__ + 1
             #{reader_visibility}
             def #{name}
-              #return #{instance_variable_name} if defined?(#{instance_variable_name})
               property = self.class.properties[#{name.inspect}]
-              ##{instance_variable_name} = property ? property.get(self) : nil
               property ? property.get(self) : nil
             end
           RUBY
