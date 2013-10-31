@@ -141,6 +141,7 @@ module Ardm
         return unless property.options.key?(:set)
 
         options[:in] = property.options[:set]
+        options[:message] ||= "must be one of #{options[:in].join(', ')}"
 
         validation_options = options_with_message(options, property, :within)
         {inclusion: validation_options}

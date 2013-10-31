@@ -58,6 +58,7 @@ try_spec do
     describe 'with value unknown to enumeration property' do
       before do
         @resource = Ardm::PropertyFixtures::Ticket.new(:status => :undecided)
+        @resource.valid?
       end
 
       # TODO: consider sharing shared spec exampels with dm-validations,
