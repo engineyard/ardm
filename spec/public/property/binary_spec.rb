@@ -30,11 +30,11 @@ describe Ardm::Property::Binary do
       end
 
       it 'should always dump with BINARY' do
-        model.bin_data.dump("foo".freeze).encoding.names.should include("BINARY")
+        model.properties[:bin_data].dump("foo".freeze).encoding.names.should include("BINARY")
       end
 
       it 'should always load with BINARY' do
-        model.bin_data.load("foo".freeze).encoding.names.should include("BINARY")
+        model.properties[:bin_data].load("foo".freeze).encoding.names.should include("BINARY")
       end
     end
   end
