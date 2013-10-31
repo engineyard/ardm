@@ -138,9 +138,7 @@ share_examples_for 'A semipublic Property' do
     end
 
     describe 'when provide a nil value when required' do
-      before do
-        property = type.new(model, name, options.merge(:required => true))
-      end
+      let(:property) { type.new(model, name, options.merge(:required => true)) }
 
       let(:value) { nil }
 
@@ -148,9 +146,7 @@ share_examples_for 'A semipublic Property' do
     end
 
     describe 'when provide a nil value when not required' do
-      before do
-        property = type.new(model, name, options.merge(:required => false))
-      end
+      let(:property) { type.new(model, name, options.merge(:required => false)) }
 
       let(:value) { nil }
 

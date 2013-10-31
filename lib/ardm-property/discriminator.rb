@@ -7,6 +7,7 @@ module Ardm
       # @api private
       def bind
         model.inheritance_column = field
+        model.extend Model unless model < Model
       end
 
       module Model
@@ -35,7 +36,9 @@ module Ardm
 
         def set_discriminator_scope_for(model)
           discriminator = self.properties.discriminator
-          model.unscoped.update_all(discriminator.field => model.descendants.dup << model)
+          model.scoped.with_default_scope.update_all(discriminator.field => model.descendants.dup << model)
+        rescue ActiveRecord::ConnectionNotEstablished => e
+          puts "Error was raised but it seems to be an ActiveRecord 3.2 error, fixed in 4:\n#{e}"
         end
       end
     end # class Discriminator

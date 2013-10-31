@@ -15,8 +15,8 @@ describe Ardm::Property::Discriminator do
   let(:value)         { Foo }
   let(:other_value)   { Bar }
   let(:invalid_value) { 1 }
-  let(:model) { Blog::Article }
-  let(:property) { type.new(model, name, options) }
+  let(:model)         { Blog::Article }
+  let(:property)      { type.new(model, name, options) }
 
   it_should_behave_like 'A semipublic Property'
 end

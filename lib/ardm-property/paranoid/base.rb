@@ -44,7 +44,12 @@ module Ardm
           paranoid_scopes.each do |cond|
             with_deleted_scope.where_values.delete(cond)
           end
-          with_deleted_scope.scoped { block_given? ? yield : all }
+
+          if block_given?
+            with_deleted_scope.scoping(&block)
+          else
+            with_deleted_scope.all
+          end
         end
 
         # @api private
