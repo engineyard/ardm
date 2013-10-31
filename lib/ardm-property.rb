@@ -703,6 +703,8 @@ module Ardm
     def typecast(value)
       @coercer ||= Coercible::Coercer.new
       @coercer[value.class].send(coercion_method, value)
+    rescue Coercible::UnsupportedCoercion
+      value
     end
 
     # Test the value to see if it is a valid value for this Property
