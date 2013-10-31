@@ -78,7 +78,7 @@ ActiveRecord::Schema.define do
 
   create_table :tshirts, :force => true do |t|
     t.string   :writing
-    t.boolean  :has_picure
+    t.boolean  :has_picture
     t.text     :picture
     t.text     :color
     t.text     :size
