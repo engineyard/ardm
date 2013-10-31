@@ -674,24 +674,8 @@ module Ardm
     #
     # @api private
     def loaded?(resource)
-      #resource.instance_variable_defined?(instance_variable_name)
+      resource.instance_variable_defined?(instance_variable_name)
       true
-    end
-
-    # Loads lazy columns when get or set is called.
-    #
-    # @param [Resource] resource
-    #   model instance for which lazy loaded attribute are loaded
-    #
-    # @api private
-    def lazy_load(resource)
-      return if loaded?(resource)
-      resource.__send__(:lazy_load, lazy_load_properties)
-    end
-
-    # @api private
-    def lazy_load_properties
-      @lazy_load_properties ||= lazy? ? [ self ] : self.properties.defaults
     end
 
     # @api private
