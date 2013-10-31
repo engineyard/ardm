@@ -16,11 +16,11 @@ try_spec do
       end
 
       it 'has slug equal to "new-datamapper-type"' do
-        @resource.slug.should == 'new-datamapper-type'
+        @resource.slug.should == 'new-ardm-type'
       end
 
       it 'can be found by slug' do
-        Ardm::PropertyFixtures::Article.where(:slug => 'new-datamapper-type').first.should == @resource
+        Ardm::PropertyFixtures::Article.where(:slug => 'new-ardm-type').first.should == @resource
       end
     end
 
