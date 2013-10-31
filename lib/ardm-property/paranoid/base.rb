@@ -5,6 +5,7 @@ module Ardm
         def self.included(model)
           model.extend ClassMethods
           model.instance_variable_set(:@paranoid_properties, {})
+          model.instance_variable_set(:@paranoid_scopes, [])
         end
 
         def paranoid_destroy
@@ -33,14 +34,15 @@ module Ardm
       module ClassMethods
         def inherited(model)
           model.instance_variable_set(:@paranoid_properties, @paranoid_properties.dup)
+          model.instance_variable_set(:@paranoid_scopes, @paranoid_scopes.dup)
           super
         end
 
         # @api public
         def with_deleted(&block)
           with_deleted_scope = self.scoped.with_default_scope
-          paranoid_properties.keys.each do |property_name|
-            with_deleted_scope.unscope(:where => property_name)
+          paranoid_scopes.each do |cond|
+            with_deleted_scope.where_values.delete(cond)
           end
           with_deleted_scope.scoped { block_given? ? yield : all }
         end
@@ -50,13 +52,19 @@ module Ardm
           @paranoid_properties
         end
 
+        def paranoid_scopes
+          @paranoid_scopes
+        end
+
         # @api private
         def set_paranoid_property(name, &block)
           paranoid_properties[name] = block
         end
 
         def set_paranoid_scope(conditions)
-          default_scope { where(conditions) }
+          paranoid_scope = conditions
+          paranoid_scopes << paranoid_scope
+          default_scope { where(paranoid_scope) }
         end
       end # module ClassMethods
     end # module Paranoid
