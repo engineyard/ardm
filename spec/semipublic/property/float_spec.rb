@@ -74,7 +74,7 @@ describe Ardm::Property::Float do
       property.typecast(BigDecimal('-24.35')).should eql(-24.35)
     end
 
-    [ Object.new, true, '00.0', '0.', '-.0', 'string' ].each do |value|
+    [ Object.new, true, '0.', '-.0', 'string' ].each do |value|
       it "does not typecast non-numeric value #{value.inspect}" do
         property.typecast(value).should equal(value)
       end

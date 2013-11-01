@@ -16,7 +16,7 @@ try_spec do
 
     describe 'with the default value' do
       it 'returns it as an array' do
-        @resource.size.should eql([Ardm::PropertyFixtures::TShirt.properties[:size].default])
+        @resource.size.should eq([Ardm::PropertyFixtures::TShirt.properties[:size].default])
       end
     end
 

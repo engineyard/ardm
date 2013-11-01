@@ -72,7 +72,7 @@ try_spec do
       end
 
       it 'has a meaningful error message on invalid property' do
-        @resource.errors[:status].should include('Status must be one of unconfirmed, confirmed, assigned, resolved, not_applicable')
+        @resource.errors[:status].should include('must be one of unconfirmed, confirmed, assigned, resolved, not_applicable')
       end
     end
   end

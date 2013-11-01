@@ -1,14 +1,13 @@
 require 'spec_helper'
 
+module LookupFoo
+  class OtherProperty < Ardm::Property::String; end
+end
+
 describe Ardm::Property::Lookup do
   before do
-    Object.send(:remove_const, :Foo) if defined?(Foo)
     @klass = Class.new(ActiveRecord::Base) do
       self.table_name = "articles"
-    end
-
-    module Foo
-      class OtherProperty < Ardm::Property::String; end
     end
   end
 
@@ -17,7 +16,7 @@ describe Ardm::Property::Lookup do
   end
 
   it 'should provide access to Property classes from outside of the Property namespace' do
-    @klass::OtherProperty.should be(Foo::OtherProperty)
+    @klass::OtherProperty.should eq(LookupFoo::OtherProperty)
   end
 
   it 'should not provide access to unknown Property classes' do
