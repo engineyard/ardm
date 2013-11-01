@@ -21,6 +21,7 @@ module Ardm
               property.set!(self, value)
             end
           end
+          true
         end
 
         # This not the same as read_attribute in AR
