@@ -28,23 +28,27 @@ module Ardm
     end
 
     def |(other)
+      raise(ArgumentError, "Cannot coerce #{other.inspect} into an array") unless other.respond_to?(:to_a)
       self.class.new(to_a | other.to_a)
     end
 
     def &(other)
+      raise(ArgumentError, "Cannot coerce #{other.inspect} into an array") unless other.respond_to?(:to_a)
       self.class.new(to_a & other.to_a)
     end
 
     def -(other)
+      raise(ArgumentError, "Cannot coerce #{other.inspect} into an array") unless other.respond_to?(:to_a)
       self.class.new(to_a - other.to_a)
     end
 
     def +(other)
+      raise(ArgumentError, "Cannot coerce #{other.inspect} into an array") unless other.respond_to?(:to_a)
       self.class.new(to_a + other.to_a)
     end
 
     def ==(other)
-      to_a == other.to_a
+      other.respond_to?(:to_a) && to_a == other.to_a
     end
 
     # TODO: make PropertySet#reject return a PropertySet instance
