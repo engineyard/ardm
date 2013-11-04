@@ -23,6 +23,8 @@ describe Ardm::Property do
       property :height,       Integer, :lazy => [:dimensions]
       property :format,       String, :default => 'jpeg'
       property :taken_at,     Time,   :default => proc { Time.now }
+
+      validates_presence_of :format
     end
   end
 
@@ -30,10 +32,6 @@ describe Ardm::Property do
     it 'returns @field value if it is present' do
       Track.properties[:title].field.should eql('name')
     end
-
-    it 'returns field for specific repository when it is present'
-
-    it 'sets field value using field naming convention on first reference'
   end
 
   describe '#default_for' do
@@ -43,6 +41,11 @@ describe Ardm::Property do
 
     it 'returns result of a call for callable values' do
       Image.properties[:taken_at].default_for(Image.new).year.should == Time.now.year
+    end
+
+    it "sets the default when the record is created" do
+      img = Image.create!(title: 'My Picture')
+      img.format.should == 'jpeg'
     end
   end
 

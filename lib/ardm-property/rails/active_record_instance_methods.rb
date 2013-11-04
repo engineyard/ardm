@@ -7,19 +7,7 @@ module Ardm
         def initialize_ardm_property_defaults
           return unless new_record?
           self.class.properties.each do |property|
-            field = property.field
-
-            next unless property.get(self).nil?
-
-            value = property.default
-
-            next if value.nil?
-
-            if Proc === value
-              property.set!(self, value.call(self, property.name))
-            else
-              property.set!(self, value)
-            end
+            attribute_get(property.name) # assigns default on fetch
           end
           true
         end
@@ -27,13 +15,18 @@ module Ardm
         # This not the same as read_attribute in AR
         def attribute_get(name)
           property = self.class.properties[name]
-          property.get(self)
+          val = read_attribute property.field
+          if new_record? && val.nil? && property.default?
+            write_attribute property.field, property.typecast(property.default_for(self))
+          end
+          read_attribute property.field
         end
 
         # This not the same as write_attribute in AR
         def attribute_set(name, value)
           property = self.class.properties[name]
-          property.set(self, value)
+          write_attribute property.field, property.typecast(value)
+          read_attribute property.field
         end
 
         # Retrieve the key(s) for this resource.

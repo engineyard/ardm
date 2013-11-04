@@ -5,7 +5,7 @@ module Ardm
 
         property :id,          Serial
         property :writing,     String
-        property :has_picture, Boolean, :default => false
+        property :has_picture, Boolean, :default => false, :required => true
         property :picture,     Enum[:octocat, :fork_you, :git_down]
 
         property :color, Enum[:white, :black, :red, :orange, :yellow, :green, :cyan, :blue, :purple]

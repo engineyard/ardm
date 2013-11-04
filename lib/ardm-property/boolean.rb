@@ -5,6 +5,13 @@ module Ardm
       dump_as         ::TrueClass
       coercion_method :to_boolean
 
+      def initialize(model, name, options = {})
+        # validates presence in rails fails for false.
+        # Boolean must therefore behave like a set.
+        options[:set] = [true, false]
+        super model, name, options
+      end
+
       # @api semipublic
       def value_dumped?(value)
         value_loaded?(value)

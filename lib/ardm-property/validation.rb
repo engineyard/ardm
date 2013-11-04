@@ -78,8 +78,9 @@ module Ardm
       private
 
       # @api private
+      # Skip TrueClass dump because presence is invalid for false, but boolean false is ok for a boolean property.
       def self.infer_presence(property, options)
-        return if property.allow_blank? || property.serial?
+        return if property.allow_blank? || property.serial? || property.dump_as == ::TrueClass
 
         validation_options = options_with_message(options, property, :presence)
 

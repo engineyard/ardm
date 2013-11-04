@@ -5,7 +5,8 @@ module Ardm
         def self.extended(model)
           model.instance_variable_set(:@properties,               PropertySet.new)
           model.instance_variable_set(:@field_naming_convention, nil)
-          model.send :after_initialize, :initialize_ardm_property_defaults
+          #model.send :after_initialize, :initialize_ardm_property_defaults
+          model.send :before_validation, :initialize_ardm_property_defaults
 
           super
         end
@@ -203,8 +204,7 @@ module Ardm
           property_module.module_eval <<-RUBY, __FILE__, __LINE__ + 1
             #{reader_visibility}
             def #{name}
-              property = self.class.properties[#{name.inspect}]
-              property ? property.get(self) : nil
+              attribute_get(#{name.inspect})
             end
           RUBY
 
@@ -231,8 +231,7 @@ module Ardm
           property_module.module_eval <<-RUBY, __FILE__, __LINE__ + 1
             #{writer_visibility}
             def #{writer_name}(value)
-              property = self.class.properties[#{name.inspect}]
-              property.set(self, value)
+              attribute_set(#{name.inspect}, value)
             end
           RUBY
         end
