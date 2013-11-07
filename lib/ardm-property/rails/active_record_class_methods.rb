@@ -117,15 +117,18 @@ module Ardm
         # Every DM property needs to be dumped when it's being sent to a query.
         # This also gives us a chance to handle aliased fields
         def expand_hash_conditions_for_aggregates(*args)
-          new_attrs = {}
-          super.each do |key, value|
+          dump_properties_hash(super)
+        end
+
+        def dump_properties_hash(options)
+          options.inject({}) do |new_attrs, (key, value)|
             if property = properties[key]
               new_attrs[property.field] = property.dump(value)
             else
               new_attrs[key] = value
             end
+            new_attrs
           end
-          new_attrs
         end
 
         # Gets the list of key fields for this Model
