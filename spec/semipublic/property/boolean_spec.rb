@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Ardm::Property::Boolean do
   let(:name)          { :active }
   let(:type)          { described_class }
-  let(:options)       { {} }
+  let(:options)       { {:set => [true, false]} }
   let(:value)         { true }
   let(:other_value)   { false }
   let(:invalid_value) { 1 }

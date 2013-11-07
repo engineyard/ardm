@@ -27,8 +27,9 @@ share_examples_for 'A semipublic Property' do
 
     [ :index, :unique_index, :unique, :lazy ].each do |attribute|
       [ true, false, :title, [ :title ] ].each do |value|
-        describe "when provided #{(options = { attribute => value }).inspect}" do
-          let(:property) { type.new(model, name, options.merge(options)) }
+        opts = { attribute => value }
+        describe "when provided #{opts.inspect}" do
+          let(:property) { type.new(model, name, options.merge(opts)) }
 
           it 'should return a Property' do
             property.should be_kind_of(type)
@@ -42,8 +43,8 @@ share_examples_for 'A semipublic Property' do
             property.load_as.should be(type.load_as)
           end
 
-          it "should set the options to #{options.inspect}" do
-            property.options.should == type.options.merge(options.merge(options))
+          it "should set the options to #{opts.inspect}" do
+            property.options.should == type.options.merge(options.merge(opts))
           end
         end
       end
