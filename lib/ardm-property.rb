@@ -697,7 +697,11 @@ module Ardm
     # @api semipublic
     def typecast(value)
       @coercer ||= Coercible::Coercer.new
-      @coercer[value.class].send(coercion_method, value)
+      if Array === value
+        value.map { |v| typecast(v) }
+      else
+        @coercer[value.class].send(coercion_method, value)
+      end
     rescue Coercible::UnsupportedCoercion
       value
     end
