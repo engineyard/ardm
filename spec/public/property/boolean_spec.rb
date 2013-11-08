@@ -23,7 +23,7 @@ describe Ardm::Property::Boolean do
 
   describe "default" do
     it "should set has_picture to the default (booleans are specifically weird in rails because presence validation fails for false)" do
-      tshirt = Ardm::PropertyFixtures::TShirt.create!
+      tshirt = Ardm::Fixtures::TShirt.create!
       tshirt.should_not have_picture
     end
   end

@@ -23,7 +23,7 @@ describe Ardm::Property::Binary do
   if RUBY_VERSION >= "1.9"
     describe 'encoding' do
       let(:model) do
-        Class.new(ActiveRecord::Base) do
+        Class.new(::Ardm::Record) do
           self.table_name = "articles" # co-opt the articles table
           property :bin_data, ::Ardm::Property::Binary, :field => 'body'
         end

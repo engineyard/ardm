@@ -1,6 +1,6 @@
 module Ardm
-  module PropertyFixtures
-    class Person < ActiveRecord::Base
+  module Fixtures
+    class Person < Ardm::Record
       self.table_name = "people"
 
       property :id,         Serial

@@ -6,11 +6,11 @@ try_spec do
 
   require './spec/fixtures/article'
 
-  describe Ardm::PropertyFixtures::Article do
+  describe Ardm::Fixtures::Article do
     describe "persisted with title and slug set to 'New Ardm Type'" do
       before do
         @input    = 'New Ardm Type'
-        @resource = Ardm::PropertyFixtures::Article.create(:title => @input, :slug => @input)
+        @resource = Ardm::Fixtures::Article.create(:title => @input, :slug => @input)
 
         @resource.reload
       end
@@ -20,7 +20,7 @@ try_spec do
       end
 
       it 'can be found by slug' do
-        Ardm::PropertyFixtures::Article.where(:slug => 'new-ardm-type').first.should == @resource
+        Ardm::Fixtures::Article.where(:slug => 'new-ardm-type').first.should == @resource
       end
     end
 
@@ -40,7 +40,7 @@ try_spec do
       ].each do |title, slug|
         describe "set with title '#{title}'" do
           before do
-            @resource = Ardm::PropertyFixtures::Article.new(:title => title)
+            @resource = Ardm::Fixtures::Article.new(:title => title)
             @resource.valid?.should be(true)
           end
 
@@ -55,7 +55,7 @@ try_spec do
             end
 
             it 'can be found by slug' do
-              Ardm::PropertyFixtures::Article.where(:slug => slug).first.should == @resource
+              Ardm::Fixtures::Article.where(:slug => slug).first.should == @resource
             end
           end
         end

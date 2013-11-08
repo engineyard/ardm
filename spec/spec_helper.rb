@@ -1,24 +1,26 @@
 require 'pry'
-
-require 'active_record'
 require 'database_cleaner'
-require 'ardm-property'
-require 'ardm-property/rails'
 
-#ActiveRecord::Base.extend Ardm::Property::Lookup
-#ActiveRecord::Base.extend Ardm::Property::ClassMethods
+ENV['ORM'] ||= 'active_record'
+require 'ardm/env'
 
-ActiveRecord::Base.configurations = { "ardm-property" => {
+Ardm.active_record do
+  ActiveRecord::Base.configurations = { "ardm" => {
     "database" => "db/test.sqlite",
     "adapter" => "sqlite3"
   }}
-ActiveRecord::Base.establish_connection 'ardm-property'
+  ActiveRecord::Base.establish_connection 'ardm'
 
-begin
-  $stdout = StringIO.new
-  load Pathname.new(__FILE__).dirname.expand_path.join("schema.rb")
-ensure
-  $stdout = STDOUT
+  begin
+    $stdout = StringIO.new
+    load Pathname.new(__FILE__).dirname.expand_path.join("schema.rb")
+  ensure
+    $stdout = STDOUT
+  end
+end
+
+Ardm.data_mapper do
+  raise "TODO: DataMapper setup."
 end
 
 Dir["#{Pathname(__FILE__).dirname.expand_path}/shared/*.rb"].each { |file| require file }

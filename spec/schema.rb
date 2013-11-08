@@ -1,4 +1,4 @@
-ActiveRecord::Schema.define do
+::ActiveRecord::Schema.define do
 
   create_table :api_users, :force => true do |t|
     t.string :name

@@ -1,6 +1,6 @@
 module Ardm
-  module PropertyFixtures
-      class TShirt < ActiveRecord::Base
+  module Fixtures
+      class TShirt < ::Ardm::Record
         self.table_name = "tshirts"
 
         property :id,          Serial
@@ -11,5 +11,5 @@ module Ardm
         property :color, Enum[:white, :black, :red, :orange, :yellow, :green, :cyan, :blue, :purple]
         property :size,  Flag[:xs, :small, :medium, :large, :xl, :xxl], :default => :xs
       end # Shirt
-    end # PropertyFixtures
+    end # Fixtures
 end # Ardm

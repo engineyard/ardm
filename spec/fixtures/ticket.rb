@@ -1,6 +1,6 @@
 module Ardm
-  module PropertyFixtures
-    class Ticket < ActiveRecord::Base
+  module Fixtures
+    class Ticket < ::Ardm::Record
       self.table_name = "tickets"
 
       property :id,     Serial

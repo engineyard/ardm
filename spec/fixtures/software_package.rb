@@ -1,6 +1,6 @@
 module Ardm
-  module PropertyFixtures
-    class SoftwarePackage < ActiveRecord::Base
+  module Fixtures
+    class SoftwarePackage < ::Ardm::Record
       self.table_name = "software_packages"
 
       property :id, Serial
@@ -18,5 +18,5 @@ module Ardm
       property :installed_at,     DateTime
       property :installed_by,     String
     end # SoftwarePackage
-  end # PropertyFixtures
+  end # Fixtures
 end # Ardm

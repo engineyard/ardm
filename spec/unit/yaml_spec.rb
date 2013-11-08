@@ -7,7 +7,7 @@ try_spec do
 
   describe Ardm::Property::Yaml do
     before do
-      @property = Ardm::PropertyFixtures::Person.properties[:inventions]
+      @property = Ardm::Fixtures::Person.properties[:inventions]
     end
 
     describe '.load' do
@@ -80,8 +80,8 @@ try_spec do
 
       describe 'given an Array instance' do
         before do
-          @input  = ['ardm-property', 'dm-more']
-          @result = ['ardm-property', 'dm-more']
+          @input  = ['ardm', 'dm-more']
+          @result = ['ardm', 'dm-more']
         end
 
         it_should_behave_like 'identity function'

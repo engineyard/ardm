@@ -8,7 +8,7 @@ try_spec do
       @uri_str = 'http://example.com/path/to/resource/'
       @uri     = Addressable::URI.parse(@uri_str)
 
-      @property = Ardm::PropertyFixtures::Bookmark.properties[:uri]
+      @property = Ardm::Fixtures::Bookmark.properties[:uri]
     end
 
     describe '.dump' do

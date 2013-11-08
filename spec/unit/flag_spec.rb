@@ -6,7 +6,7 @@ try_spec do
   describe Ardm::Property::Flag do
     describe '.dump' do
       before do
-        @flag = Ardm::PropertyFixtures::TShirt.property(
+        @flag = Ardm::Fixtures::TShirt.property(
           :stuff, Ardm::Property::Flag[:first, :second, :third, :fourth, :fifth])
 
         @property_klass = Ardm::Property::Flag
@@ -77,7 +77,7 @@ try_spec do
 
     describe '.load' do
       before do
-        @flag = Ardm::PropertyFixtures::TShirt.property(:stuff, Ardm::Property::Flag, :flags => [:uno, :dos, :tres, :cuatro, :cinco])
+        @flag = Ardm::Fixtures::TShirt.property(:stuff, Ardm::Property::Flag, :flags => [:uno, :dos, :tres, :cuatro, :cinco])
       end
 
       describe 'when argument matches a key in the flag map' do

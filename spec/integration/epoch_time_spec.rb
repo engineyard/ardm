@@ -4,9 +4,9 @@ try_spec do
 
   require './spec/fixtures/person'
 
-  describe Ardm::PropertyFixtures::Person do
+  describe Ardm::Fixtures::Person do
     before do
-      @resource = Ardm::PropertyFixtures::Person.new(:name => '')
+      @resource = Ardm::Fixtures::Person.new(:name => '')
     end
 
     describe 'with a birthday' do

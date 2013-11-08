@@ -4,12 +4,12 @@ try_spec do
 
   require './spec/fixtures/person'
 
-  describe Ardm::PropertyFixtures::Person do
+  describe Ardm::Fixtures::Person do
     before do
-      @resource  = Ardm::PropertyFixtures::Person.create!(:password => 'Ardm R0cks!')
-      Ardm::PropertyFixtures::Person.create!(:password => 'password1')
+      @resource  = Ardm::Fixtures::Person.create!(:password => 'Ardm R0cks!')
+      Ardm::Fixtures::Person.create!(:password => 'password1')
 
-      @people = Ardm::PropertyFixtures::Person.all
+      @people = Ardm::Fixtures::Person.all
       @resource.reload
     end
 

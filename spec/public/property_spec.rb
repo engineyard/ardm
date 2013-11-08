@@ -7,7 +7,7 @@ describe Ardm::Property do
 
   # define the model prior to supported_by
   before do
-    class ::Track < ActiveRecord::Base
+    class ::Track < Ardm::Record
       property :id,               Serial
       property :artist,           String, :lazy => false, :index => :artist_album
       property :title,            String, :field => 'name', :index => true
@@ -15,7 +15,7 @@ describe Ardm::Property do
       property :musicbrainz_hash, String, :unique => true, :unique_index => true
     end
 
-    class ::Image < ActiveRecord::Base
+    class ::Image < Ardm::Record
       property :md5hash,      String, :key => true, :length => 32
       property :title,        String, :required => true, :unique => true
       property :description,  Text,   :length => 1..1024, :lazy => [ :detail ]

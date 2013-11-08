@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 module ::ParanoidBooleanBlog
-  class Draft < ActiveRecord::Base
+  class Draft < Ardm::Record
     self.table_name = "articles"
     property :id,      Serial
     property :deleted, ParanoidBoolean

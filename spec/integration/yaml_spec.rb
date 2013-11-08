@@ -5,9 +5,9 @@ try_spec do
   require './spec/fixtures/person'
   require './spec/fixtures/invention'
 
-  describe Ardm::PropertyFixtures::Person do
+  describe Ardm::Fixtures::Person do
     before do
-      @resource = Ardm::PropertyFixtures::Person.new(:name => '')
+      @resource = Ardm::Fixtures::Person.new(:name => '')
     end
 
     describe 'with no inventions information' do
@@ -30,7 +30,7 @@ try_spec do
     describe 'with a few items on the inventions list' do
       before do
         @input = [ 'carbon telephone transmitter', 'light bulb', 'electric grid' ].map do |name|
-          Ardm::PropertyFixtures::Invention.new(name)
+          Ardm::Fixtures::Invention.new(name)
         end
         @resource.inventions = @input
       end

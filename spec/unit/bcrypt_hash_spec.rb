@@ -14,7 +14,7 @@ try_spec do
       end
       @nonstandard_type2 = TestType.new
 
-      class ::User < ActiveRecord::Base
+      class ::User < Ardm::Record
         property :id, Serial
         property :password, BCryptHash
       end

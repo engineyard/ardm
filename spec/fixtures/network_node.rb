@@ -1,6 +1,6 @@
 module Ardm
-  module PropertyFixtures
-    class NetworkNode < ActiveRecord::Base
+  module Fixtures
+    class NetworkNode < Ardm::Record
       self.table_name = "network_nodes"
 
       property :id,               Serial
@@ -19,5 +19,5 @@ module Ardm
         self.ip_address.ipv4?
       end
     end # NetworkNode
-  end # PropertyFixtures
+  end # Fixtures
 end # Ardm

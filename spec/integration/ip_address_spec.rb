@@ -4,7 +4,7 @@ try_spec do
 
   require './spec/fixtures/network_node'
 
-  describe Ardm::PropertyFixtures::NetworkNode do
+  describe Ardm::Fixtures::NetworkNode do
     def run_ipv4
       be_runs_ipv4
     end
@@ -14,7 +14,7 @@ try_spec do
     end
 
     before do
-      @resource = Ardm::PropertyFixtures::NetworkNode.new(
+      @resource = Ardm::Fixtures::NetworkNode.new(
         :node_uuid        => '25a44800-21c9-11de-8c30-0800200c9a66',
         :ip_address       => nil,
         :cidr_subnet_bits => nil

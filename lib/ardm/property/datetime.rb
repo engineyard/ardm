@@ -1,0 +1,12 @@
+require 'ardm/property/object'
+
+module Ardm
+  class Property
+    class DateTime < Object
+      load_as         ::DateTime
+      dump_as         ::DateTime
+      coercion_method :to_datetime
+
+    end # class DateTime
+  end # class Property
+end # module Ardm

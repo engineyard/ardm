@@ -4,11 +4,11 @@ try_spec do
 
   require './spec/fixtures/bookmark'
 
-  describe Ardm::PropertyFixtures::Bookmark do
+  describe Ardm::Fixtures::Bookmark do
     describe 'without URI' do
       before do
         @uri = nil
-        @resource = Ardm::PropertyFixtures::Bookmark.new(
+        @resource = Ardm::Fixtures::Bookmark.new(
           :title  => 'Check this out',
           :uri    => @uri,
           :shared => false,
@@ -19,7 +19,7 @@ try_spec do
       end
 
       it 'can be found by uri' do
-        Ardm::PropertyFixtures::Bookmark.where(:uri => @uri).first.should == @resource
+        Ardm::Fixtures::Bookmark.where(:uri => @uri).first.should == @resource
       end
 
       describe 'when reloaded' do
@@ -36,7 +36,7 @@ try_spec do
     describe 'with a blank URI' do
       before do
         @uri = ''
-        @resource = Ardm::PropertyFixtures::Bookmark.new(
+        @resource = Ardm::Fixtures::Bookmark.new(
           :title  => 'Check this out',
           :uri    => @uri,
           :shared => false,
@@ -47,7 +47,7 @@ try_spec do
       end
 
       it 'can be found by uri' do
-        Ardm::PropertyFixtures::Bookmark.where(:uri => @uri).first.should == @resource
+        Ardm::Fixtures::Bookmark.where(:uri => @uri).first.should == @resource
       end
 
       describe 'when reloaded' do
@@ -68,7 +68,7 @@ try_spec do
     describe 'with invalid URI' do
       before do
         @uri = 'this is def. not URI'
-        @resource = Ardm::PropertyFixtures::Bookmark.new(
+        @resource = Ardm::Fixtures::Bookmark.new(
           :title  => 'Check this out',
           :uri    => @uri,
           :shared => false,
@@ -107,7 +107,7 @@ try_spec do
     ].each do |uri|
       describe "with URI set to '#{uri}'" do
         before do
-          @resource = Ardm::PropertyFixtures::Bookmark.new(
+          @resource = Ardm::Fixtures::Bookmark.new(
             :title  => 'Check this out',
             :uri    => uri,
             :shared => false,
@@ -118,7 +118,7 @@ try_spec do
         end
 
         it 'can be found by uri' do
-          Ardm::PropertyFixtures::Bookmark.where(:uri => uri).first.should_not be_nil
+          Ardm::Fixtures::Bookmark.where(:uri => uri).first.should_not be_nil
         end
 
         describe 'when reloaded' do

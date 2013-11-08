@@ -1,6 +1,6 @@
 share_examples_for 'A semipublic Property' do
   module ::Blog
-    class Article < ActiveRecord::Base
+    class Article < Ardm::Record
       self.table_name = "articles"
       property :id, Serial
     end

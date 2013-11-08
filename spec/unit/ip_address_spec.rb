@@ -7,7 +7,7 @@ try_spec do
     before do
       @stored = '81.20.130.1'
       @input  = IPAddr.new(@stored)
-      @property = Ardm::PropertyFixtures::NetworkNode.properties[:ip_address]
+      @property = Ardm::Fixtures::NetworkNode.properties[:ip_address]
     end
 
     describe '.dump' do

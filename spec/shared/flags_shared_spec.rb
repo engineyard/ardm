@@ -6,7 +6,7 @@ share_examples_for "A property with flags" do
 
     @flags = [ :one, :two, :three ]
 
-    class ::User < ActiveRecord::Base
+    class ::User < Ardm::Record
     end
 
     @property = User.property :item, @property_klass[@flags], :key => true

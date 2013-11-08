@@ -1,6 +1,6 @@
 module Ardm
-  module PropertyFixtures
-    class APIUser < ActiveRecord::Base
+  module Fixtures
+    class APIUser < Ardm::Record
       self.table_name = "api_users"
 
       property :id, Serial

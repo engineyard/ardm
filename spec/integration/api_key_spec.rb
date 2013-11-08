@@ -3,7 +3,7 @@ require 'spec_helper'
 try_spec do
   require './spec/fixtures/api_user'
 
-  describe Ardm::PropertyFixtures::APIUser do
+  describe Ardm::Fixtures::APIUser do
     subject { described_class.new(:name => 'alice') }
 
     let(:original_api_key) { subject.api_key }

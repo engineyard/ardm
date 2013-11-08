@@ -6,7 +6,7 @@ end
 
 describe Ardm::Property::Lookup do
   before do
-    @klass = Class.new(ActiveRecord::Base) do
+    @klass = Class.new(Ardm::Record) do
       self.table_name = "articles"
     end
   end

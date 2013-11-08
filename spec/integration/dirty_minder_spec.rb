@@ -15,9 +15,9 @@ try_spec do
 
   require './spec/fixtures/person'
 
-  describe Ardm::PropertyFixtures::Person do
+  describe Ardm::Fixtures::Person do
     before :each do
-      @resource = Ardm::PropertyFixtures::Person.new(:name => 'Thomas Edison')
+      @resource = Ardm::Fixtures::Person.new(:name => 'Thomas Edison')
     end
 
     describe 'with positions indirectly mutated as a hash' do

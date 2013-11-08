@@ -5,7 +5,7 @@ share_examples_for 'A public Property' do
     end
 
     module ::Blog
-      class Article < ActiveRecord::Base
+      class Article < Ardm::Record
         self.table_name = "articles"
         property :id, Serial
       end

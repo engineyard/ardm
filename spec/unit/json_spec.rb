@@ -7,7 +7,7 @@ try_spec do
 
   describe Ardm::Property::Json do
     before do
-      @property = Ardm::PropertyFixtures::Person.properties[:positions]
+      @property = Ardm::Fixtures::Person.properties[:positions]
     end
 
     describe '.load' do
@@ -82,7 +82,7 @@ try_spec do
 
       describe 'when given instance of an Array' do
         before do
-          @input = %w[ ardm-property dm-more ]
+          @input = %w[ ardm dm-more ]
 
           @result = @property.typecast(@input)
         end

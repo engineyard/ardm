@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Ardm::Property, 'Object type' do
   before do
     module ::Blog
-      class Article < ActiveRecord::Base
+      class Article < Ardm::Record
         self.table_name = "articles"
         property :id,    Serial
         property :title, String

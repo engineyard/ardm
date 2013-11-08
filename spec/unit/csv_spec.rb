@@ -3,7 +3,7 @@ require 'spec_helper'
 try_spec do
   describe Ardm::Property::Csv do
     before do
-      class ::User < ActiveRecord::Base
+      class ::User < Ardm::Record
         property :id, Serial
         property :things, Csv
       end

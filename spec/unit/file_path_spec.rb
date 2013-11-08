@@ -4,7 +4,7 @@ require './spec/fixtures/software_package'
 try_spec do
   describe Ardm::Property::FilePath do
     before do
-      @property = Ardm::PropertyFixtures::SoftwarePackage.properties[:source_path]
+      @property = Ardm::Fixtures::SoftwarePackage.properties[:source_path]
     end
 
     before do

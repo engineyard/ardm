@@ -4,11 +4,11 @@ try_spec do
 
   require './spec/fixtures/software_package'
 
-  describe Ardm::PropertyFixtures::SoftwarePackage do
+  describe Ardm::Fixtures::SoftwarePackage do
     describe 'with source path at /var/cache/apt/archives/linux-libc-dev_2.6.28-11.40_i386.deb' do
       before do
         @source_path = '/var/cache/apt/archives/linux-libc-dev_2.6.28-11.40_i386.deb'
-        @resource    = Ardm::PropertyFixtures::SoftwarePackage.new(:source_path => @source_path)
+        @resource    = Ardm::Fixtures::SoftwarePackage.new(:source_path => @source_path)
       end
 
       describe 'when is a new record' do
@@ -48,7 +48,7 @@ try_spec do
     describe 'with destination path at /usr/local' do
       before do
         @destination_path = '/usr/local'
-        @resource         = Ardm::PropertyFixtures::SoftwarePackage.new(:destination_path => @destination_path)
+        @resource         = Ardm::Fixtures::SoftwarePackage.new(:destination_path => @destination_path)
       end
 
       describe 'when saved and reloaded' do
@@ -90,7 +90,7 @@ try_spec do
     describe 'with no (nil) source path' do
       before do
         @source_path = nil
-        @resource    = Ardm::PropertyFixtures::SoftwarePackage.new(:source_path => @source_path)
+        @resource    = Ardm::Fixtures::SoftwarePackage.new(:source_path => @source_path)
       end
 
       describe 'when saved and reloaded' do
@@ -108,7 +108,7 @@ try_spec do
     describe 'with a blank source path' do
       before do
         @source_path = ''
-        @resource    = Ardm::PropertyFixtures::SoftwarePackage.new(:source_path => @source_path)
+        @resource    = Ardm::Fixtures::SoftwarePackage.new(:source_path => @source_path)
       end
 
       describe 'when saved and reloaded' do
@@ -126,7 +126,7 @@ try_spec do
     describe 'with a source path assigned to an empty array' do
       before do
         @source_path = []
-        @resource    = Ardm::PropertyFixtures::SoftwarePackage.new(:source_path => @source_path)
+        @resource    = Ardm::Fixtures::SoftwarePackage.new(:source_path => @source_path)
       end
 
       describe 'when saved and reloaded' do
@@ -149,7 +149,7 @@ try_spec do
       describe 'when instantiated' do
         it 'raises an exception' do
           lambda do
-            Ardm::PropertyFixtures::SoftwarePackage.new(:source_path => @source_path)
+            Ardm::Fixtures::SoftwarePackage.new(:source_path => @source_path)
           end.should raise_error(TypeError)
         end
       end

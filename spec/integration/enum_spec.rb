@@ -4,10 +4,10 @@ try_spec do
 
   require './spec/fixtures/ticket'
 
-  describe Ardm::PropertyFixtures::Ticket do
+  describe Ardm::Fixtures::Ticket do
     describe 'that is dumped and then loaded' do
       before do
-        @resource = Ardm::PropertyFixtures::Ticket.new(
+        @resource = Ardm::Fixtures::Ticket.new(
           :title  => "Can't order by aggregated fields",
           :id     => 789,
           :body   => "I'm trying to use the aggregate method and sort the results by a summed field, but it doesn't work.",
@@ -25,7 +25,7 @@ try_spec do
 
     describe 'that is supplied a matching enumeration value' do
       before do
-        @resource = Ardm::PropertyFixtures::Ticket.new(:status => :assigned)
+        @resource = Ardm::Fixtures::Ticket.new(:status => :assigned)
       end
 
       it 'typecasts it for outside reader' do
@@ -35,7 +35,7 @@ try_spec do
 
     describe '#get' do
       before do
-        @resource = Ardm::PropertyFixtures::Ticket.new(
+        @resource = Ardm::Fixtures::Ticket.new(
           :title  => '"sudo make install" of drizzle fails because it tries to chown mysql',
           :id     => 257497,
           :body   => "Note that at the very least, there should be a check to see whether or not the user is created before chown'ing a file to the user.",
@@ -45,19 +45,19 @@ try_spec do
       end
 
       it 'supports queries with equality operator on enumeration property' do
-        Ardm::PropertyFixtures::Ticket.where(:status => :confirmed).
+        Ardm::Fixtures::Ticket.where(:status => :confirmed).
           should include(@resource)
       end
 
       it 'supports queries with inequality operator on enumeration property' do
-        Ardm::PropertyFixtures::Ticket.where.not(:status => :confirmed).
+        Ardm::Fixtures::Ticket.where.not(:status => :confirmed).
           should_not include(@resource)
       end
     end
 
     describe 'with value unknown to enumeration property' do
       before do
-        @resource = Ardm::PropertyFixtures::Ticket.new(:status => :undecided)
+        @resource = Ardm::Fixtures::Ticket.new(:status => :undecided)
         @resource.valid?
       end
 

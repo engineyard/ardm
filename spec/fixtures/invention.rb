@@ -1,5 +1,5 @@
 module Ardm
-  module PropertyFixtures
+  module Fixtures
     Invention = Struct.new(:name)
   end
 end

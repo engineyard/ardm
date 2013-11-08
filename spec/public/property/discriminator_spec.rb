@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 module ::DiscBlog
-  class Content < ActiveRecord::Base
+  class Content < Ardm::Record
     self.table_name = "articles"
 
     property :id,    Serial
@@ -42,7 +42,7 @@ describe Ardm::Property::Discriminator do
       end
 
       it 'should return a Resource' do
-        @resource.should be_kind_of(ActiveRecord::Base)
+        @resource.should be_kind_of(Ardm::Record)
       end
 
       it 'should be an descendant instance' do
@@ -56,7 +56,7 @@ describe Ardm::Property::Discriminator do
       end
 
       it 'should return a Resource' do
-        @resource.should be_kind_of(ActiveRecord::Base)
+        @resource.should be_kind_of(Ardm::Record)
       end
 
       it 'should be an descendant instance' do
@@ -70,7 +70,7 @@ describe Ardm::Property::Discriminator do
       end
 
       it 'should return a Resource' do
-        @resource.should be_kind_of(ActiveRecord::Base)
+        @resource.should be_kind_of(Ardm::Record)
       end
 
       it 'should be a base model instance' do

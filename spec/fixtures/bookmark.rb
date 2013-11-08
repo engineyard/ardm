@@ -1,6 +1,6 @@
 module Ardm
-  module PropertyFixtures
-    class Bookmark < ActiveRecord::Base
+  module Fixtures
+    class Bookmark < Ardm::Record
       self.table_name = "bookmarks"
 
       property :id, Serial
