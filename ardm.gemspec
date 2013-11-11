@@ -7,6 +7,7 @@ Gem::Specification.new do |gem|
   gem.summary       = "ActiveRecord plugin to provide a smooth migration from DataMapper to ActiveRecord"
   gem.description   = gem.summary
   gem.homepage      = "http://github.com/engineyard/ardm"
+  gem.license       = "MIT"
 
   gem.files         = `git ls-files`.split("\n")
   gem.test_files    = `git ls-files -- {spec}/*`.split("\n")
