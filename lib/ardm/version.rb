@@ -1,5 +1,3 @@
 module Ardm
-  class Property
-    VERSION = '1.3.0.beta'
-  end
+  VERSION = '0.0.1'
 end

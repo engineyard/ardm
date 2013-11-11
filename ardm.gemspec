@@ -4,7 +4,7 @@ require File.expand_path('../lib/ardm/version', __FILE__)
 Gem::Specification.new do |gem|
   gem.authors       = [ 'Martin Emde', 'Dan Kubb' ]
   gem.email         = [ "me@martinemde.com" ]
-  gem.summary       = "ActiveRecord plugin to provide a smooth migration from Ardm to ActiveRecord"
+  gem.summary       = "ActiveRecord plugin to provide a smooth migration from DataMapper to ActiveRecord"
   gem.description   = gem.summary
   gem.homepage      = "http://github.com/engineyard/ardm"
 
@@ -14,7 +14,7 @@ Gem::Specification.new do |gem|
 
   gem.name          = "ardm"
   gem.require_paths = [ "lib" ]
-  gem.version       = Ardm::Property::VERSION
+  gem.version       = Ardm::VERSION
 
   gem.add_runtime_dependency('activesupport', '>= 3.2')
   gem.add_runtime_dependency('bcrypt-ruby',   '~> 3.0.0')
