@@ -57,8 +57,15 @@ that are not accounted for.
 
 ## Usage
 
-  require 'ardm'
+    require 'ardm'
 
+
+## Conversions
+
+Things that access DataMapper directly can be replaced with Ardm invocations:
+
+    DataMapper.finalize    =>  Ardm::Record.finalize
+    DataMapper.repository  =>  Ardm::Record.repository
 
 
 ## Copyright
