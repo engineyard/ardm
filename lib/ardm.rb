@@ -1,4 +1,3 @@
-puts __FILE__
 module Ardm
   # Check which ORM is loaded in Ardm.
   #

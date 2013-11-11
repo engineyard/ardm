@@ -1,4 +1,3 @@
-puts __FILE__
 require 'ardm'
 
 # only load support libs in active record mode (dm will supply its own libs)
