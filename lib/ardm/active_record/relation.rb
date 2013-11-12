@@ -1,5 +1,4 @@
 require 'active_support/concern'
-require 'active_record'
 
 module Ardm
   module ActiveRecord
@@ -15,7 +14,8 @@ module Ardm
           def update(*a)
             if a.size == 1
               # need to translate attributes
-              options = @klass.send(:dump_properties_hash, a.first)
+              options = @klass.dump_properties_hash(a.first)
+              options = @klass.dump_associations_hash(options)
               update_all(options)
             else
               update_without_ardm(*a)
@@ -48,12 +48,41 @@ module Ardm
         apply_finder_options(options)
       end
 
+      #def apply_finder_options(options)
+      #  return super if options.nil? || options.empty?
+      #  options = options.dup
+      #  conditions = options.slice!(*::ActiveRecord::SpawnMethods::VALID_FIND_OPTIONS)
+      #  super(options).where(conditions)
+      #end
+
+      VALID_FIND_OPTIONS = [ :conditions, :include, :joins, :limit, :offset, :extend,
+        :order, :select, :readonly, :group, :having, :from, :lock ]
+
+      # We used to just patch this, like above, but we need to copy it over
+      # completely for rails4 since it no longer supports the old style finder
+      # methods that act more like the datamapper finders.
       def apply_finder_options(options)
-        return super if options.nil? || options.empty?
-        options = options.dup
-        conditions = options.slice!(*::ActiveRecord::SpawnMethods::VALID_FIND_OPTIONS)
-        super(options).where(conditions)
+        relation = clone
+        return relation if options.nil?
+
+        finders = options.dup
+        finders[:select] = finders.delete(:fields)
+        conditions = finders.slice!(*VALID_FIND_OPTIONS)
+
+        finders.delete_if { |key, value| value.nil? && key != :limit }
+
+        ([:joins, :select, :group, :order, :having, :limit, :offset, :from, :lock, :readonly] & finders.keys).each do |finder|
+          relation = relation.send(finder, finders[finder])
+        end
+
+        relation = relation.where(conditions)           if conditions.any?
+        relation = relation.where(finders[:conditions]) if options.has_key?(:conditions)
+        relation = relation.includes(finders[:include]) if options.has_key?(:include)
+        relation = relation.extending(finders[:extend]) if options.has_key?(:extend)
+
+        relation
       end
+
 
       def calculate(operation, column_name, options={})
         if property = properties[column_name]

@@ -7,12 +7,14 @@
 
   create_table :articles, :force => true do |t|
     t.string   :title
+    t.string   :author
     t.text     :body
     t.timestamps
     t.datetime :published_at
     t.boolean  :deleted
     t.datetime :deleted_at
     t.string   :slug
+    t.integer  :original_id
   end
 
   create_table :bookmarks, :force => true do |t|

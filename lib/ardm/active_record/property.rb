@@ -141,6 +141,13 @@ module Ardm
           end
         end
 
+        def assert_valid_attributes(options)
+          options.each do |key, value|
+            property = properties[key]
+            property.assert_valid_value(value)
+          end
+        end
+
         # Gets the list of key fields for this Model
         #
         # @return [Array]

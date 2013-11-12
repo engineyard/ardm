@@ -24,7 +24,8 @@ module Ardm
         attr_accessible property.name
         attr_accessible property.field
         rescue => e
-          puts "WARNING: Error silenced. FIXME before release.\n#{e}"
+          puts "WARNING: Error silenced. FIXME before release.\n#{e}" unless $attr_accessible_warning
+          $attr_accessible_warning = true
         end
         property
       end
@@ -33,12 +34,34 @@ module Ardm
       def self.timestamps(*a)
       end
 
+      def self.update(*a)
+        options = dump_properties_hash(a.first)
+        options = dump_associations_hash(options)
+        assert_valid_attributes(options)
+        update_all(options) != 0
+      end
+
+      def self.update!(*a)
+        options = dump_properties_hash(a.first)
+        options = dump_associations_hash(options)
+        assert_valid_attributes(options)
+        update_all(options) != 0
+      end
+
+      def self.destroy!(*a)
+        delete_all
+      end
+
       def key
         id
       end
 
       def new?
         new_record?
+      end
+
+      def saved?
+        !new_record?
       end
 
       def save_self(*)
