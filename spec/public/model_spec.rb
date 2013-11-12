@@ -1,6 +1,13 @@
 require 'spec_helper'
 
 module ::ModelBlog
+  class ArticlePublication < Ardm::Record
+    self.table_name = "article_publications"
+
+    belongs_to :acticle,     model: 'ModelBlog::Article'
+    belongs_to :publication, model: 'ModelBlog::Publication'
+  end
+
   class Article < Ardm::Record
     self.table_name = "articles"
 
@@ -11,7 +18,8 @@ module ::ModelBlog
     belongs_to :original, self, :required => false
     has n, :revisions, self, :child_key => [ :original_id ]
     has 1, :previous,  self, :child_key => [ :original_id ], :order => [ :id.desc ]
-    #has n, :publications, :through => Resource
+    has n, :article_publications, model: ArticlePublication
+    has n, :publications, :through => :article_publications
   end
 
   class Publication < Ardm::Record
@@ -20,13 +28,12 @@ module ::ModelBlog
     property :id,   Serial
     property :name, String
 
-    #has n, :articles, :through => Resource
+    has n, :article_publications, model: ArticlePublication
+    has n, :acticles, :through => :article_publications
   end
 end
 
 describe 'Ardm::Record' do
-  #extend DataMapper::Spec::CollectionHelpers::GroupMethods
-
   before do
     @article_model     = ModelBlog::Article
     @publication_model = ModelBlog::Publication
@@ -179,5 +186,6 @@ describe 'Ardm::Record' do
     end
   end
 
+  # FIXME: these are very broken right now
   #it_should_behave_like 'Finder Interface'
 end

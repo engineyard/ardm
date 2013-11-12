@@ -7,12 +7,12 @@ share_examples_for 'Finder Interface' do
   end
 
   before do
-    @no_join = defined?(DataMapper::Adapters::InMemoryAdapter) && @adapter.kind_of?(DataMapper::Adapters::InMemoryAdapter) ||
-               defined?(DataMapper::Adapters::YamlAdapter)     && @adapter.kind_of?(DataMapper::Adapters::YamlAdapter)
+    @no_join = defined?(Ardm::Adapters::InMemoryAdapter) && @adapter.kind_of?(Ardm::Adapters::InMemoryAdapter) ||
+               defined?(Ardm::Adapters::YamlAdapter)     && @adapter.kind_of?(Ardm::Adapters::YamlAdapter)
 
-    @do_adapter = defined?(DataMapper::Adapters::DataObjectsAdapter) && @adapter.kind_of?(DataMapper::Adapters::DataObjectsAdapter)
+    @do_adapter = defined?(Ardm::Adapters::DataObjectsAdapter) && @adapter.kind_of?(Ardm::Adapters::DataObjectsAdapter)
 
-    @many_to_many = @articles.kind_of?(DataMapper::Associations::ManyToMany::Collection)
+    #@many_to_many = @articles.kind_of?(Ardm::Associations::ManyToMany::Collection)
 
     @skip = @no_join && @many_to_many
   end
@@ -30,7 +30,7 @@ share_examples_for 'Finder Interface' do
 
     describe "##{method}" do
       before do
-        1.upto(10) { |number| @articles.create(:content => "Article #{number}") }
+        1.upto(10) { |number| @articles.create(:body => "Article #{number}") }
         @copy = @articles.kind_of?(Class) ? @articles : @articles.dup
       end
 
@@ -42,7 +42,7 @@ share_examples_for 'Finder Interface' do
         end
 
         it 'should return a Resource' do
-          @return.should be_kind_of(DataMapper::Resource)
+          @return.should be_kind_of(Ardm::Record)
         end
 
         it 'should return expected Resource' do
@@ -56,7 +56,7 @@ share_examples_for 'Finder Interface' do
         end
 
         it 'should return a Collection' do
-          @return.should be_kind_of(DataMapper::Collection)
+          @return.should be_kind_of(Ardm::Collection)
         end
 
         it 'should return the expected Resource' do
@@ -74,7 +74,7 @@ share_examples_for 'Finder Interface' do
         end
 
         it 'should return a Collection' do
-          @return.should be_kind_of(DataMapper::Collection)
+          @return.should be_kind_of(Ardm::Collection)
         end
 
         it 'should return the expected Resources' do
@@ -94,7 +94,7 @@ share_examples_for 'Finder Interface' do
         end
 
         it 'should return a Resource' do
-          @return.should be_kind_of(DataMapper::Resource)
+          @return.should be_kind_of(Ardm::Record)
         end
 
         it 'should return expected Resource' do
@@ -108,7 +108,7 @@ share_examples_for 'Finder Interface' do
         end
 
         it 'should return a Collection' do
-          @return.should be_kind_of(DataMapper::Collection)
+          @return.should be_kind_of(Ardm::Collection)
         end
 
         it 'should return the expected Resources' do
@@ -126,7 +126,7 @@ share_examples_for 'Finder Interface' do
         end
 
         it 'should return a Collection' do
-          @return.should be_kind_of(DataMapper::Collection)
+          @return.should be_kind_of(Ardm::Collection)
         end
 
         it 'should return the expected Resources' do
@@ -144,7 +144,7 @@ share_examples_for 'Finder Interface' do
         end
 
         it 'should return a Collection' do
-          @return.should be_kind_of(DataMapper::Collection)
+          @return.should be_kind_of(Ardm::Collection)
         end
 
         it 'should return the expected value' do
@@ -174,7 +174,7 @@ share_examples_for 'Finder Interface' do
         end
 
         it 'should return a Collection' do
-          @return.should be_kind_of(DataMapper::Collection)
+          @return.should be_kind_of(Ardm::Collection)
         end
 
         it 'should be empty' do
@@ -188,7 +188,7 @@ share_examples_for 'Finder Interface' do
         end
 
         it 'should return a Collection' do
-          @return.should be_kind_of(DataMapper::Collection)
+          @return.should be_kind_of(Ardm::Collection)
         end
 
         it 'should be empty' do
@@ -209,7 +209,7 @@ share_examples_for 'Finder Interface' do
       end
 
       it 'should return a Collection' do
-        @return.should be_kind_of(DataMapper::Collection)
+        @return.should be_kind_of(Ardm::Collection)
       end
 
       it 'should return a new instance' do
@@ -235,14 +235,14 @@ share_examples_for 'Finder Interface' do
 
     describe 'with a query' do
       before do
-        @new  = @articles.create(:content => 'New Article')
+        @new  = @articles.create(:body => 'New Article')
         @copy = @articles.kind_of?(Class) ? @articles : @articles.dup
 
-        @return = @articles.all(:content => [ 'New Article' ])
+        @return = @articles.all(:body => [ 'New Article' ])
       end
 
       it 'should return a Collection' do
-        @return.should be_kind_of(DataMapper::Collection)
+        @return.should be_kind_of(Ardm::Collection)
       end
 
       it 'should return a new instance' do
@@ -258,13 +258,13 @@ share_examples_for 'Finder Interface' do
       end
 
       it 'should scope the Collection' do
-        @return.reload.should == @copy.entries.select { |resource| resource.content == 'New Article' }
+        @return.reload.should == @copy.entries.select { |resource| resource.body == 'New Article' }
       end
     end
 
     describe 'with a query using raw conditions' do
       before do
-        pending unless defined?(DataMapper::Adapters::DataObjectsAdapter) && @adapter.kind_of?(DataMapper::Adapters::DataObjectsAdapter)
+        pending unless defined?(Ardm::Adapters::DataObjectsAdapter) && @adapter.kind_of?(Ardm::Adapters::DataObjectsAdapter)
       end
 
       before do
@@ -275,7 +275,7 @@ share_examples_for 'Finder Interface' do
       end
 
       it 'should return a Collection' do
-        @return.should be_kind_of(DataMapper::Collection)
+        @return.should be_kind_of(Ardm::Collection)
       end
 
       it 'should return a new instance' do
@@ -310,7 +310,7 @@ share_examples_for 'Finder Interface' do
         end
 
         it 'should return a Collection' do
-          @return.should be_kind_of(DataMapper::Collection)
+          @return.should be_kind_of(Ardm::Collection)
         end
 
         it 'should be expected Resources' do
@@ -328,7 +328,7 @@ share_examples_for 'Finder Interface' do
         end
 
         it 'should return a Collection' do
-          @return.should be_kind_of(DataMapper::Collection)
+          @return.should be_kind_of(Ardm::Collection)
         end
 
         it 'should be expected Resources' do
@@ -350,7 +350,7 @@ share_examples_for 'Finder Interface' do
         end
 
         it 'should return a Collection' do
-          @return.should be_kind_of(DataMapper::Collection)
+          @return.should be_kind_of(Ardm::Collection)
         end
 
         it 'should be expected Resources' do
@@ -369,7 +369,7 @@ share_examples_for 'Finder Interface' do
         end
 
         it 'should return a Collection' do
-          @return.should be_kind_of(DataMapper::Collection)
+          @return.should be_kind_of(Ardm::Collection)
         end
 
         it 'should be an empty Collection' do
@@ -387,7 +387,7 @@ share_examples_for 'Finder Interface' do
         end
 
         it 'should return a Collection' do
-          @return.should be_kind_of(DataMapper::Collection)
+          @return.should be_kind_of(Ardm::Collection)
         end
 
         if respond_to?(:model?) && model?
@@ -405,7 +405,7 @@ share_examples_for 'Finder Interface' do
         end
 
         it 'should be equivalent to negated collection query' do
-          pending_if 'Update RDBMS to match ruby behavior', @do_adapter && @articles.kind_of?(DataMapper::Model) do
+          pending_if 'Update RDBMS to match ruby behavior', @do_adapter && @articles.kind_of?(Ardm::Record) do
             # NOTE: the second query will not match any articles where original_id
             # is nil, while the in-memory/yaml adapters will.  RDBMS will explicitly
             # filter out NULL matches because we are matching on a non-NULL value,
@@ -421,7 +421,7 @@ share_examples_for 'Finder Interface' do
         end
 
         it 'should return a Collection' do
-          @return.should be_kind_of(DataMapper::Collection)
+          @return.should be_kind_of(Ardm::Collection)
         end
 
         it 'should be expected Resources' do
@@ -440,7 +440,7 @@ share_examples_for 'Finder Interface' do
 
     describe 'with a query using a 1:1 relationship' do
       before do
-        @new = @articles.create(:content => 'New Article', :original => @article)
+        @new = @articles.create(:body => 'New Article', :original => @article)
       end
 
       describe 'with a Hash' do
@@ -449,7 +449,7 @@ share_examples_for 'Finder Interface' do
         end
 
         it 'should return a Collection' do
-          @return.should be_kind_of(DataMapper::Collection)
+          @return.should be_kind_of(Ardm::Collection)
         end
 
         it 'should be expected Resources' do
@@ -467,7 +467,7 @@ share_examples_for 'Finder Interface' do
         end
 
         it 'should return a Collection' do
-          @return.should be_kind_of(DataMapper::Collection)
+          @return.should be_kind_of(Ardm::Collection)
         end
 
         it 'should be expected Resources' do
@@ -489,7 +489,7 @@ share_examples_for 'Finder Interface' do
         end
 
         it 'should return a Collection' do
-          @return.should be_kind_of(DataMapper::Collection)
+          @return.should be_kind_of(Ardm::Collection)
         end
 
         it 'should be expected Resources' do
@@ -507,7 +507,7 @@ share_examples_for 'Finder Interface' do
         end
 
         it 'should return a Collection' do
-          @return.should be_kind_of(DataMapper::Collection)
+          @return.should be_kind_of(Ardm::Collection)
         end
 
         it 'should be an empty Collection' do
@@ -525,7 +525,7 @@ share_examples_for 'Finder Interface' do
         end
 
         it 'should return a Collection' do
-          @return.should be_kind_of(DataMapper::Collection)
+          @return.should be_kind_of(Ardm::Collection)
         end
 
         if respond_to?(:model?) && model?
@@ -553,7 +553,7 @@ share_examples_for 'Finder Interface' do
         end
 
         it 'should return a Collection' do
-          @return.should be_kind_of(DataMapper::Collection)
+          @return.should be_kind_of(Ardm::Collection)
         end
 
         if respond_to?(:model?) && model?
@@ -578,7 +578,7 @@ share_examples_for 'Finder Interface' do
 
     describe 'with a query using a 1:m relationship' do
       before do
-        @new = @articles.create(:content => 'New Article', :original => @article)
+        @new = @articles.create(:body => 'New Article', :original => @article)
       end
 
       describe 'with a Hash' do
@@ -587,7 +587,7 @@ share_examples_for 'Finder Interface' do
         end
 
         it 'should return a Collection' do
-          @return.should be_kind_of(DataMapper::Collection)
+          @return.should be_kind_of(Ardm::Collection)
         end
 
         it 'should be expected Resources' do
@@ -605,7 +605,7 @@ share_examples_for 'Finder Interface' do
         end
 
         it 'should return a Collection' do
-          @return.should be_kind_of(DataMapper::Collection)
+          @return.should be_kind_of(Ardm::Collection)
         end
 
         it 'should be expected Resources' do
@@ -627,7 +627,7 @@ share_examples_for 'Finder Interface' do
         end
 
         it 'should return a Collection' do
-          @return.should be_kind_of(DataMapper::Collection)
+          @return.should be_kind_of(Ardm::Collection)
         end
 
         it 'should be expected Resources' do
@@ -645,7 +645,7 @@ share_examples_for 'Finder Interface' do
         end
 
         it 'should return a Collection' do
-          @return.should be_kind_of(DataMapper::Collection)
+          @return.should be_kind_of(Ardm::Collection)
         end
 
         it 'should be an empty Collection' do
@@ -663,7 +663,7 @@ share_examples_for 'Finder Interface' do
         end
 
         it 'should return a Collection' do
-          @return.should be_kind_of(DataMapper::Collection)
+          @return.should be_kind_of(Ardm::Collection)
         end
 
         if respond_to?(:model?) && model?
@@ -691,7 +691,7 @@ share_examples_for 'Finder Interface' do
         end
 
         it 'should return a Collection' do
-          @return.should be_kind_of(DataMapper::Collection)
+          @return.should be_kind_of(Ardm::Collection)
         end
 
         if respond_to?(:model?) && model?
@@ -716,7 +716,7 @@ share_examples_for 'Finder Interface' do
 
     describe 'with a query using a m:m relationship' do
       before do
-        @publication = @article.publications.create(:name => 'DataMapper Now')
+        @publication = @article.publications.create(:name => 'Ardm Now')
       end
 
       describe 'with a Hash' do
@@ -725,7 +725,7 @@ share_examples_for 'Finder Interface' do
         end
 
         it 'should return a Collection' do
-          @return.should be_kind_of(DataMapper::Collection)
+          @return.should be_kind_of(Ardm::Collection)
         end
 
         it 'should be expected Resources' do
@@ -745,7 +745,7 @@ share_examples_for 'Finder Interface' do
         end
 
         it 'should return a Collection' do
-          @return.should be_kind_of(DataMapper::Collection)
+          @return.should be_kind_of(Ardm::Collection)
         end
 
         it 'should be expected Resources' do
@@ -769,7 +769,7 @@ share_examples_for 'Finder Interface' do
         end
 
         it 'should return a Collection' do
-          @return.should be_kind_of(DataMapper::Collection)
+          @return.should be_kind_of(Ardm::Collection)
         end
 
         it 'should be expected Resources' do
@@ -789,7 +789,7 @@ share_examples_for 'Finder Interface' do
         end
 
         it 'should return a Collection' do
-          @return.should be_kind_of(DataMapper::Collection)
+          @return.should be_kind_of(Ardm::Collection)
         end
 
         it 'should be an empty Collection' do
@@ -807,7 +807,7 @@ share_examples_for 'Finder Interface' do
         end
 
         it 'should return a Collection' do
-          @return.should be_kind_of(DataMapper::Collection)
+          @return.should be_kind_of(Ardm::Collection)
         end
 
         it 'should be empty' do
@@ -831,7 +831,7 @@ share_examples_for 'Finder Interface' do
         end
 
         it 'should return a Collection' do
-          @return.should be_kind_of(DataMapper::Collection)
+          @return.should be_kind_of(Ardm::Collection)
         end
 
         it 'should be expected Resources' do
@@ -865,7 +865,7 @@ share_examples_for 'Finder Interface' do
       end
 
       it 'should return a Resource' do
-        @return.should be_kind_of(DataMapper::Resource)
+        @return.should be_kind_of(Ardm::Record)
       end
 
       it 'should return expected Resource' do
@@ -879,7 +879,7 @@ share_examples_for 'Finder Interface' do
       end
 
       it 'should return a Resource' do
-        @return.should be_kind_of(DataMapper::Resource)
+        @return.should be_kind_of(Ardm::Record)
       end
 
       it 'should return expected Resource' do
@@ -961,14 +961,14 @@ share_examples_for 'Finder Interface' do
     describe 'with a belongs_to relationship method' do
       before do
         rescue_if 'Model#method_missing should delegate to relationships', @articles.kind_of?(Class) do
-          @articles.create(:content => 'Another Article', :original => @original)
+          @articles.create(:body => 'Another Article', :original => @original)
 
           @return = @collection = @articles.originals
         end
       end
 
       it 'should return a Collection' do
-        @return.should be_kind_of(DataMapper::Collection)
+        @return.should be_kind_of(Ardm::Collection)
       end
 
       it 'should return expected Collection' do
@@ -998,7 +998,7 @@ share_examples_for 'Finder Interface' do
         end
 
         it 'should return a Collection' do
-          @return.should be_kind_of(DataMapper::Collection)
+          @return.should be_kind_of(Ardm::Collection)
         end
 
         it 'should return expected Collection' do
@@ -1017,7 +1017,7 @@ share_examples_for 'Finder Interface' do
         end
 
         it 'should return a Collection' do
-          @return.should be_kind_of(DataMapper::Collection)
+          @return.should be_kind_of(Ardm::Collection)
         end
 
         it 'should return expected Collection' do
@@ -1025,7 +1025,7 @@ share_examples_for 'Finder Interface' do
           @return.should == [ @new, @other ]
         end
 
-        { :id => true, :title => false, :content => false }.each do |attribute, expected|
+        { :id => true, :title => false, :body => false }.each do |attribute, expected|
           it "should have query field #{attribute.inspect} #{'not' unless expected} loaded".squeeze(' ') do
             @return.each { |resource| resource.attribute_loaded?(attribute).should == expected }
           end
@@ -1056,7 +1056,7 @@ share_examples_for 'Finder Interface' do
         end
 
         it 'should return a Collection' do
-          @return.should be_kind_of(DataMapper::Collection)
+          @return.should be_kind_of(Ardm::Collection)
         end
 
         it 'should return expected Collection' do
@@ -1074,14 +1074,14 @@ share_examples_for 'Finder Interface' do
         end
 
         it 'should return a Collection' do
-          @return.should be_kind_of(DataMapper::Collection)
+          @return.should be_kind_of(Ardm::Collection)
         end
 
         it 'should return expected Collection' do
           @collection.should == [ @other, @new ]
         end
 
-        { :id => true, :title => false, :content => false }.each do |attribute, expected|
+        { :id => true, :title => false, :body => false }.each do |attribute, expected|
           it "should have query field #{attribute.inspect} #{'not' unless expected} loaded".squeeze(' ') do
             @collection.each { |resource| resource.attribute_loaded?(attribute).should == expected }
           end
@@ -1098,7 +1098,7 @@ share_examples_for 'Finder Interface' do
         @new = @articles.create
 
         @publication1 = @article.publications.create(:name => 'Ruby Today')
-        @publication2 = @new.publications.create(:name => 'Inside DataMapper')
+        @publication2 = @new.publications.create(:name => 'Inside Ardm')
       end
 
       describe 'with no arguments' do
@@ -1107,7 +1107,7 @@ share_examples_for 'Finder Interface' do
         end
 
         it 'should return a Collection' do
-          @return.should be_kind_of(DataMapper::Collection)
+          @return.should be_kind_of(Ardm::Collection)
         end
 
         it 'should return expected Collection' do
@@ -1129,7 +1129,7 @@ share_examples_for 'Finder Interface' do
         end
 
         it 'should return a Collection' do
-          @return.should be_kind_of(DataMapper::Collection)
+          @return.should be_kind_of(Ardm::Collection)
         end
 
         it 'should return expected Collection' do

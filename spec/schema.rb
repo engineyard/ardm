@@ -17,6 +17,11 @@
     t.integer  :original_id
   end
 
+  create_table :article_publications, :force => true do |t|
+    t.integer  :article_id
+    t.integer  :publication_id
+  end
+
   create_table :bookmarks, :force => true do |t|
     t.string     :title
     t.boolean    :shared

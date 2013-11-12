@@ -1,4 +1,5 @@
 require 'active_support/concern'
+require 'ardm/active_record/collection'
 
 module Ardm
   module ActiveRecord
