@@ -287,19 +287,21 @@ module Ardm
 
       # This not the same as read_attribute in AR
       def attribute_get(name)
-        property = self.class.properties[name]
-        val = read_attribute property.field
-        if new_record? && val.nil? && property.default?
-          write_attribute property.field, property.typecast(property.default_for(self))
+        if property = self.class.properties[name]
+          val = read_attribute property.field
+          if new_record? && val.nil? && property.default?
+            write_attribute property.field, property.typecast(property.default_for(self))
+          end
+          read_attribute property.field
         end
-        read_attribute property.field
       end
 
       # This not the same as write_attribute in AR
       def attribute_set(name, value)
-        property = self.class.properties[name]
-        write_attribute property.field, property.typecast(value)
-        read_attribute property.field
+        if property = self.class.properties[name]
+          write_attribute property.field, property.typecast(value)
+          read_attribute property.field
+        end
       end
 
       # Retrieve the key(s) for this resource.

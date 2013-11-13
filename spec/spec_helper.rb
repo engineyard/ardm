@@ -38,6 +38,14 @@ RSpec.configure do |config|
   config.after(:each) do
     DatabaseCleaner.clean
   end
+
+  def reset_raise_on_save_failure(object)
+    object.instance_eval do
+      if defined?(@raise_on_save_failure)
+        remove_instance_variable(:@raise_on_save_failure)
+      end
+    end
+  end
 end
 
 DEPENDENCIES = {

@@ -31,6 +31,8 @@ require 'ardm/active_record/relation'
 
 module Ardm
   Record = Ardm::ActiveRecord::Record
+  SaveFailure = ::ActiveRecord::RecordNotSaved
+  RecordNotFound = ::ActiveRecord::RecordNotFound
 end
 
 #::ActiveRecord::Base.class_eval do

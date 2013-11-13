@@ -9,6 +9,9 @@ module Ardm
 
       self.abstract_class = true
 
+      class_attribute :raise_on_save_failure
+      self.raise_on_save_failure = false
+
       JSON = Json
 
       def self.finalize
@@ -66,6 +69,10 @@ module Ardm
 
       def save_self(*)
         save
+      end
+
+      def save
+        super || (raise_on_save_failure && raise(Ardm::SaveFailure, "Save Failed"))
       end
 
       def update(*a)

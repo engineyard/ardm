@@ -29,6 +29,12 @@
     t.text       :tags
   end
 
+  create_table :comments, :force => true do |t|
+    t.text     :body
+    t.integer  :user_id
+    t.timestamps
+  end
+
   create_table :images, :force => true, :id => false do |t|
     t.string   :md5hash, :length => 32
     t.index    :md5hash, :unique => true
@@ -44,6 +50,12 @@
     t.string     :ip_address
     t.integer    :cidr_subnet_bits
     t.string     :node_uuid
+  end
+
+  create_table :paragraphs, :force => true do |t|
+    t.string   :text
+    t.integer  :article_id
+    t.timestamps
   end
 
   create_table :people, :force => true do |t|
@@ -89,5 +101,15 @@
     t.text     :picture
     t.text     :color
     t.text     :size
+  end
+
+  create_table :users, :force => true, :id => false, :primary_key => :name do |t|
+    t.string  :name
+    t.integer :age
+    t.text    :summary
+    t.text    :description
+    t.boolean :admin
+    t.integer :parent_id
+    t.integer :referrer_id
   end
 end

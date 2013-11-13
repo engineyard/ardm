@@ -93,13 +93,12 @@ module Ardm
             # For polymorphic relationships, find the foreign key and type:
             # PriceEstimate.where(estimate_of: treasure)
             if klass && reflection = klass.reflect_on_association(column.to_sym)
-              column = reflection.foreign_key
               if value.is_a?(Base) && reflection.respond_to?(:polymorphic?) && reflection.polymorphic?
                 queries << build(table[reflection.foreign_type], value.class.base_class)
               end
-            end
 
-            #puts "expand(#{klass.name}, #{column.inspect}, #{value.inspect})"
+              column = reflection.foreign_key
+            end
 
             queries << build(table[column], value)
             queries

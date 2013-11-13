@@ -52,7 +52,7 @@ module Ardm
         end
 
         def get(id)
-          all(id: id).first
+          where(id: id).first
         end
 
         def get!(id)
