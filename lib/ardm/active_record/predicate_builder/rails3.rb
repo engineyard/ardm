@@ -40,7 +40,9 @@ module Ardm
 
           def build_from_hash(klass, attributes, default_table)
             queries = []
-            klass = attributes.klass # HAX (this method is added to the attributes hash by expand_hash_conditions_for_aggregates
+            # HAX (this method is added to the attributes hash by expand_hash_conditions_for_aggregates
+            # Rails 3 calls build_form_hash with the first arg that is not the klass.
+            klass = attributes.klass
 
             attributes.each do |column, value|
               table = default_table

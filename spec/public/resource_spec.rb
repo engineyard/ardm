@@ -186,9 +186,11 @@ describe Ardm::Record do
   [ :update, :update! ].each do |method|
     describe 'with attributes where one is a foreign key' do
       before do
-        @dkubb = @user.referrer = @user_model.create(:name => 'dkubb', :age => 33)
+        @dkubb = @user_model.create(:name => 'dkubb', :age => 33)
+        @user.referrer = @dkubb
         @user.save
-        @user = @user_model.get!(@user.key)
+        binding.pry
+        @user = @user_model.get(@user.key)
         @user.referrer.should == @dkubb
 
         @solnic = @user_model.create(:name => 'solnic', :age => 28)

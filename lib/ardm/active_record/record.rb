@@ -55,10 +55,6 @@ module Ardm
         delete_all
       end
 
-      def key
-        id
-      end
-
       def new?
         new_record?
       end

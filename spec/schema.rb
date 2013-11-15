@@ -110,6 +110,6 @@
     t.text    :description
     t.boolean :admin
     t.integer :parent_id
-    t.integer :referrer_id
+    t.string  :referrer_id
   end
 end

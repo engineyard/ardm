@@ -52,10 +52,18 @@ module Ardm
         end
 
         def get(id)
-          where(id: id).first
+          if Array === id && id.size == 1
+            # Model#key returns an array
+            id = id.first
+          end
+          where(primary_key => id).first
         end
 
         def get!(id)
+          if Array === id && id.size == 1
+            # Model#key returns an array
+            id = id.first
+          end
           find(id)
         end
 
@@ -70,23 +78,6 @@ module Ardm
         def first_or_initialize(find_params)
           all(find_params).first_or_initialize
         end
-
-        #def first(args=nil)
-        #  if Hash === args
-        #    all(args).first
-        #  else
-        #    puts "#{self}.first(#{args.inspect})"
-        #    puts caller[0..1]
-        #    super(args)
-        #  end
-        #end
-
-        #def all(options={})
-        #  puts "#{self}.all(#{options.inspect})"
-        #  puts caller[0..1]
-        #  binding.pry if options[:account]
-        #  Ardm::Query.all(self, options)
-        #end
 
         #def exist?(options={})
         #  puts "#{self}.exist?(#{options.inspect})"
