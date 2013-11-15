@@ -72,7 +72,7 @@ module Ardm
       end
 
       def save
-        super || (raise_on_save_failure && raise(Ardm::SaveFailure, "Save Failed"))
+        super || (raise_on_save_failure && raise(Ardm::SaveFailureError, "Save Failed"))
       end
 
       def update(*a)

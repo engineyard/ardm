@@ -2,6 +2,6 @@ require 'ardm/data_mapper/record'
 
 module Ardm
   Record = Ardm::DataMapper::Record
-  SaveFailure = ::DataMapper::SaveFailure
+  SaveFailureError = ::DataMapper::SaveFailureError
   RecordNotFound = ::DataMapper::ObjectNotFoundError
 end
