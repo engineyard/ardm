@@ -1,5 +1,5 @@
-Code to adapt dm-types and dm-core properties to Active Record copyright (c) 2013 Martin Emde
-Code from dm-types and dm-core originally Copyright (c) 2011 Sam Smoot, Dan Kubb
+Adaptation of dm-core to run atop Active Record Copyright (c) 2013 Engine Yard
+dm-types and dm-core source code Copyright (c) 2011 Sam Smoot, Dan Kubb
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
