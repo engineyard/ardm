@@ -22,7 +22,7 @@ Ardm.data_mapper do
   raise "TODO: DataMapper setup."
 end
 
-Dir["#{Pathname(__FILE__).dirname.expand_path}/shared/*.rb"].each { |file| require file }
+Dir["#{Pathname(__FILE__).dirname.expand_path}/{shared,support}/*.rb"].each { |file| require file }
 
 RSpec.configure do |config|
   config.before(:suite) do

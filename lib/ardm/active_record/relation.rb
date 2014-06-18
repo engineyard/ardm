@@ -76,6 +76,18 @@ module Ardm
           relation = relation.send(finder, finders[finder])
         end
 
+        conditions.each do |key, value|
+          if assoc = relation.reflect_on_association(key)
+            conditions.delete(key)
+            case assoc.macro
+            when :belongs_to
+              id = value.is_a?(Hash) ? value.with_indifferent_access[:id] : value
+              relation = relation.where(assoc.foreign_key => id)
+            else raise("unknown: #{assoc}")
+            end
+          end
+        end
+
         relation = relation.where(conditions)           if conditions.any?
         relation = relation.where(finders[:conditions]) if options.has_key?(:conditions)
         relation = relation.includes(finders[:include]) if options.has_key?(:include)

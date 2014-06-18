@@ -69,12 +69,12 @@ module Ardm
         !new_record?
       end
 
-      def save_self(*)
-        save
+      def save_self(*args)
+        save(*args)
       end
 
-      def save
-        super || (raise_on_save_failure && raise(Ardm::SaveFailureError, "Save Failed"))
+      def save!(*args)
+        save(*args) || (raise_on_save_failure && raise(Ardm::SaveFailureError, "Save Failed"))
       end
 
       def update(*a)

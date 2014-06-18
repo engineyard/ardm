@@ -40,10 +40,6 @@ module Ardm
       end
 
       module ClassMethods
-        def relationships
-          @relationships ||={}
-        end
-
         def dump_associations_hash(options)
           options.inject({}) do |new_attrs, (key, value)|
             if reflection = reflect_on_association(key.to_sym)
@@ -80,7 +76,7 @@ module Ardm
           assoc = reflect_on_association(field)
           Ardm::ActiveRecord::Record.on_finalize << lambda do
             self.class_eval do
-              property assoc.foreign_key, assoc.klass.key.first.class
+              property assoc.foreign_key, assoc.klass.key.first.class, key: false
             end
           end
           nil

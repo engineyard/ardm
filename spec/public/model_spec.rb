@@ -18,7 +18,7 @@ module ::ModelBlog
     belongs_to :original, self, :required => false
     has n, :revisions, self, :child_key => [ :original_id ]
     has 1, :previous,  self, :child_key => [ :original_id ], :order => [ :id.desc ]
-    has n, :article_publications, model: ArticlePublication
+    has n, :article_publications, model: 'ArticlePublication'
     has n, :publications, :through => :article_publications
   end
 
@@ -48,6 +48,7 @@ describe 'Ardm::Record' do
 
     @original = @articles.create(:title => 'Original Article')
     @article  = @articles.create(:title => 'Sample Article', :body => 'Sample', :original => @original)
+    expect(@article.reload.original).to eq(@original)
     @other    = @articles.create(:title => 'Other Article',  :body => 'Other')
   end
 
@@ -188,8 +189,11 @@ describe 'Ardm::Record' do
     end
   end
 
-  # FIXME: these are very broken right now
-  #it_should_behave_like 'Finder Interface'
+  describe "finders" do
+    before(:each) { @articles = ModelBlog::Article.all }
+
+   include_examples 'Finder Interface'
+  end
 
   it 'Ardm::Record should respond to raise_on_save_failure' do
     Ardm::Record.should respond_to(:raise_on_save_failure)
