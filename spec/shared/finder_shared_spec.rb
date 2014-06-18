@@ -1,4 +1,4 @@
-share_examples_for 'Finder Interface' do
+shared_examples 'Finder Interface' do
   before do
     %w[ @article_model @article @other @articles ].each do |ivar|
       raise "+#{ivar}+ should be defined in before block" unless instance_variable_defined?(ivar)

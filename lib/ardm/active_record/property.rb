@@ -209,7 +209,7 @@ module Ardm
 
         def set_primary_key_for(property)
           if property.key? || property.serial?
-            self.primary_key = property.name
+            self.primary_key ||= property.name
           end
         end
 

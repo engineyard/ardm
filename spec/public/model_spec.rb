@@ -33,6 +33,8 @@ module ::ModelBlog
   end
 end
 
+Ardm::Record.finalize
+
 describe 'Ardm::Record' do
   before do
     @article_model     = ModelBlog::Article
@@ -138,7 +140,7 @@ describe 'Ardm::Record' do
       let(:model) { @article_model }
 
       it 'should remove all resources' do
-        method(:subject).should change { model.any? }.from(true).to(false)
+        expect { model.send(method) }.to change { model.any? }.from(true).to(false)
       end
     end
   end
@@ -203,47 +205,6 @@ describe 'Ardm::Record' do
     Ardm::Record.should respond_to(:raise_on_save_failure=)
   end
 
-  describe '.raise_on_save_failure=' do
-    before do
-      reset_raise_on_save_failure(Ardm::Record)
-    end
-
-    after do
-      # reset to the default value
-      reset_raise_on_save_failure(Ardm::Record)
-    end
-
-    subject { Ardm::Record.raise_on_save_failure = @value }
-
-    describe 'with a true value' do
-      before do
-        @value = true
-      end
-
-      it { should be(true) }
-
-      it 'should set raise_on_save_failure' do
-        method(:subject).should change {
-          Ardm::Record.raise_on_save_failure
-        }.from(false).to(true)
-      end
-    end
-
-    describe 'with a false value' do
-      before do
-        @value = false
-      end
-
-      it { should be(false) }
-
-      it 'should set raise_on_save_failure' do
-        method(:subject).should_not change {
-          Ardm::Record.raise_on_save_failure
-        }
-      end
-    end
-  end
-
   it 'A model should respond to raise_on_save_failure' do
     @article_model.should respond_to(:raise_on_save_failure)
   end
@@ -280,42 +241,5 @@ describe 'Ardm::Record' do
 
   it 'A model should respond to raise_on_save_failure=' do
     @article_model.should respond_to(:raise_on_save_failure=)
-  end
-
-  describe '#raise_on_save_failure=' do
-    after do
-      # reset to the default value
-      reset_raise_on_save_failure(@article_model)
-    end
-
-    subject { @article_model.raise_on_save_failure = @value }
-
-    describe 'with a true value' do
-      before do
-        @value = true
-      end
-
-      it { should be(true) }
-
-      it 'should set raise_on_save_failure' do
-        method(:subject).should change {
-          @article_model.raise_on_save_failure
-        }.from(false).to(true)
-      end
-    end
-
-    describe 'with a false value' do
-      before do
-        @value = false
-      end
-
-      it { should be(false) }
-
-      it 'should set raise_on_save_failure' do
-        method(:subject).should_not change {
-          @article_model.raise_on_save_failure
-        }
-      end
-    end
   end
 end

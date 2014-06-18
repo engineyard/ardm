@@ -57,6 +57,10 @@ module Ardm
         delete_all
       end
 
+      def destroy
+        self.class.delete(self.send(self.class.primary_key))
+      end
+
       def new?
         new_record?
       end

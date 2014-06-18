@@ -2,6 +2,7 @@ require 'active_support/concern'
 
 module Ardm
   module ActiveRecord
+    Relationship = Struct.new(:child_key)
     module Associations
       extend ActiveSupport::Concern
 
@@ -33,13 +34,16 @@ module Ardm
           ar[:foreign_key] = property.field
         end
 
-        if (conditions = ar.slice!(*keep)).any?
-          ar[:conditions] = conditions
-        end
-        ar
+        block = if (conditions = ar.slice!(*keep)).any?
+                  lambda { where(conditions) }
+                end
+        [block, ar]
       end
 
       module ClassMethods
+        def relationships
+          @relationships ||={}
+        end
 
         def dump_associations_hash(options)
           options.inject({}) do |new_attrs, (key, value)|
@@ -72,7 +76,7 @@ module Ardm
 
           options.delete(:default)
           options.delete(:required)
-          opts = Ardm::ActiveRecord::Associations.convert_options(self, options)
+          _, opts = Ardm::ActiveRecord::Associations.convert_options(self, options)
           super field, opts
           assoc = reflect_on_association(field)
           Ardm::ActiveRecord::Record.on_finalize << lambda do
@@ -102,8 +106,8 @@ module Ardm
           opts = Ardm::ActiveRecord::Associations.convert_options(self, options, :through, :order)
 
           case count
-          when 1      then has_one  name, opts
-          when "many" then has_many name, opts
+          when 1      then has_one  name, *opts
+          when "many" then has_many name, *opts
           end
         end
 

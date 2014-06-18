@@ -1,4 +1,4 @@
-share_examples_for "A property with flags" do
+shared_examples "A property with flags" do
   before do
     %w[ @property_klass ].each do |ivar|
       raise "+#{ivar}+ should be defined in before block" unless instance_variable_defined?(ivar)
