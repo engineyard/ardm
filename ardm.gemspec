@@ -17,7 +17,7 @@ Gem::Specification.new do |gem|
   gem.require_paths = [ "lib" ]
   gem.version       = Ardm::VERSION
 
-  gem.add_runtime_dependency('activesupport', '~> 4.0')
+  gem.add_runtime_dependency('activesupport', '>= 3.2')
   gem.add_runtime_dependency('bcrypt-ruby',   '~> 3.0.0')
   gem.add_runtime_dependency('fastercsv',     '~> 1.5.4')
   gem.add_runtime_dependency('multi_json',    '> 1.3.2')

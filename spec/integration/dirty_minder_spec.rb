@@ -54,7 +54,7 @@ try_spec do
         end
 
         it "should remember the new attribute" do
-          @resource.positions['pays_buttloads_of_money'].should be_true
+          @resource.positions['pays_buttloads_of_money'].should be_truthy
         end
       end
 
@@ -68,7 +68,7 @@ try_spec do
 
         it "should remember the changed detail" do
           # Works in active record (unless something is fooling me)
-          #pending "not supported (YET)" do
+          #skip "not supported (YET)" do
             # TODO: Not supported (yet?) -- this is a much harder problem to
             # solve: using mutating accessors of nested objects.  We could
             # detect it from #dirty? (using the #hash method), but #dirty?
@@ -149,7 +149,7 @@ try_spec do
 
           it "should remember the changed detail" do
             # Works in active record (unless something is fooling me)
-            #pending "not supported (YET)" do
+            #skip "not supported (YET)" do
               # TODO: Not supported (yet?) -- this is a much harder problem to
               # solve: using mutating accessors of nested objects.  We could
               # detect it from #dirty? (using the #hash method), but #dirty?

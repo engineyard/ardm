@@ -220,7 +220,6 @@ module Ardm
           return if property.key? || property.serial? # let AR do it
           name                   = property.name.to_s
           reader_visibility      = property.reader_visibility
-          instance_variable_name = property.instance_variable_name
           property_module.module_eval <<-RUBY, __FILE__, __LINE__ + 1
             #{reader_visibility}
             def #{name}
@@ -251,7 +250,7 @@ module Ardm
           property_module.module_eval <<-RUBY, __FILE__, __LINE__ + 1
             #{writer_visibility}
             def #{writer_name}(value)
-              attribute_set(#{name.inspect}, value)
+              attribute_set(:#{name}, value)
             end
           RUBY
         end
@@ -325,6 +324,8 @@ module Ardm
 
         # only memoize a valid key
         @_key = key if model_key.valid?(key)
+
+        key
       end
 
       # Gets this instance's Model's properties

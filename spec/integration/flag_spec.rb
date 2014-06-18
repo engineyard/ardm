@@ -16,7 +16,7 @@ try_spec do
 
     describe 'with the default value' do
       it 'returns it as an array' do
-        pending "FIXME: This probably should pass" do
+        skip "FIXME: This probably should pass" do
           @resource.size.should eq([Ardm::Fixtures::TShirt.properties[:size].default])
         end
       end
@@ -26,7 +26,7 @@ try_spec do
       describe 'dumped and loaded' do
         before do
           @resource.size = [ :xs, :medium ]
-          @resource.save.should be_true
+          @resource.save.should be_truthy
           @resource.reload
         end
 
@@ -43,7 +43,7 @@ try_spec do
 
       describe 'dumped and loaded' do
         before do
-          @resource.save.should be_true
+          @resource.save.should be_truthy
           @resource.reload
         end
 

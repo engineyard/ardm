@@ -41,7 +41,7 @@ module Ardm
 
         # @api public
         def with_deleted(&block)
-          with_deleted_scope = self.scoped.with_default_scope
+          with_deleted_scope = self.all.with_default_scope
           paranoid_scopes.each do |cond|
             with_deleted_scope.where_values.delete(cond)
           end

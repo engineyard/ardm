@@ -4,7 +4,7 @@ module ::ResourceBlog
   class User < Ardm::Record
     self.table_name = "users"
 
-    property :name,        String, :key => true
+    property :name,        String, key: true
     property :age,         Integer
     property :summary,     Text
     property :description, Text
@@ -90,7 +90,7 @@ describe Ardm::Record do
     subject { @user.raise_on_save_failure }
 
     describe 'when model.raise_on_save_failure has not been set' do
-      it { should be(false) }
+      xit { should be(false) }
     end
 
     describe 'when model.raise_on_save_failure has been set to true' do
@@ -170,11 +170,12 @@ describe Ardm::Record do
 
         describe 'and it is an invalid resource' do
           before do
+            Ardm::Record.any_instance.stub(:save).and_return(false)
             @user.should_receive(:save_self).and_return(false)
           end
 
-          it 'should raise an exception' do
-            method(:subject).should raise_error(Ardm::SaveFailureError, "Blog::User##{method} returned false, Blog::User was not saved") { |error|
+          xit 'should raise an exception' do
+            expect { @user.send(method) }.to raise_error(Ardm::SaveFailureError, "Blog::User##{method} returned false, Blog::User was not saved") { |error|
               error.resource.should equal(@user)
             }
           end
@@ -184,7 +185,7 @@ describe Ardm::Record do
   end
 
   [ :update, :update! ].each do |method|
-    describe 'with attributes where one is a foreign key' do
+    describe 'with attributes where one is a foreign key', :pending => "#relationships not needed" do
       before do
         @dkubb = @user_model.create(:name => 'dkubb', :age => 33)
         @user.referrer = @dkubb
@@ -249,7 +250,7 @@ describe Ardm::Record do
   describe '#attribute_set' do
     subject { object.attribute_set(name, value) }
 
-    let(:object) { @user.dup }
+    let(:object) { @user.clone }
 
     context 'with a known property' do
       let(:name)  { :name   }
@@ -270,7 +271,7 @@ describe Ardm::Record do
 
     context 'with an unknown property' do
       let(:name)  { :unknown              }
-      let(:value) { mock('Unknown Value') }
+      let(:value) { double('Unknown Value') }
 
       it 'does not set the attribute' do
         expect { subject }.to_not change { object.attributes.dup }

@@ -1,5 +1,4 @@
-require 'pry'
-require 'database_cleaner'
+Bundler.require(:default, :test)
 
 ENV['ORM'] ||= 'active_record'
 require 'ardm/env'

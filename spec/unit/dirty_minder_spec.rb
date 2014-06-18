@@ -32,7 +32,7 @@ describe Ardm::Property::DirtyMinder,'set!' do
 
   shared_examples_for 'a hooked value' do
     it 'should extend value with hook' do
-      pending "FIXME: This probably should pass" do
+      skip "FIXME: This probably should pass" do
         value.should be_kind_of(Ardm::Property::DirtyMinder::Hooker)
       end
     end

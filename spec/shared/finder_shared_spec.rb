@@ -18,7 +18,7 @@ shared_examples 'Finder Interface' do
   end
 
   before do
-    pending if @skip
+    skip if @skip
   end
 
   it 'should be Enumerable' do
@@ -264,7 +264,7 @@ shared_examples 'Finder Interface' do
 
     describe 'with a query using raw conditions' do
       before do
-        pending unless defined?(Ardm::Adapters::DataObjectsAdapter) && @adapter.kind_of?(Ardm::Adapters::DataObjectsAdapter)
+        skip unless defined?(Ardm::Adapters::DataObjectsAdapter) && @adapter.kind_of?(Ardm::Adapters::DataObjectsAdapter)
       end
 
       before do
@@ -405,7 +405,7 @@ shared_examples 'Finder Interface' do
         end
 
         it 'should be equivalent to negated collection query' do
-          pending_if 'Update RDBMS to match ruby behavior', @do_adapter && @articles.kind_of?(Ardm::Record) do
+          skip_if 'Update RDBMS to match ruby behavior', @do_adapter && @articles.kind_of?(Ardm::Record) do
             # NOTE: the second query will not match any articles where original_id
             # is nil, while the in-memory/yaml adapters will.  RDBMS will explicitly
             # filter out NULL matches because we are matching on a non-NULL value,
@@ -729,7 +729,7 @@ shared_examples 'Finder Interface' do
         end
 
         it 'should be expected Resources' do
-          pending 'TODO' do
+          skip 'TODO' do
             @return.should == [ @article ]
           end
         end
@@ -749,7 +749,7 @@ shared_examples 'Finder Interface' do
         end
 
         it 'should be expected Resources' do
-          pending 'TODO' do
+          skip 'TODO' do
             @return.should == [ @article ]
           end
         end
@@ -773,7 +773,7 @@ shared_examples 'Finder Interface' do
         end
 
         it 'should be expected Resources' do
-          pending 'TODO' do
+          skip 'TODO' do
             @return.should == [ @article ]
           end
         end
@@ -811,7 +811,7 @@ shared_examples 'Finder Interface' do
         end
 
         it 'should be empty' do
-          pending 'TODO' do
+          skip 'TODO' do
             @return.should be_empty
           end
         end
@@ -835,7 +835,7 @@ shared_examples 'Finder Interface' do
         end
 
         it 'should be expected Resources' do
-          pending 'TODO' do
+          skip 'TODO' do
             @return.should == [ @article ]
           end
         end
@@ -936,26 +936,26 @@ shared_examples 'Finder Interface' do
   end
 
   it 'should respond to a belongs_to relationship method with #method_missing' do
-    pending_if 'Model#method_missing should delegate to relationships', @articles.kind_of?(Class) do
+    skip_if 'Model#method_missing should delegate to relationships', @articles.kind_of?(Class) do
       @articles.should respond_to(:original)
     end
   end
 
   it 'should respond to a has n relationship method with #method_missing' do
-    pending_if 'Model#method_missing should delegate to relationships', @articles.kind_of?(Class) do
+    skip_if 'Model#method_missing should delegate to relationships', @articles.kind_of?(Class) do
       @articles.should respond_to(:revisions)
     end
   end
 
   it 'should respond to a has 1 relationship method with #method_missing' do
-    pending_if 'Model#method_missing should delegate to relationships', @articles.kind_of?(Class) do
+    skip_if 'Model#method_missing should delegate to relationships', @articles.kind_of?(Class) do
       @articles.should respond_to(:previous)
     end
   end
 
   describe '#method_missing' do
     before do
-      pending 'Model#method_missing should delegate to relationships' if @articles.kind_of?(Class)
+      skip 'Model#method_missing should delegate to relationships' if @articles.kind_of?(Class)
     end
 
     describe 'with a belongs_to relationship method' do
@@ -1111,13 +1111,13 @@ shared_examples 'Finder Interface' do
         end
 
         it 'should return expected Collection' do
-          pending_if @no_join do
+          skip_if @no_join do
             @collection.should == [ @publication1, @publication2 ]
           end
         end
 
         it 'should set the association for each Resource' do
-          pending_if @no_join do
+          skip_if @no_join do
             @articles.map { |resource| resource.publications }.should == [ [ @publication1 ], [ @publication2 ] ]
           end
         end
@@ -1133,7 +1133,7 @@ shared_examples 'Finder Interface' do
         end
 
         it 'should return expected Collection' do
-          pending_if @no_join do
+          skip_if @no_join do
             @collection.should == [ @publication1, @publication2 ]
           end
         end
@@ -1145,7 +1145,7 @@ shared_examples 'Finder Interface' do
         end
 
         it 'should set the association for each Resource' do
-          pending_if @no_join do
+          skip_if @no_join do
             @articles.map { |resource| resource.publications }.should == [ [ @publication1 ], [ @publication2 ] ]
           end
         end

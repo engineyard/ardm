@@ -53,7 +53,7 @@ try_spec do
 
       describe 'when saved and reloaded' do
         before do
-          @resource.save.should be_true
+          @resource.save.should be_truthy
           @resource.reload
         end
 
@@ -95,7 +95,7 @@ try_spec do
 
       describe 'when saved and reloaded' do
         before do
-          @resource.save.should be_true
+          @resource.save.should be_truthy
           @resource.reload
         end
 
@@ -113,7 +113,7 @@ try_spec do
 
       describe 'when saved and reloaded' do
         before do
-          @resource.save.should be_true
+          @resource.save.should be_truthy
           @resource.reload
         end
 
@@ -131,7 +131,7 @@ try_spec do
 
       describe 'when saved and reloaded' do
         before do
-          @resource.save.should be_true
+          @resource.save.should be_truthy
           @resource.reload
         end
 

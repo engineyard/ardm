@@ -1,8 +1,7 @@
-require 'active_support/concern'
+
 
 module Ardm
   module ActiveRecord
-    Relationship = Struct.new(:child_key)
     module Associations
       extend ActiveSupport::Concern
 
