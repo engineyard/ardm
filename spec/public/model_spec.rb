@@ -4,7 +4,7 @@ module ::ModelBlog
   class ArticlePublication < Ardm::Record
     self.table_name = "article_publications"
 
-    belongs_to :acticle,     model: 'ModelBlog::Article'
+    belongs_to :article,     model: 'ModelBlog::Article'
     belongs_to :publication, model: 'ModelBlog::Publication'
   end
 
@@ -29,7 +29,7 @@ module ::ModelBlog
     property :name, String
 
     has n, :article_publications, model: ArticlePublication
-    has n, :acticles, :through => :article_publications
+    has n, :articles, :through => :article_publications
   end
 end
 
@@ -190,9 +190,13 @@ describe 'Ardm::Record' do
   end
 
   describe "finders" do
-    before(:each) { @articles = ModelBlog::Article.all }
+    before(:each) do
+      ModelBlog::Article.destroy_all
+      @articles = ModelBlog::Article.all
+      @article  = @articles.create(:title => 'Sample Article', :body => 'Sample')
+    end
 
-   include_examples 'Finder Interface'
+    include_examples 'Finder Interface'
   end
 
   it 'Ardm::Record should respond to raise_on_save_failure' do

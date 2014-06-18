@@ -83,7 +83,14 @@ module Ardm
             when :belongs_to
               id = value.is_a?(Hash) ? value.with_indifferent_access[:id] : value
               relation = relation.where(assoc.foreign_key => id)
-            else raise("unknown: #{assoc}")
+            when :has_many
+              foreign_class = assoc.options[:class_name].constantize
+              foreign_key   = assoc.options[:foreign_key]
+              parent_key    = assoc.options[:child_key] || klass.primary_key
+
+              relation = relation.where(
+                parent_key => foreign_class.where(foreign_key => value))
+            else raise("unknown: #{assoc.inspect}")
             end
           end
         end
