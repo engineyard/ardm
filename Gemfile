@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gemspec
 
 gem 'pry'
-gem 'pry-debugger'
+gem 'pry-nav'
 
 group :test do
   gem 'sqlite3'

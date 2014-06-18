@@ -189,7 +189,6 @@ describe Ardm::Record do
         @dkubb = @user_model.create(:name => 'dkubb', :age => 33)
         @user.referrer = @dkubb
         @user.save
-        binding.pry
         @user = @user_model.get(@user.key)
         @user.referrer.should == @dkubb
 

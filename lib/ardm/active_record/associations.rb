@@ -75,7 +75,11 @@ module Ardm
           opts = Ardm::ActiveRecord::Associations.convert_options(self, options)
           super field, opts
           assoc = reflect_on_association(field)
-          property assoc.foreign_key, assoc.klass.key.first.class
+          Ardm::ActiveRecord::Record.on_finalize << lambda do
+            self.class_eval do
+              property assoc.foreign_key, assoc.klass.key.first.class
+            end
+          end
           nil
         end
 

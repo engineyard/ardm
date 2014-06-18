@@ -14,7 +14,11 @@ module Ardm
 
       JSON = Json
 
+      class_attribute :on_finalize
+      self.on_finalize = []
+
       def self.finalize
+        on_finalize.each { |f| f.call }
       end
 
       def self.execute_sql(sql)
@@ -24,8 +28,6 @@ module Ardm
       def self.property(property_name, property_type, options={})
         property = super
         begin
-        attr_accessible property.name
-        attr_accessible property.field
         rescue => e
           puts "WARNING: Error silenced. FIXME before release.\n#{e}" unless $attr_accessible_warning
           $attr_accessible_warning = true
