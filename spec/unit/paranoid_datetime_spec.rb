@@ -7,7 +7,7 @@ module ::ParanoidDateTimeBlog
     property :id,         Serial
     property :deleted_at, ParanoidDateTime
 
-    before_destroy :before_destroy
+    before(:destroy, :before_destroy)
 
     def before_destroy; end
   end

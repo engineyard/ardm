@@ -6,7 +6,7 @@ module ::ParanoidBooleanBlog
     property :id,      Serial
     property :deleted, ParanoidBoolean
 
-    before_destroy :before_destroy
+    before(:destroy, :before_destroy)
 
     def before_destroy; end
   end

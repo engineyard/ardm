@@ -3,6 +3,8 @@ Bundler.require(:default, :test)
 ENV['ORM'] ||= 'active_record'
 require 'ardm/env'
 
+Dir["#{Pathname(__FILE__).dirname.expand_path}/{shared,support}/*.rb"].each { |file| require file }
+
 Ardm.active_record do
   ActiveRecord::Base.configurations = { "ardm" => {
     "database" => "db/test.sqlite",
@@ -19,10 +21,10 @@ Ardm.active_record do
 end
 
 Ardm.data_mapper do
-  raise "TODO: DataMapper setup."
+  Bundler.require(:datamapper)
+  DataMapper.setup(:default, "sqlite3://#{File.expand_path("../../db/test.sqlite", __FILE__)}")
+  DataMapper.auto_migrate!
 end
-
-Dir["#{Pathname(__FILE__).dirname.expand_path}/{shared,support}/*.rb"].each { |file| require file }
 
 RSpec.configure do |config|
   config.before(:suite) do

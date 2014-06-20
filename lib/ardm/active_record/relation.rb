@@ -88,8 +88,8 @@ module Ardm
               foreign_key   = assoc.options[:foreign_key]
               parent_key    = assoc.options[:child_key] || klass.primary_key
 
-              relation = relation.where(
-                parent_key => foreign_class.where(foreign_key => value))
+              relation = relation.where.not(
+                parent_key => foreign_class.select(foreign_class.primary_key).where.not(foreign_key => value))
             else raise("unknown: #{assoc.inspect}")
             end
           end

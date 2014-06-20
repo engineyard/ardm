@@ -14,7 +14,7 @@ module Ardm
 
       property :slug, Slug
 
-      before_validation do
+      before(:valid?) do
         self.slug = self.title
       end
     end # Article

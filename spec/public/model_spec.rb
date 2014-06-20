@@ -4,6 +4,8 @@ module ::ModelBlog
   class ArticlePublication < Ardm::Record
     self.table_name = "article_publications"
 
+    property :id, Serial
+
     belongs_to :article,     model: 'ModelBlog::Article'
     belongs_to :publication, model: 'ModelBlog::Publication'
   end
@@ -191,7 +193,7 @@ describe 'Ardm::Record' do
 
   describe "finders" do
     before(:each) do
-      ModelBlog::Article.destroy_all
+      ModelBlog::Article.destroy
       @articles = ModelBlog::Article.all
       @article  = @articles.create(:title => 'Sample Article', :body => 'Sample')
     end
