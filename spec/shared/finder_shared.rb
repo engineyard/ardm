@@ -676,6 +676,7 @@ shared_examples 'Finder Interface' do
           end
         else
           it 'should be expected Resources' do
+            # SELECT "id", "title", "original_id" FROM "articles" WHERE NOT("id" IN (SELECT "original_id" FROM "articles" WHERE NOT("original_id" IS NULL))) ORDER BY "id"
             @return.should == [ @new ]
           end
         end
