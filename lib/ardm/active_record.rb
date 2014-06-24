@@ -35,10 +35,6 @@ module Ardm
   RecordNotFound = ::ActiveRecord::RecordNotFound
 end
 
-#::ActiveRecord::Base.class_eval do
-#  include Ardm::ActiveRecord::Base
-#end
-
 ::ActiveRecord::Relation.class_eval do
   include Ardm::ActiveRecord::Relation
 end

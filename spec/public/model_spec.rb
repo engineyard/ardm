@@ -195,7 +195,8 @@ describe 'Ardm::Record' do
     before(:each) do
       ModelBlog::Article.destroy
       @articles = ModelBlog::Article.all
-      @article  = @articles.create(:title => 'Sample Article', :body => 'Sample')
+      @original = @articles.create(:title => 'Original Article')
+      @article  = @articles.create(:title => 'Sample Article', :body => 'Sample', :original => @original)
     end
 
     include_examples 'Finder Interface'

@@ -27,6 +27,11 @@ Ardm.data_mapper do
 end
 
 RSpec.configure do |config|
+  config.treat_symbols_as_metadata_keys_with_true_values = true
+  if ENV["ORM"] == "active_record"
+    config.filter_run_excluding(:dm => true)
+  end
+
   config.before(:suite) do
     DatabaseCleaner.strategy = :transaction
     DatabaseCleaner.clean_with(:truncation)

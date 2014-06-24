@@ -7,7 +7,7 @@ module Ardm
       OPERATORS = {
         # DM      => ARel
         :eql      => :eq,
-        :not      => :not,
+        :not      => :not_eq,
         :in       => :in,
         :gt       => :gt,
         :gte      => :gteq,
@@ -47,8 +47,8 @@ module Ardm
         FOR_ARRAY[operator]
       end
 
-      def to_arel(arel_table, value)
-        Ardm::Query::Expression.new(arel_table, target, operator, value)
+      def to_arel(relation, value)
+        Ardm::Query::Expression.new(relation, target, operator, value)
       end
 
       private
