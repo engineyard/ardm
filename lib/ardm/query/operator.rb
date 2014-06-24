@@ -48,7 +48,7 @@ module Ardm
       end
 
       def to_arel(relation, value)
-        Ardm::Query::Expression.new(relation, target, operator, value)
+        Ardm::Query::Expression.new(relation, target, self, value)
       end
 
       private

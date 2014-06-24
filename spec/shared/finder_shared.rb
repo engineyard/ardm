@@ -541,6 +541,12 @@ shared_examples 'Finder Interface' do
         end
 
         it 'should be equivalent to negated collection query' do
+          # SELECT "id", "title", "original_id" FROM "articles" WHERE NOT("id" IN (SELECT "original_id" FROM "articles" WHERE NOT("original_id" IS NULL))) ORDER BY "id"
+          # ar:
+          # SELECT "articles".* FROM "articles" WHERE ("articles"."original_id" IS NOT NULL)
+          # SELECT "articles".* FROM "articles" WHERE ("articles"."id" NOT IN (SELECT original_id FROM "articles" WHERE ("articles"."original_id" IS NOT NULL)))
+          puts "@return:#{@return.to_sql}"
+          puts "negated:#{@articles.all(:previous.not => @article_model.all(:original.not => nil)).to_sql}"
           @return.should == @articles.all(:previous.not => @article_model.all(:original.not => nil))
         end
       end
