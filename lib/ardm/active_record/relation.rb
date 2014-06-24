@@ -106,6 +106,8 @@ module Ardm
                            relation.where(parent_key => value.send(assoc.foreign_key))
                          elsif value.is_a?(::ActiveRecord::Relation)
                            relation.where(parent_key => value.select(foreign_key))
+                         elsif value.nil?
+                           relation.where.not(parent_key => foreign_class.select(foreign_key).where.not(foreign_key => value))
                          else
                            relation.where(parent_key => foreign_class.select(foreign_key).where(value))
                          end
