@@ -37,7 +37,6 @@
 
   create_table :images, :force => true, :id => false do |t|
     t.string   :md5hash, :length => 32
-    t.index    :md5hash, :unique => true
     t.string   :title
     t.text     :description, :length => 1024
     t.integer  :width
@@ -45,6 +44,7 @@
     t.string   :format
     t.time     :taken_at
   end
+  add_index :images, :md5hash, :unique => true
 
   create_table :network_nodes, :force => true do |t|
     t.string     :ip_address
@@ -90,10 +90,10 @@
     t.string   :name
     t.string   :album
     t.string   :musicbrainz_hash
-    t.index    [:artist, :album]
-    t.index    :name
-    t.index    :musicbrainz_hash, :unique => true
   end
+  add_index :tracks, [:artist, :album]
+  add_index :tracks, :name
+  add_index :tracks, :musicbrainz_hash, :unique => true
 
   create_table :tshirts, :force => true do |t|
     t.string   :writing
