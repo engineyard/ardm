@@ -38,6 +38,7 @@ module ::ResourceBlog
 
     property :id,   Serial
     property :body, Text
+    timestamps :at
 
     has n, :paragraphs
   end
@@ -90,7 +91,7 @@ describe Ardm::Record do
     subject { @user.raise_on_save_failure }
 
     describe 'when model.raise_on_save_failure has not been set' do
-      it { should be(false) }
+      it { should be_false }
     end
 
     describe 'when model.raise_on_save_failure has been set to true' do
@@ -98,7 +99,7 @@ describe Ardm::Record do
         @user_model.raise_on_save_failure = true
       end
 
-      it { should be(true) }
+      it { should be_true }
     end
 
     describe 'when resource.raise_on_save_failure has been set to true' do
@@ -106,7 +107,7 @@ describe Ardm::Record do
         @user.raise_on_save_failure = true
       end
 
-      it { should be(true) }
+      it { should be_true }
     end
   end
 
@@ -117,34 +118,28 @@ describe Ardm::Record do
   describe '#raise_on_save_failure=' do
     after do
       # reset to the default value
-      @user_model.raise_on_save_failure = false
+      reset_raise_on_save_failure(@user_model)
     end
 
-    subject { @user_model.raise_on_save_failure = @value }
-
     describe 'with a true value' do
-      before do
-        @value = true
-      end
+      subject { @user_model.raise_on_save_failure = true }
 
-      it { should be(true) }
+      it { should be_true }
 
       it 'should set raise_on_save_failure' do
-        method(:subject).should change {
+        expect { subject }.to change {
           @user_model.raise_on_save_failure
         }.from(false).to(true)
       end
     end
 
     describe 'with a false value' do
-      before do
-        @value = false
-      end
+      subject { @user_model.raise_on_save_failure = false }
 
-      it { should be(false) }
+      it { should be_false }
 
       it 'should set raise_on_save_failure' do
-        method(:subject).should_not change {
+        expect { subject }.to_not change {
           @user_model.raise_on_save_failure
         }
       end
@@ -161,7 +156,7 @@ describe Ardm::Record do
         end
 
         describe 'and it is a savable resource' do
-          it { should be(true) }
+          it { should be_true }
         end
 
         # FIXME: We cannot trigger a failing save with invalid properties anymore.
@@ -174,7 +169,7 @@ describe Ardm::Record do
           end
 
           it 'should raise an exception' do
-            method(:subject).should raise_error(Ardm::SaveFailureError, "Blog::User##{method} returned false, Blog::User was not saved") { |error|
+            expect { subject }.to raise_error(Ardm::SaveFailureError, "Blog::User##{method} returned false, Blog::User was not saved") { |error|
               error.resource.should equal(@user)
             }
           end
@@ -189,7 +184,6 @@ describe Ardm::Record do
         @dkubb = @user_model.create(:name => 'dkubb', :age => 33)
         @user.referrer = @dkubb
         @user.save
-        binding.pry
         @user = @user_model.get(@user.key)
         @user.referrer.should == @dkubb
 
@@ -198,15 +192,21 @@ describe Ardm::Record do
         @attributes = {}
 
         relationship = @user_model.relationships[:referrer]
-        relationship.child_key.to_a.each_with_index do |k, i|
-          @attributes[k.name] = relationship.parent_key.to_a[i].get(@solnic)
-        end
+
+        # Original datamapper implementation:
+        #relationship.child_key.to_a.each_with_index do |k, i|
+        #  @attributes[k.name] = relationship.parent_key.to_a[i].get(@solnic)
+        #end
+
+        # #key returns an array even though there's only one value.
+        @attributes[relationship.foreign_key] = @solnic.key.first
+        puts @attributes.inspect
 
         @return = @user.__send__(method, @attributes)
       end
 
       it 'should return true' do
-        @return.should be(true)
+        @return.should be_true
       end
 
       it 'should update attributes of Resource' do

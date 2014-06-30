@@ -14,6 +14,8 @@ module Ardm
 
       property :slug, Slug
 
+      timestamps :at
+
       before_validation do
         self.slug = self.title
       end

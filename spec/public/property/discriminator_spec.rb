@@ -7,6 +7,7 @@ module ::DiscBlog
     property :id,    Serial
     property :title, String, :required => true
     property :type,  Discriminator, :field => "slug"
+    timestamps :at
   end
 
   class Article < Content; end

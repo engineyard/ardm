@@ -6,6 +6,7 @@ module ::ParanoidDateTimeBlog
 
     property :id,         Serial
     property :deleted_at, ParanoidDateTime
+    timestamps :at
 
     before_destroy :before_destroy
 

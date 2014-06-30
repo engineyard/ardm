@@ -51,7 +51,7 @@ module Ardm
           # use that class rather than the primitive
           klass = Ardm::Property.determine_class(type)
 
-          unless klass
+          if !klass || klass == NilClass
             raise ArgumentError, "+type+ was #{type.inspect}, which is not a supported type"
           end
 
@@ -100,7 +100,11 @@ module Ardm
         end
 
         def columns
-          @columns ||= properties.map do |property|
+          @columns ||= _ardm_load_columns
+        end
+
+        def _ardm_load_columns
+          properties.map do |property|
             sql_type = connection.type_to_sql(
               property.dump_as.name.to_sym,
               property.options[:limit],
@@ -109,8 +113,7 @@ module Ardm
             )
 
             column = ::ActiveRecord::ConnectionAdapters::Column.new(
-              #property.name.to_s,
-              property.field.to_s,
+              property.field.to_s, #property.name.to_s,
               nil,#property.dump(property.default),
               sql_type,
               property.allow_nil?

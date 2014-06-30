@@ -40,9 +40,18 @@ RSpec.configure do |config|
   end
 
   def reset_raise_on_save_failure(object)
+    name = :raise_on_save_failure
+    ivar = "@#{name}"
+
+    if object.respond_to? :singleton_class
+      object.singleton_class.class_eval do
+        remove_possible_method(name)
+      end
+    end
+
     object.instance_eval do
-      if defined?(@raise_on_save_failure)
-        remove_instance_variable(:@raise_on_save_failure)
+      if instance_variable_defined?(ivar)
+        remove_instance_variable(ivar)
       end
     end
   end

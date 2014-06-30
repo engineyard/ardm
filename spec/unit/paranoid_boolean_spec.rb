@@ -5,6 +5,7 @@ module ::ParanoidBooleanBlog
     self.table_name = "articles"
     property :id,      Serial
     property :deleted, ParanoidBoolean
+    timestamps :at
 
     before_destroy :before_destroy
 

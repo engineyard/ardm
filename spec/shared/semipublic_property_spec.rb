@@ -3,6 +3,7 @@ share_examples_for 'A semipublic Property' do
     class Article < Ardm::Record
       self.table_name = "articles"
       property :id, Serial
+      timestamps :at
     end
   end
 

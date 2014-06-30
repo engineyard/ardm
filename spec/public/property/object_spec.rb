@@ -8,6 +8,7 @@ describe Ardm::Property, 'Object type' do
         property :id,    Serial
         property :title, String
         property :meta,  Object, :required => true, :field => 'body'
+        timestamps :at
       end
     end
 

@@ -1,11 +1,8 @@
 require 'spec_helper'
 
 module ::ModelBlog
+  # FIXME: load order in tests is being problematic
   class ArticlePublication < Ardm::Record
-    self.table_name = "article_publications"
-
-    belongs_to :acticle,     model: 'ModelBlog::Article'
-    belongs_to :publication, model: 'ModelBlog::Publication'
   end
 
   class Article < Ardm::Record
@@ -14,11 +11,12 @@ module ::ModelBlog
     property :id,       Serial
     property :title,    String, :required => true, :default => 'Default Title'
     property :body,     Text
+    timestamps :at
 
     belongs_to :original, self, :required => false
     has n, :revisions, self, :child_key => [ :original_id ]
     has 1, :previous,  self, :child_key => [ :original_id ], :order => [ :id.desc ]
-    has n, :article_publications, model: ArticlePublication
+    has n, :article_publications, model: ::ModelBlog::ArticlePublication
     has n, :publications, :through => :article_publications
   end
 
@@ -28,8 +26,15 @@ module ::ModelBlog
     property :id,   Serial
     property :name, String
 
-    has n, :article_publications, model: ArticlePublication
+    has n, :article_publications, model: ::ModelBlog::ArticlePublication
     has n, :acticles, :through => :article_publications
+  end
+
+  class ArticlePublication < Ardm::Record
+    self.table_name = "article_publications"
+
+    belongs_to :acticle,     model: '::ModelBlog::Article'
+    belongs_to :publication, model: '::ModelBlog::Publication'
   end
 end
 
@@ -133,12 +138,8 @@ describe 'Ardm::Record' do
 
   [ :destroy, :destroy! ].each do |method|
     describe "##{method}" do
-      subject { model.send(method) }
-
-      let(:model) { @article_model }
-
       it 'should remove all resources' do
-        method(:subject).should change { model.any? }.from(true).to(false)
+        expect { @article_model.send(method) }.to change { @article_model.any? }.from(true).to(false)
       end
     end
   end
@@ -189,133 +190,4 @@ describe 'Ardm::Record' do
   # FIXME: these are very broken right now
   #it_should_behave_like 'Finder Interface'
 
-  it 'Ardm::Record should respond to raise_on_save_failure' do
-    Ardm::Record.should respond_to(:raise_on_save_failure)
-  end
-
-  describe '.raise_on_save_failure' do
-    subject { Ardm::Record.raise_on_save_failure }
-
-    it { should be(false) }
-  end
-
-  it 'Ardm::Record should respond to raise_on_save_failure=' do
-    Ardm::Record.should respond_to(:raise_on_save_failure=)
-  end
-
-  describe '.raise_on_save_failure=' do
-    before do
-      reset_raise_on_save_failure(Ardm::Record)
-    end
-
-    after do
-      # reset to the default value
-      reset_raise_on_save_failure(Ardm::Record)
-    end
-
-    subject { Ardm::Record.raise_on_save_failure = @value }
-
-    describe 'with a true value' do
-      before do
-        @value = true
-      end
-
-      it { should be(true) }
-
-      it 'should set raise_on_save_failure' do
-        method(:subject).should change {
-          Ardm::Record.raise_on_save_failure
-        }.from(false).to(true)
-      end
-    end
-
-    describe 'with a false value' do
-      before do
-        @value = false
-      end
-
-      it { should be(false) }
-
-      it 'should set raise_on_save_failure' do
-        method(:subject).should_not change {
-          Ardm::Record.raise_on_save_failure
-        }
-      end
-    end
-  end
-
-  it 'A model should respond to raise_on_save_failure' do
-    @article_model.should respond_to(:raise_on_save_failure)
-  end
-
-  describe '#raise_on_save_failure' do
-    after do
-      # reset to the default value
-      reset_raise_on_save_failure(Ardm::Record)
-      reset_raise_on_save_failure(@article_model)
-    end
-
-    subject { @article_model.raise_on_save_failure }
-
-    describe 'when Ardm::Record.raise_on_save_failure has not been set' do
-      it { should be(false) }
-    end
-
-    describe 'when Ardm::Record.raise_on_save_failure has been set to true' do
-      before do
-        Ardm::Record.raise_on_save_failure = true
-      end
-
-      it { should be(true) }
-    end
-
-    describe 'when model.raise_on_save_failure has been set to true' do
-      before do
-        @article_model.raise_on_save_failure = true
-      end
-
-      it { should be(true) }
-    end
-  end
-
-  it 'A model should respond to raise_on_save_failure=' do
-    @article_model.should respond_to(:raise_on_save_failure=)
-  end
-
-  describe '#raise_on_save_failure=' do
-    after do
-      # reset to the default value
-      reset_raise_on_save_failure(@article_model)
-    end
-
-    subject { @article_model.raise_on_save_failure = @value }
-
-    describe 'with a true value' do
-      before do
-        @value = true
-      end
-
-      it { should be(true) }
-
-      it 'should set raise_on_save_failure' do
-        method(:subject).should change {
-          @article_model.raise_on_save_failure
-        }.from(false).to(true)
-      end
-    end
-
-    describe 'with a false value' do
-      before do
-        @value = false
-      end
-
-      it { should be(false) }
-
-      it 'should set raise_on_save_failure' do
-        method(:subject).should_not change {
-          @article_model.raise_on_save_failure
-        }
-      end
-    end
-  end
 end

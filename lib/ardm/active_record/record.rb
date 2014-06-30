@@ -22,19 +22,35 @@ module Ardm
       end
 
       def self.property(property_name, property_type, options={})
-        property = super
+        prop = super
         begin
-        attr_accessible property.name
-        attr_accessible property.field
+        attr_accessible prop.name
+        attr_accessible prop.field
         rescue => e
           puts "WARNING: Error silenced. FIXME before release.\n#{e}" unless $attr_accessible_warning
           $attr_accessible_warning = true
         end
-        property
+        prop
       end
 
       # no-op in active record
-      def self.timestamps(*a)
+      def self.timestamps(at=:at)
+        case at
+        when :at
+          property :created_at, DateTime
+          property :updated_at, DateTime
+        when :on
+          property :created_on, Date
+          property :updated_on, Date
+        else
+          raise ArgumentError, "Unknown argument: timestamps(#{at.inspect})"
+        end
+      end
+
+      # The reflections returned here don't look like datamapper relationships.
+      # @todo improve this if needed with a wrapper
+      def self.relationships
+        reflections
       end
 
       def self.update(*a)
@@ -49,6 +65,10 @@ module Ardm
         options = dump_associations_hash(options)
         assert_valid_attributes(options)
         update_all(options) != 0
+      end
+
+      def self.destroy(*a)
+        destroy_all
       end
 
       def self.destroy!(*a)
