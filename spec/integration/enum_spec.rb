@@ -50,7 +50,7 @@ try_spec do
       end
 
       it 'supports queries with inequality operator on enumeration property' do
-        Ardm::Fixtures::Ticket.where.not(:status => :confirmed).
+        Ardm::Fixtures::Ticket.where(:status.not => :confirmed).
           should_not include(@resource)
       end
     end
