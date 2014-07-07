@@ -23,8 +23,8 @@ describe Ardm::Property::Text do
 
     it 'should delegate to #type.load' do
       return_value = 'return value'
-      property.should_receive(:load).with(@value).and_return(return_value)
-      subject.should == return_value
+      expect(property).to receive(:load).with(@value).and_return(return_value)
+      expect(subject).to eq(return_value)
     end
   end
 end

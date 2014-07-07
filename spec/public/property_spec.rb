@@ -30,37 +30,37 @@ describe Ardm::Property do
 
   describe '#field' do
     it 'returns @field value if it is present' do
-      Track.properties[:title].field.should eql('name')
+      expect(Track.properties[:title].field).to eql('name')
     end
   end
 
   describe '#default_for' do
     it 'returns default value for non-callables' do
-      Image.properties[:format].default_for(Image.new).should == 'jpeg'
+      expect(Image.properties[:format].default_for(Image.new)).to eq('jpeg')
     end
 
     it 'returns result of a call for callable values' do
-      Image.properties[:taken_at].default_for(Image.new).year.should == Time.now.year
+      expect(Image.properties[:taken_at].default_for(Image.new).year).to eq(Time.now.year)
     end
 
     it "sets the default when the record is created" do
       img = Image.create!(title: 'My Picture')
-      img.format.should == 'jpeg'
+      expect(img.format).to eq('jpeg')
     end
   end
 
   describe '#eql?' do
     it 'is true for properties with the same model and name' do
-      Track.properties[:title].should eql(Track.properties[:title])
+      expect(Track.properties[:title]).to eql(Track.properties[:title])
     end
 
 
     it 'is false for properties of different models' do
-      Track.properties[:title].should_not eql(Image.properties[:title])
+      expect(Track.properties[:title]).not_to eql(Image.properties[:title])
     end
 
     it 'is false for properties with different names' do
-      Track.properties[:title].should_not eql(Track.properties[:id])
+      expect(Track.properties[:title]).not_to eql(Track.properties[:id])
     end
   end
 
@@ -75,21 +75,21 @@ describe Ardm::Property do
     it 'gets instance variable value from the resource directly' do
       # if you know a better way to test direct instance variable access,
       # go ahead and make changes to this example
-      Image.properties[:description].get!(@image).should == 'Is set by magic'
+      expect(Image.properties[:description].get!(@image)).to eq('Is set by magic')
     end
   end
 
   describe '#index' do
     it 'returns true when property has an index' do
-      Track.properties[:title].index.should be(true)
+      expect(Track.properties[:title].index).to be(true)
     end
 
     it 'returns index name when property has a named index' do
-      Track.properties[:album].index.should eql(:artist_album)
+      expect(Track.properties[:album].index).to eql(:artist_album)
     end
 
     it 'returns false when property has no index' do
-      Track.properties[:musicbrainz_hash].index.should be(false)
+      expect(Track.properties[:musicbrainz_hash].index).to be(false)
     end
   end
 
@@ -105,48 +105,48 @@ describe Ardm::Property do
     end
 
     it 'features model name' do
-      @str.should =~ /@model=Track/
+      expect(@str).to match(/@model=Track/)
     end
 
     it 'features property name' do
-      @str.should =~ /@name=:title/
+      expect(@str).to match(/@name=:title/)
     end
   end
 
   describe '#key?' do
     describe 'returns true when property is a ' do
       it 'serial key' do
-        Track.properties[:id].key?.should be(true)
+        expect(Track.properties[:id].key?).to be(true)
       end
       it 'natural key' do
-        Image.properties[:md5hash].key?.should be(true)
+        expect(Image.properties[:md5hash].key?).to be(true)
       end
     end
 
     it 'returns true when property is a part of composite key'
 
     it 'returns false when property does not relate to a key' do
-      Track.properties[:title].key?.should be(false)
+      expect(Track.properties[:title].key?).to be(false)
     end
   end
 
   describe '#lazy?' do
     it 'returns true when property is lazy loaded' do
-      Image.properties[:description].lazy?.should be(true)
+      expect(Image.properties[:description].lazy?).to be(true)
     end
 
     it 'returns false when property is not lazy loaded' do
-      Track.properties[:artist].lazy?.should be(false)
+      expect(Track.properties[:artist].lazy?).to be(false)
     end
   end
 
   describe '#length' do
     it 'returns upper bound for Range values' do
-      Image.properties[:description].length.should eql(1024)
+      expect(Image.properties[:description].length).to eql(1024)
     end
 
     it 'returns value as is for integer values' do
-      Image.properties[:md5hash].length.should eql(32)
+      expect(Image.properties[:md5hash].length).to eql(32)
     end
   end
 
@@ -157,7 +157,7 @@ describe Ardm::Property do
       end
 
       it 'should be nil' do
-        @property.min.should be_nil
+        expect(@property.min).to be_nil
       end
     end
 
@@ -167,7 +167,7 @@ describe Ardm::Property do
       end
 
       it 'should be the default value' do
-        @property.min.should == 0
+        expect(@property.min).to eq(0)
       end
     end
 
@@ -178,7 +178,7 @@ describe Ardm::Property do
       end
 
       it 'should be the expected value' do
-        @property.min.should == @min
+        expect(@property.min).to eq(@min)
       end
     end
   end
@@ -190,7 +190,7 @@ describe Ardm::Property do
       end
 
       it 'should be nil' do
-        @property.max.should be_nil
+        expect(@property.max).to be_nil
       end
     end
 
@@ -200,7 +200,7 @@ describe Ardm::Property do
       end
 
       it 'should be the default value' do
-        @property.max.should == 2**31-1
+        expect(@property.max).to eq(2**31-1)
       end
     end
 
@@ -211,28 +211,28 @@ describe Ardm::Property do
       end
 
       it 'should be the expected value' do
-        @property.max.should == @max
+        expect(@property.max).to eq(@max)
       end
     end
   end
 
   describe '#allow_nil?' do
     it 'returns true when property can accept nil as its value' do
-      Track.properties[:artist].allow_nil?.should be(true)
+      expect(Track.properties[:artist].allow_nil?).to be(true)
     end
 
     it 'returns false when property nil value is prohibited for this property' do
-      Image.properties[:title].allow_nil?.should be(false)
+      expect(Image.properties[:title].allow_nil?).to be(false)
     end
   end
 
   describe '#serial?' do
     it 'returns true when property is serial (auto incrementing)' do
-      Track.properties[:id].serial?.should be(true)
+      expect(Track.properties[:id].serial?).to be(true)
     end
 
     it 'returns false when property is NOT serial (auto incrementing)' do
-      Image.properties[:md5hash].serial?.should be(false)
+      expect(Image.properties[:md5hash].serial?).to be(false)
     end
   end
 
@@ -254,12 +254,12 @@ describe Ardm::Property do
     it 'type casts given value' do
       @property.set(@image, Addressable::URI.parse('http://test.example/'))
       # get a string that has been typecasted using #to_str
-      @image.title.should == 'http://test.example/'
+      expect(@image.title).to eq('http://test.example/')
     end
 
     it 'sets new property value' do
       @property.set(@image, 'Updated value')
-      @image.title.should == 'Updated value'
+      expect(@image.title).to eq('Updated value')
     end
   end
 
@@ -274,39 +274,39 @@ describe Ardm::Property do
 
     it 'directly sets instance variable on given resource' do
       @property.set!(@image, 'Set with dark Ruby magic')
-      @image.title.should == 'Set with dark Ruby magic'
+      expect(@image.title).to eq('Set with dark Ruby magic')
     end
   end
 
   describe '#unique?' do
     it 'is true for fields that explicitly given uniq index' do
-      Track.properties[:musicbrainz_hash].unique?.should be(true)
+      expect(Track.properties[:musicbrainz_hash].unique?).to be(true)
     end
 
     it 'is true for serial fields' do
-      Track.properties[:title].unique?.should be(true)
+      expect(Track.properties[:title].unique?).to be(true)
     end
 
     it 'is true for keys' do
-      Image.properties[:md5hash].unique?.should be(true)
+      expect(Image.properties[:md5hash].unique?).to be(true)
     end
   end
 
   describe '#unique_index' do
     it 'returns true when property has unique index' do
-      Track.properties[:musicbrainz_hash].unique_index.should be(true)
+      expect(Track.properties[:musicbrainz_hash].unique_index).to be(true)
     end
 
     it 'returns false when property has no unique index' do
-      Track.properties[:title].unique_index.should be(false)
+      expect(Track.properties[:title].unique_index).to be(false)
     end
 
     it 'returns true when property is unique' do
-      Image.properties[:title].unique_index.should be(true)
+      expect(Image.properties[:title].unique_index).to be(true)
     end
 
     it 'returns :key when property is a key' do
-      Track.properties[:id].unique_index.should == :key
+      expect(Track.properties[:id].unique_index).to eq(:key)
     end
   end
 end

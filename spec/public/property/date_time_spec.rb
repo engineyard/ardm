@@ -15,8 +15,8 @@ describe Ardm::Property::DateTime do
   describe '.options' do
     subject { described_class.options }
 
-    it { should be_kind_of(Hash) }
+    it { is_expected.to be_kind_of(Hash) }
 
-    it { should eql(:load_as => @load_as, :dump_as => @load_as, :coercion_method => :to_datetime) }
+    it { is_expected.to eql(:load_as => @load_as, :dump_as => @load_as, :coercion_method => :to_datetime) }
   end
 end

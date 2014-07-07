@@ -21,12 +21,12 @@ describe Ardm::Property, 'Object type' do
   describe '.options' do
     subject { described_class.options }
 
-    it { should be_kind_of(Hash) }
+    it { is_expected.to be_kind_of(Hash) }
 
-    it { should be_empty }
+    it { is_expected.to be_empty }
   end
 
-  it { should respond_to(:typecast) }
+  it { is_expected.to respond_to(:typecast) }
 
   describe '#typecast' do
     before do
@@ -35,10 +35,10 @@ describe Ardm::Property, 'Object type' do
 
     subject { @property.typecast(@value) }
 
-    it { should equal(@value) }
+    it { is_expected.to equal(@value) }
   end
 
-  it { should respond_to(:dump) }
+  it { is_expected.to respond_to(:dump) }
 
   describe '#dump' do
     describe 'with a value' do
@@ -48,23 +48,23 @@ describe Ardm::Property, 'Object type' do
 
       subject { @property.dump(@value) }
 
-      it { @property.load(subject).should == @value }
+      it { expect(@property.load(subject)).to eq(@value) }
     end
 
     describe 'with nil' do
       subject { @property.dump(nil) }
 
-      it { should be_nil }
+      it { is_expected.to be_nil }
     end
   end
 
-  it { should respond_to(:valid?) }
+  it { is_expected.to respond_to(:valid?) }
 
   describe '#valid?' do
     describe 'with a valid load_as' do
       subject { @property.valid?('lang' => 'en_CA') }
 
-      it { should be(true) }
+      it { is_expected.to be(true) }
     end
 
     describe 'with nil and property is not required' do
@@ -74,19 +74,19 @@ describe Ardm::Property, 'Object type' do
 
       subject { @property.valid?(nil) }
 
-      it { should be(true) }
+      it { is_expected.to be(true) }
     end
 
     describe 'with nil and property is required' do
       subject { @property.valid?(nil) }
 
-      it { should be(false) }
+      it { is_expected.to be(false) }
     end
 
     describe 'with nil and property is required, but validity is negated' do
       subject { @property.valid?(nil, true) }
 
-      it { should be(true) }
+      it { is_expected.to be(true) }
     end
   end
 
@@ -98,7 +98,7 @@ describe Ardm::Property, 'Object type' do
     subject { @resource.reload.meta }
 
     it 'should load the correct value' do
-      should == { 'lang' => 'en_CA' }
+      is_expected.to eq({ 'lang' => 'en_CA' })
     end
   end
 end

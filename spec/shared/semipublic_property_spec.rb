@@ -10,19 +10,19 @@ shared_examples 'A semipublic Property' do
   describe '.new' do
     describe 'when provided no options' do
       it 'should return a Property' do
-        property.should be_kind_of(type)
+        expect(property).to be_kind_of(type)
       end
 
       it 'should set the load_as' do
-        property.load_as.should be(type.load_as)
+        expect(property.load_as).to be(type.load_as)
       end
 
       it 'should set the model' do
-        property.model.should equal(model)
+        expect(property.model).to equal(model)
       end
 
       it 'should set the options to the default' do
-        property.options.should == type.options.merge(options)
+        expect(property.options).to eq(type.options.merge(options))
       end
     end
 
@@ -33,19 +33,19 @@ shared_examples 'A semipublic Property' do
           let(:property) { type.new(model, name, options.merge(opts)) }
 
           it 'should return a Property' do
-            property.should be_kind_of(type)
+            expect(property).to be_kind_of(type)
           end
 
           it 'should set the model' do
-            property.model.should equal(model)
+            expect(property.model).to equal(model)
           end
 
           it 'should set the load_as' do
-            property.load_as.should be(type.load_as)
+            expect(property.load_as).to be(type.load_as)
           end
 
           it "should set the options to #{opts.inspect}" do
-            property.options.should == type.options.merge(options.merge(opts))
+            expect(property.options).to eq(type.options.merge(options.merge(opts)))
           end
         end
       end
@@ -53,9 +53,9 @@ shared_examples 'A semipublic Property' do
       [ [], nil ].each do |value|
         describe "when provided #{(invalid_options = { attribute => value }).inspect}" do
           it 'should raise an exception' do
-            lambda {
+            expect {
               type.new(model, name, options.merge(invalid_options))
-            }.should raise_error(ArgumentError, "options[#{attribute.inspect}] must be either true, false, a Symbol or an Array of Symbols")
+            }.to raise_error(ArgumentError, "options[#{attribute.inspect}] must be either true, false, a Symbol or an Array of Symbols")
           end
         end
       end
@@ -66,21 +66,21 @@ shared_examples 'A semipublic Property' do
     subject { property.load(value) }
 
     before do
-      property.should_receive(:typecast).with(value).and_return(value)
+      expect(property).to receive(:typecast).with(value).and_return(value)
     end
 
-    it { should eql(value) }
+    it { is_expected.to eql(value) }
   end
 
   describe "#typecast" do
     describe 'when value is nil' do
       it 'returns value unchanged' do
-        property.typecast(nil).should be(nil)
+        expect(property.typecast(nil)).to be(nil)
       end
 
       describe 'when value is a Ruby primitive' do
         it 'returns value unchanged' do
-          property.typecast(value).should == value
+          expect(property.typecast(value)).to eq(value)
         end
       end
     end
@@ -89,27 +89,27 @@ shared_examples 'A semipublic Property' do
   describe '#valid?' do
     describe 'when provided a valid value' do
       it 'should return true' do
-        property.valid?(value).should be(true)
+        expect(property.valid?(value)).to be(true)
       end
     end
 
     describe 'when provide an invalid value' do
       it 'should return false' do
-        property.valid?(invalid_value).should be(false)
+        expect(property.valid?(invalid_value)).to be(false)
       end
     end
 
     describe 'when provide a nil value when required' do
       it 'should return false' do
         property = type.new(model, name, options.merge(:required => true))
-        property.valid?(nil).should be(false)
+        expect(property.valid?(nil)).to be(false)
       end
     end
 
     describe 'when provide a nil value when not required' do
       it 'should return false' do
         property = type.new(model, name, options.merge(:required => false))
-        property.valid?(nil).should be(true)
+        expect(property.valid?(nil)).to be(true)
       end
     end
   end
@@ -122,14 +122,14 @@ shared_examples 'A semipublic Property' do
     shared_examples_for 'assert_valid_value on invalid value' do
       it 'should raise Ardm::Property::InvalidValueError' do
         expect { subject }.to(raise_error(Ardm::Property::InvalidValueError) do |error|
-          error.property.should == property
+          expect(error.property).to eq(property)
         end)
       end
     end
 
     describe 'when provided a valid value' do
       it 'should return true' do
-        subject.should be(true)
+        expect(subject).to be(true)
       end
     end
 
@@ -153,7 +153,7 @@ shared_examples 'A semipublic Property' do
       let(:value) { nil }
 
       it 'should return true' do
-        subject.should be(true)
+        expect(subject).to be(true)
       end
     end
   end

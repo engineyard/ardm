@@ -27,13 +27,13 @@ describe Ardm::Property::Discriminator do
   describe '.options' do
     subject { described_class.options }
 
-    it { should be_kind_of(Hash) }
+    it { is_expected.to be_kind_of(Hash) }
 
-    it { should include(:load_as => Class, :required => true) }
+    it { is_expected.to include(:load_as => Class, :required => true) }
   end
 
   it 'should typecast to a Model' do
-    @article_model.properties[:type].typecast('DiscBlog::Release').should equal(@release_model)
+    expect(@article_model.properties[:type].typecast('DiscBlog::Release')).to equal(@release_model)
   end
 
   describe 'Model#new' do
@@ -43,11 +43,11 @@ describe Ardm::Property::Discriminator do
       end
 
       it 'should return a Resource' do
-        @resource.should be_kind_of(Ardm::Record)
+        expect(@resource).to be_kind_of(Ardm::Record)
       end
 
       it 'should be an descendant instance' do
-        @resource.should be_instance_of(DiscBlog::Release)
+        expect(@resource).to be_instance_of(DiscBlog::Release)
       end
     end
 
@@ -57,11 +57,11 @@ describe Ardm::Property::Discriminator do
       end
 
       it 'should return a Resource' do
-        @resource.should be_kind_of(Ardm::Record)
+        expect(@resource).to be_kind_of(Ardm::Record)
       end
 
       it 'should be an descendant instance' do
-        @resource.should be_instance_of(DiscBlog::Release)
+        expect(@resource).to be_instance_of(DiscBlog::Release)
       end
     end
 
@@ -71,44 +71,44 @@ describe Ardm::Property::Discriminator do
       end
 
       it 'should return a Resource' do
-        @resource.should be_kind_of(Ardm::Record)
+        expect(@resource).to be_kind_of(Ardm::Record)
       end
 
       it 'should be a base model instance' do
-        @resource.should be_instance_of(@article_model)
+        expect(@resource).to be_instance_of(@article_model)
       end
     end
   end
 
   describe 'Model#descendants' do
     it 'should set the descendants for the grandparent model' do
-      @article_model.descendants.to_a.should =~ [ @announcement_model, @release_model ]
+      expect(@article_model.descendants.to_a).to match_array([ @announcement_model, @release_model ])
     end
 
     it 'should set the descendants for the parent model' do
-      @announcement_model.descendants.to_a.should == [ @release_model ]
+      expect(@announcement_model.descendants.to_a).to eq([ @release_model ])
     end
 
     it 'should set the descendants for the child model' do
-      @release_model.descendants.to_a.should == []
+      expect(@release_model.descendants.to_a).to eq([])
     end
   end
 
   describe 'Model#default_scope', :pending => "I don't understand the intention of these" do
     it 'should have no default scope for the top level model' do
-      @content_model.default_scope[:type].should be_nil
+      expect(@content_model.default_scope[:type]).to be_nil
     end
 
     it 'should set the default scope for the grandparent model' do
-      @article_model.default_scope[:type].to_a.should =~ [ @article_model, @announcement_model, @release_model ]
+      expect(@article_model.default_scope[:type].to_a).to match_array([ @article_model, @announcement_model, @release_model ])
     end
 
     it 'should set the default scope for the parent model' do
-      @announcement_model.default_scope[:type].to_a.should =~ [ @announcement_model, @release_model ]
+      expect(@announcement_model.default_scope[:type].to_a).to match_array([ @announcement_model, @release_model ])
     end
 
     it 'should set the default scope for the child model' do
-      @release_model.default_scope[:type].to_a.should == [ @release_model ]
+      expect(@release_model.default_scope[:type].to_a).to eq([ @release_model ])
     end
   end
 
@@ -117,18 +117,18 @@ describe Ardm::Property::Discriminator do
   end
 
   it 'should persist the type' do
-    @announcement.class.find(*@announcement.key).type.should equal(@announcement_model)
+    expect(@announcement.class.find(*@announcement.key).type).to equal(@announcement_model)
   end
 
   it 'should be retrieved as an instance of the correct class' do
-    @announcement.class.find(*@announcement.key).should be_instance_of(@announcement_model)
+    expect(@announcement.class.find(*@announcement.key)).to be_instance_of(@announcement_model)
   end
 
   it 'should include descendants in finders' do
-    @article_model.first.should eql(@announcement)
+    expect(@article_model.first).to eql(@announcement)
   end
 
   it 'should not include ancestors' do
-    @release_model.first.should be_nil
+    expect(@release_model.first).to be_nil
   end
 end

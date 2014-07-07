@@ -13,21 +13,21 @@ try_spec do
     describe '.load' do
       describe 'when nil is provided' do
         it 'returns nil' do
-          @property.load(nil).should be_nil
+          expect(@property.load(nil)).to be_nil
         end
       end
 
       describe 'when YAML encoded primitive string is provided' do
         it 'returns decoded value as Ruby string' do
-          @property.load("--- yaml string\n").should == 'yaml string'
+          expect(@property.load("--- yaml string\n")).to eq('yaml string')
         end
       end
 
       describe 'when something else is provided' do
         it 'raises ArgumentError with a meaningful message' do
-          lambda {
+          expect {
             @property.load(:sym)
-          }.should raise_error(ArgumentError, '+value+ of a property of YAML type must be nil or a String')
+          }.to raise_error(ArgumentError, '+value+ of a property of YAML type must be nil or a String')
         end
       end
     end
@@ -35,31 +35,31 @@ try_spec do
     describe '.dump' do
       describe 'when nil is provided' do
         it 'returns nil' do
-          @property.dump(nil).should be_nil
+          expect(@property.dump(nil)).to be_nil
         end
       end
 
       describe 'when YAML encoded primitive string is provided' do
         it 'does not do double encoding' do
-          YAML.load(@property.dump("--- yaml encoded string\n")).should == 'yaml encoded string'
+          expect(YAML.load(@property.dump("--- yaml encoded string\n"))).to eq('yaml encoded string')
         end
       end
 
       describe 'when regular Ruby string is provided' do
         it 'dumps argument to YAML' do
-          YAML.load(@property.dump('dump me (to yaml)')).should == 'dump me (to yaml)'
+          expect(YAML.load(@property.dump('dump me (to yaml)'))).to eq('dump me (to yaml)')
         end
       end
 
       describe 'when Ruby array is provided' do
         it 'dumps argument to YAML' do
-          YAML.load(@property.dump([ 1, 2, 3 ])).should == [ 1, 2, 3 ]
+          expect(YAML.load(@property.dump([ 1, 2, 3 ]))).to eq([ 1, 2, 3 ])
         end
       end
 
       describe 'when Ruby hash is provided' do
         it 'dumps argument to YAML' do
-          YAML.load(@property.dump({ :datamapper => 'Data access layer in Ruby' })).should == { :datamapper => 'Data access layer in Ruby' }
+          expect(YAML.load(@property.dump({ :datamapper => 'Data access layer in Ruby' }))).to eq({ :datamapper => 'Data access layer in Ruby' })
         end
       end
     end

@@ -12,16 +12,16 @@ describe Ardm::Property::Lookup do
   end
 
   it 'should provide access to Property classes' do
-    @klass::Serial.should == Ardm::Property::Serial
+    expect(@klass::Serial).to eq(Ardm::Property::Serial)
   end
 
   it 'should provide access to Property classes from outside of the Property namespace' do
-    @klass::OtherProperty.should eq(LookupFoo::OtherProperty)
+    expect(@klass::OtherProperty).to eq(LookupFoo::OtherProperty)
   end
 
   it 'should not provide access to unknown Property classes' do
-    lambda {
+    expect {
       @klass::Bla
-    }.should raise_error(NameError)
+    }.to raise_error(NameError)
   end
 end

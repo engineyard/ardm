@@ -16,13 +16,13 @@ describe Ardm::Property::EpochTime do
     describe 'with a Time instance' do
       let(:value) { Time.now }
 
-      it { should == value.to_i }
+      it { is_expected.to eq(value.to_i) }
     end
 
     describe 'with nil' do
       let(:value) { nil }
 
-      it { should == value }
+      it { is_expected.to eq(value) }
     end
   end
 
@@ -32,25 +32,25 @@ describe Ardm::Property::EpochTime do
     describe 'with a DateTime instance' do
       let(:value) { DateTime.now }
 
-      it { should == Time.parse(value.to_s) }
+      it { is_expected.to eq(Time.parse(value.to_s)) }
     end
 
     describe 'with a number' do
       let(:value) { Time.now.to_i }
 
-      it { should == ::Time.at(value) }
+      it { is_expected.to eq(::Time.at(value)) }
     end
 
     describe 'with a numeric string' do
       let(:value) { Time.now.to_i.to_s }
 
-      it { should == ::Time.at(value.to_i) }
+      it { is_expected.to eq(::Time.at(value.to_i)) }
     end
 
     describe 'with a DateTime string' do
       let(:value) { '2011-07-11 15:00:04 UTC' }
 
-      it { should == ::Time.parse(value) }
+      it { is_expected.to eq(::Time.parse(value)) }
     end
   end
 
@@ -60,13 +60,13 @@ describe Ardm::Property::EpochTime do
     describe 'with a number' do
       let(:value) { Time.now.to_i }
 
-      it { should == Time.at(value) }
+      it { is_expected.to eq(Time.at(value)) }
     end
 
     describe 'with nil' do
       let(:value) { nil }
 
-      it { should == value }
+      it { is_expected.to eq(value) }
     end
   end
 end

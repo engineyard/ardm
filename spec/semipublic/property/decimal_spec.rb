@@ -15,68 +15,68 @@ describe Ardm::Property::Decimal do
   describe '#typecast' do
     it 'returns same value if a decimal' do
       @value = BigDecimal('24.0')
-      property.typecast(@value).should equal(@value)
+      expect(property.typecast(@value)).to equal(@value)
     end
 
     it 'returns decimal representation of a zero string integer' do
-      property.typecast('0').should eql(BigDecimal('0.0'))
+      expect(property.typecast('0')).to eql(BigDecimal('0.0'))
     end
 
     it 'returns decimal representation of a positive string integer' do
-      property.typecast('24').should eql(BigDecimal('24.0'))
+      expect(property.typecast('24')).to eql(BigDecimal('24.0'))
     end
 
     it 'returns decimal representation of a negative string integer' do
-      property.typecast('-24').should eql(BigDecimal('-24.0'))
+      expect(property.typecast('-24')).to eql(BigDecimal('-24.0'))
     end
 
     it 'returns decimal representation of a zero string float' do
-      property.typecast('0.0').should eql(BigDecimal('0.0'))
+      expect(property.typecast('0.0')).to eql(BigDecimal('0.0'))
     end
 
     it 'returns decimal representation of a positive string float' do
-      property.typecast('24.35').should eql(BigDecimal('24.35'))
+      expect(property.typecast('24.35')).to eql(BigDecimal('24.35'))
     end
 
     it 'returns decimal representation of a negative string float' do
-      property.typecast('-24.35').should eql(BigDecimal('-24.35'))
+      expect(property.typecast('-24.35')).to eql(BigDecimal('-24.35'))
     end
 
     it 'returns decimal representation of a zero string float, with no leading digits' do
-      property.typecast('.0').should eql(BigDecimal('0.0'))
+      expect(property.typecast('.0')).to eql(BigDecimal('0.0'))
     end
 
     it 'returns decimal representation of a positive string float, with no leading digits' do
-      property.typecast('.41').should eql(BigDecimal('0.41'))
+      expect(property.typecast('.41')).to eql(BigDecimal('0.41'))
     end
 
     it 'returns decimal representation of a zero integer' do
-      property.typecast(0).should eql(BigDecimal('0.0'))
+      expect(property.typecast(0)).to eql(BigDecimal('0.0'))
     end
 
     it 'returns decimal representation of a positive integer' do
-      property.typecast(24).should eql(BigDecimal('24.0'))
+      expect(property.typecast(24)).to eql(BigDecimal('24.0'))
     end
 
     it 'returns decimal representation of a negative integer' do
-      property.typecast(-24).should eql(BigDecimal('-24.0'))
+      expect(property.typecast(-24)).to eql(BigDecimal('-24.0'))
     end
 
     it 'returns decimal representation of a zero float' do
-      property.typecast(0.0).should eql(BigDecimal('0.0'))
+      expect(property.typecast(0.0)).to eql(BigDecimal('0.0'))
     end
 
     it 'returns decimal representation of a positive float' do
-      property.typecast(24.35).should eql(BigDecimal('24.35'))
+      expect(property.typecast(24.35)).to eql(BigDecimal('24.35'))
     end
 
     it 'returns decimal representation of a negative float' do
-      property.typecast(-24.35).should eql(BigDecimal('-24.35'))
+      expect(property.typecast(-24.35)).to eql(BigDecimal('-24.35'))
     end
 
     [ Object.new, true, '0.', '-.0', 'string' ].each do |value|
       it "does not typecast non-numeric value #{value.inspect}" do
-        property.typecast(value).should equal(value)
+        expect(property.typecast(value)).to equal(value)
       end
     end
   end

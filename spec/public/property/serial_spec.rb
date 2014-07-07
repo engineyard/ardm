@@ -15,8 +15,8 @@ describe Ardm::Property::Serial do
   describe '.options' do
     subject { described_class.options }
 
-    it { should be_kind_of(Hash) }
+    it { is_expected.to be_kind_of(Hash) }
 
-    it { should eql(:load_as => @load_as, :dump_as => @load_as, :coercion_method => :to_integer, :min => 1, :serial => true) }
+    it { is_expected.to eql(:load_as => @load_as, :dump_as => @load_as, :coercion_method => :to_integer, :min => 1, :serial => true) }
   end
 end

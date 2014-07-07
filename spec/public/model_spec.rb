@@ -62,34 +62,34 @@ describe 'Ardm::Record' do
     context 'with no arguments' do
       let(:args) { [] }
 
-      it { should be_instance_of(model) }
+      it { is_expected.to be_instance_of(model) }
 
-      it { subject.title.should == 'Default Title' }
+      it { expect(subject.title).to eq('Default Title') }
     end
 
     context 'with an empty Hash' do
       let(:args) { [ {} ] }
 
-      it { should be_instance_of(model) }
+      it { is_expected.to be_instance_of(model) }
 
-      it { subject.title.should == 'Default Title' }
+      it { expect(subject.title).to eq('Default Title') }
     end
 
     context 'with a non-empty Hash' do
       let(:attributes) { { :title => 'A Title' } }
       let(:args)       { [ attributes ]          }
 
-      it { should be_instance_of(model) }
+      it { is_expected.to be_instance_of(model) }
 
-      it { subject.title.should == 'A Title' }
+      it { expect(subject.title).to eq('A Title') }
     end
 
     context 'with nil' do
       let(:args) { [ nil ] }
 
-      it { should be_instance_of(model) }
+      it { is_expected.to be_instance_of(model) }
 
-      it { subject.title.should == 'Default Title' }
+      it { expect(subject.title).to eq('Default Title') }
     end
   end
 
@@ -102,26 +102,26 @@ describe 'Ardm::Record' do
       context 'with no arguments' do
         let(:args) { [] }
 
-        it { should be_instance_of(model) }
+        it { is_expected.to be_instance_of(model) }
 
-        it { should be_saved }
+        it { is_expected.to be_saved }
       end
 
       context 'with an empty Hash' do
         let(:args) { [ {} ] }
 
-        it { should be_instance_of(model) }
+        it { is_expected.to be_instance_of(model) }
 
-        it { should be_saved }
+        it { is_expected.to be_saved }
       end
 
       context 'with a non-empty Hash' do
         let(:attributes) { { :title => 'A Title' } }
         let(:args)       { [ attributes ]          }
 
-        it { should be_instance_of(model) }
+        it { is_expected.to be_instance_of(model) }
 
-        it { should be_saved }
+        it { is_expected.to be_saved }
 
         it { expect(subject.title).to eq attributes[:title] }
       end
@@ -129,9 +129,9 @@ describe 'Ardm::Record' do
       context 'with nil' do
         let(:args) { [ nil ] }
 
-        it { should be_instance_of(model) }
+        it { is_expected.to be_instance_of(model) }
 
-        it { should be_saved }
+        it { is_expected.to be_saved }
       end
     end
   end
@@ -154,11 +154,11 @@ describe 'Ardm::Record' do
         let(:attributes) { { :title => 'Updated Title' } }
         let(:args)       { [ attributes ]                }
 
-        it { should be(true) }
+        it { is_expected.to be(true) }
 
         it 'should persist the changes' do
           subject
-          model.all(:fields => [ :title ]).map { |resource| resource.title }.uniq.should == [ attributes[:title] ]
+          expect(model.all(:fields => [ :title ]).map { |resource| resource.title }.uniq).to eq([ attributes[:title] ])
         end
       end
 
@@ -166,11 +166,11 @@ describe 'Ardm::Record' do
         let(:attributes) { { :original => @other } }
         let(:args)       { [ attributes ]          }
 
-        it { should be(true) }
+        it { is_expected.to be(true) }
 
         it 'should persist the changes' do
           subject
-          model.all(:fields => [ :original_id ]).map { |resource| resource.original }.uniq.should == [ attributes[:original] ]
+          expect(model.all(:fields => [ :original_id ]).map { |resource| resource.original }.uniq).to eq([ attributes[:original] ])
         end
       end
 
@@ -180,7 +180,7 @@ describe 'Ardm::Record' do
 
         it 'should raise InvalidValueError' do
           expect { subject }.to(raise_error(Ardm::Property::InvalidValueError) do |error|
-            error.property.should == model.properties[:title]
+            expect(error.property).to eq(model.properties[:title])
           end)
         end
       end

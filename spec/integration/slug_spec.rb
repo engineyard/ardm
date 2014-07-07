@@ -16,11 +16,11 @@ try_spec do
       end
 
       it 'has slug equal to "new-datamapper-type"' do
-        @resource.slug.should == 'new-ardm-type'
+        expect(@resource.slug).to eq('new-ardm-type')
       end
 
       it 'can be found by slug' do
-        Ardm::Fixtures::Article.where(:slug => 'new-ardm-type').first.should == @resource
+        expect(Ardm::Fixtures::Article.where(:slug => 'new-ardm-type').first).to eq(@resource)
       end
     end
 
@@ -41,21 +41,21 @@ try_spec do
         describe "set with title '#{title}'" do
           before do
             @resource = Ardm::Fixtures::Article.new(:title => title)
-            @resource.valid?.should be(true)
+            expect(@resource.valid?).to be(true)
           end
 
           it "has slug equal to '#{slug}'" do
-            @resource.slug.should == slug
+            expect(@resource.slug).to eq(slug)
           end
 
           describe "and persisted" do
             before do
-              @resource.save.should be(true)
+              expect(@resource.save).to be(true)
               @resource.reload
             end
 
             it 'can be found by slug' do
-              Ardm::Fixtures::Article.where(:slug => slug).first.should == @resource
+              expect(Ardm::Fixtures::Article.where(:slug => slug).first).to eq(@resource)
             end
           end
         end

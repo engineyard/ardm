@@ -16,31 +16,31 @@ try_spec do
         end
 
         it 'points to original path' do
-          @resource.source_path.to_s.should == @source_path
+          expect(@resource.source_path.to_s).to eq(@source_path)
         end
 
         it 'responds to :directory?' do
-          @resource.source_path.should respond_to(:directory?)
+          expect(@resource.source_path).to respond_to(:directory?)
         end
 
         it 'responds to :file?' do
-          @resource.source_path.should respond_to(:file?)
+          expect(@resource.source_path).to respond_to(:file?)
         end
 
         it 'responds to :dirname' do
-          @resource.source_path.should respond_to(:dirname)
+          expect(@resource.source_path).to respond_to(:dirname)
         end
 
         it 'responds to :absolute?' do
-          @resource.source_path.should respond_to(:absolute?)
+          expect(@resource.source_path).to respond_to(:absolute?)
         end
 
         it 'responds to :readable?' do
-          @resource.source_path.should respond_to(:readable?)
+          expect(@resource.source_path).to respond_to(:readable?)
         end
 
         it 'responds to :size' do
-          @resource.source_path.should respond_to(:size)
+          expect(@resource.source_path).to respond_to(:size)
         end
       end
     end
@@ -53,36 +53,36 @@ try_spec do
 
       describe 'when saved and reloaded' do
         before do
-          @resource.save.should be true
+          expect(@resource.save).to be true
           @resource.reload
         end
 
         it 'points to original path' do
-          @resource.destination_path.to_s.should == @destination_path
+          expect(@resource.destination_path.to_s).to eq(@destination_path)
         end
 
         it 'responds to :directory?' do
-          @resource.destination_path.should respond_to(:directory?)
+          expect(@resource.destination_path).to respond_to(:directory?)
         end
 
         it 'responds to :file?' do
-          @resource.destination_path.should respond_to(:file?)
+          expect(@resource.destination_path).to respond_to(:file?)
         end
 
         it 'responds to :dirname' do
-          @resource.destination_path.should respond_to(:dirname)
+          expect(@resource.destination_path).to respond_to(:dirname)
         end
 
         it 'responds to :absolute?' do
-          @resource.destination_path.should respond_to(:absolute?)
+          expect(@resource.destination_path).to respond_to(:absolute?)
         end
 
         it 'responds to :readable?' do
-          @resource.destination_path.should respond_to(:readable?)
+          expect(@resource.destination_path).to respond_to(:readable?)
         end
 
         it 'responds to :size' do
-          @resource.destination_path.should respond_to(:size)
+          expect(@resource.destination_path).to respond_to(:size)
         end
       end
     end
@@ -95,12 +95,12 @@ try_spec do
 
       describe 'when saved and reloaded' do
         before do
-          @resource.save.should be true
+          expect(@resource.save).to be true
           @resource.reload
         end
 
         it 'has nil source path' do
-          @resource.source_path.should be_nil
+          expect(@resource.source_path).to be_nil
         end
       end
     end
@@ -113,12 +113,12 @@ try_spec do
 
       describe 'when saved and reloaded' do
         before do
-          @resource.save.should be true
+          expect(@resource.save).to be true
           @resource.reload
         end
 
         it 'has nil source path' do
-          @resource.source_path.should be_nil
+          expect(@resource.source_path).to be_nil
         end
       end
     end
@@ -131,12 +131,12 @@ try_spec do
 
       describe 'when saved and reloaded' do
         before do
-          @resource.save.should be true
+          expect(@resource.save).to be true
           @resource.reload
         end
 
         it 'has nil source path' do
-          @resource.source_path.should be_nil
+          expect(@resource.source_path).to be_nil
         end
       end
     end
@@ -148,9 +148,9 @@ try_spec do
 
       describe 'when instantiated' do
         it 'raises an exception' do
-          lambda do
+          expect do
             Ardm::Fixtures::SoftwarePackage.new(:source_path => @source_path)
-          end.should raise_error(TypeError)
+          end.to raise_error(TypeError)
         end
       end
     end

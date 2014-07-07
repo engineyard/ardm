@@ -14,8 +14,8 @@ try_spec do
     end
 
     it 'persists the password on initial save' do
-      @resource.password.should       == 'Ardm R0cks!'
-      @people.last.password.should == 'password1'
+      expect(@resource.password).to       eq('Ardm R0cks!')
+      expect(@people.last.password).to eq('password1')
     end
 
     it 'recalculates password hash on attribute update' do
@@ -23,23 +23,23 @@ try_spec do
       @resource.save
 
       @resource.reload
-      @resource.password.should     == 'bcryptic obscure'
-      @resource.password.should_not == 'Ardm R0cks!'
+      expect(@resource.password).to     eq('bcryptic obscure')
+      expect(@resource.password).not_to eq('Ardm R0cks!')
     end
 
     it 'does not change password value on reload' do
       resource = @people.last
       original = resource.password.to_s
       resource.reload
-      resource.password.to_s.should == original
+      expect(resource.password.to_s).to eq(original)
     end
 
     it 'uses cost of BCrypt::Engine::DEFAULT_COST' do
-      @resource.password.cost.should == BCrypt::Engine::DEFAULT_COST
+      expect(@resource.password.cost).to eq(BCrypt::Engine::DEFAULT_COST)
     end
 
     it 'allows Bcrypt::Password#hash to be an Integer' do
-      @resource.password.hash.should be_kind_of(Integer)
+      expect(@resource.password.hash).to be_kind_of(Integer)
     end
   end
 end

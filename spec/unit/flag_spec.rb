@@ -20,7 +20,7 @@ try_spec do
         end
 
         it 'returns flag bit of value' do
-          @result.should == 1
+          expect(@result).to eq(1)
         end
       end
 
@@ -30,7 +30,7 @@ try_spec do
         end
 
         it 'returns flag bit of value' do
-          @result.should == 2
+          expect(@result).to eq(2)
         end
       end
 
@@ -40,7 +40,7 @@ try_spec do
         end
 
         it 'builds binary flag from key values of all matches' do
-          @result.should == 10
+          expect(@result).to eq(10)
         end
       end
 
@@ -50,7 +50,7 @@ try_spec do
         end
 
         it 'builds binary flag from key values of all matches' do
-          @result.should == 31
+          expect(@result).to eq(31)
         end
       end
 
@@ -60,7 +60,7 @@ try_spec do
         end
 
         it 'returns zero' do
-          @result.should == 0
+          expect(@result).to eq(0)
         end
       end
 
@@ -70,7 +70,7 @@ try_spec do
         end
 
         it 'behaves the same as if there were no duplicates' do
-          @result.should == @flag.dump([ :second, :fourth ])
+          expect(@result).to eq(@flag.dump([ :second, :fourth ]))
         end
       end
     end
@@ -86,7 +86,7 @@ try_spec do
         end
 
         it 'returns array with a single matching element' do
-          @result.should == [ :tres ]
+          expect(@result).to eq([ :tres ])
         end
       end
 
@@ -96,7 +96,7 @@ try_spec do
         end
 
         it 'returns array of matching values' do
-          @result.should == [ :dos, :cuatro ]
+          expect(@result).to eq([ :dos, :cuatro ])
         end
       end
 
@@ -106,7 +106,7 @@ try_spec do
         end
 
         it 'returns an empty array' do
-          @result.should == []
+          expect(@result).to eq([])
         end
       end
     end

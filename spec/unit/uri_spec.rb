@@ -13,36 +13,36 @@ try_spec do
 
     describe '.dump' do
       it 'returns the URI as a String' do
-        @property.dump(@uri).should == @uri_str
+        expect(@property.dump(@uri)).to eq(@uri_str)
       end
 
       describe 'when given nil' do
         it 'returns nil' do
-          @property.dump(nil).should be_nil
+          expect(@property.dump(nil)).to be_nil
         end
       end
 
       describe 'when given an empty string' do
         it 'returns an empty URI' do
-          @property.dump('').should == ''
+          expect(@property.dump('')).to eq('')
         end
       end
     end
 
     describe '.load' do
       it 'returns the URI as Addressable' do
-        @property.load(@uri_str).should == @uri
+        expect(@property.load(@uri_str)).to eq(@uri)
       end
 
       describe 'when given nil' do
         it 'returns nil' do
-          @property.load(nil).should be_nil
+          expect(@property.load(nil)).to be_nil
         end
       end
 
       describe 'if given an empty String' do
         it 'returns an empty URI' do
-          @property.load('').should == Addressable::URI.parse('')
+          expect(@property.load('')).to eq(Addressable::URI.parse(''))
         end
       end
     end
@@ -50,13 +50,13 @@ try_spec do
     describe '.typecast' do
       describe 'given instance of Addressable::URI' do
         it 'does nothing' do
-          @property.typecast(@uri).should == @uri
+          expect(@property.typecast(@uri)).to eq(@uri)
         end
       end
 
       describe 'when given a string' do
         it 'delegates to .load' do
-          @property.typecast(@uri_str).should == @uri
+          expect(@property.typecast(@uri_str)).to eq(@uri)
         end
       end
     end

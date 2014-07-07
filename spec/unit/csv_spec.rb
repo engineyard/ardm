@@ -19,7 +19,7 @@ try_spec do
         end
 
         it 'parses the argument using CVS parser' do
-          @result.should == [ %w[ uno due tre ] ]
+          expect(@result).to eq([ %w[ uno due tre ] ])
         end
       end
 
@@ -30,7 +30,7 @@ try_spec do
         end
 
         it 'does not change the input' do
-          @result.should == @input
+          expect(@result).to eq(@input)
         end
       end
 
@@ -41,7 +41,7 @@ try_spec do
         end
 
         it 'returns nil' do
-          @result.should be_nil
+          expect(@result).to be_nil
         end
       end
 
@@ -52,7 +52,7 @@ try_spec do
         end
 
         it 'returns nil' do
-          @result.should be_nil
+          expect(@result).to be_nil
         end
       end
 
@@ -63,7 +63,7 @@ try_spec do
         end
 
         it 'returns nil' do
-          @result.should be_nil
+          expect(@result).to be_nil
         end
       end
 
@@ -74,7 +74,7 @@ try_spec do
         end
 
         it 'returns nil' do
-          @result.should be_nil
+          expect(@result).to be_nil
         end
       end
 
@@ -85,7 +85,7 @@ try_spec do
         end
 
         it 'returns input as is' do
-          @result.should eql(@input)
+          expect(@result).to eql(@input)
         end
       end
     end
@@ -98,7 +98,7 @@ try_spec do
         end
 
         it 'dumps value to comma separated string' do
-          @result.should == "uno,due,tre\nuno,dos,tres\n"
+          expect(@result).to eq("uno,due,tre\nuno,dos,tres\n")
         end
       end
 
@@ -109,7 +109,7 @@ try_spec do
         end
 
         it 'returns input as is' do
-          @result.should == @input
+          expect(@result).to eq(@input)
         end
       end
 
@@ -120,7 +120,7 @@ try_spec do
         end
 
         it 'returns nil' do
-          @result.should be_nil
+          expect(@result).to be_nil
         end
       end
 
@@ -131,7 +131,7 @@ try_spec do
         end
 
         it 'returns nil' do
-          @result.should be_nil
+          expect(@result).to be_nil
         end
       end
     end

@@ -17,7 +17,7 @@ try_spec do
         end
 
         it 'dumps input into a string' do
-          @result.should == @stored
+          expect(@result).to eq(@stored)
         end
       end
 
@@ -27,7 +27,7 @@ try_spec do
         end
 
         it 'returns nil' do
-          @result.should be_nil
+          expect(@result).to be_nil
         end
       end
 
@@ -37,7 +37,7 @@ try_spec do
         end
 
         it 'retuns a blank string' do
-          @result.should == ''
+          expect(@result).to eq('')
         end
       end
     end
@@ -49,7 +49,7 @@ try_spec do
         end
 
         it 'returns IPAddr instance from stored value' do
-          @result.should == @input
+          expect(@result).to eq(@input)
         end
       end
 
@@ -59,7 +59,7 @@ try_spec do
         end
 
         it 'returns nil' do
-          @result.should be_nil
+          expect(@result).to be_nil
         end
       end
 
@@ -69,7 +69,7 @@ try_spec do
         end
 
         it 'returns IPAddr instance from stored value' do
-          @result.should == IPAddr.new('0.0.0.0')
+          expect(@result).to eq(IPAddr.new('0.0.0.0'))
         end
       end
 
@@ -79,7 +79,7 @@ try_spec do
         end
 
         it 'raises ArgumentError with a meaningful message' do
-          @operation.should raise_error(ArgumentError, '+value+ must be nil or a String')
+          expect(@operation).to raise_error(ArgumentError, '+value+ must be nil or a String')
         end
       end
     end
@@ -91,7 +91,7 @@ try_spec do
         end
 
         it 'does not change the value' do
-          @result.should == @input
+          expect(@result).to eq(@input)
         end
       end
 
@@ -101,7 +101,7 @@ try_spec do
         end
 
         it 'instantiates IPAddr instance' do
-          @result.should == @input
+          expect(@result).to eq(@input)
         end
       end
     end

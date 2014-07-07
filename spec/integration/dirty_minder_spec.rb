@@ -29,45 +29,45 @@ try_spec do
         }
         @resource.save!
         @resource.reload
-        @resource.positions['title'].should == 'Layperson'
+        expect(@resource.positions['title']).to eq('Layperson')
       end
 
       describe "when I change positions" do
         before :each do
-          @resource.changed?.should == false
+          expect(@resource.changed?).to eq(false)
           @resource.positions['title'] = 'Chief Layer of People'
           @resource.save!
           @resource.reload
         end
 
         it "should remember the new position" do
-          @resource.positions['title'].should == 'Chief Layer of People'
+          expect(@resource.positions['title']).to eq('Chief Layer of People')
         end
       end
 
       describe "when I add a new attribute of the position" do
         before :each do
-          @resource.changed?.should == false
+          expect(@resource.changed?).to eq(false)
           @resource.positions['pays_buttloads_of_money'] = true
           @resource.save!
           @resource.reload
         end
 
         it "should remember the new attribute" do
-          @resource.positions['pays_buttloads_of_money'].should be true
+          expect(@resource.positions['pays_buttloads_of_money']).to be true
         end
       end
 
       describe "when I change the details of the position" do
         before :each do
-          @resource.changed?.should == false
+          expect(@resource.changed?).to eq(false)
           @resource.positions['details'].merge!('awesome' => "VERY TRUE")
           @resource.save!
           @resource.reload
         end
 
         it "should remember the changed detail" do
-          @resource.positions['details']['awesome'].should == 'VERY TRUE'
+          expect(@resource.positions['details']['awesome']).to eq('VERY TRUE')
         end
       end
 
@@ -78,8 +78,8 @@ try_spec do
         end
 
         it "should reflect the previously set/persisted value" do
-          @resource.positions.should_not be_nil
-          @resource.positions['title'].should == 'Layperson'
+          expect(@resource.positions).not_to be_nil
+          expect(@resource.positions['title']).to eq('Layperson')
         end
       end
 
@@ -95,25 +95,25 @@ try_spec do
         ]
         @resource.save!
         @resource.reload
-        @resource.positions.first['title'].should == 'Layperson'
+        expect(@resource.positions.first['title']).to eq('Layperson')
       end
 
       describe "when I remove the position" do
         before :each do
-          @resource.changed?.should == false
+          expect(@resource.changed?).to eq(false)
           @resource.positions.pop
           @resource.save!
           @resource.reload
         end
 
         it "should know there aren't any positions" do
-          @resource.positions.should == []
+          expect(@resource.positions).to eq([])
         end
       end
 
       describe "when I add a new position" do
         before :each do
-          @resource.changed?.should == false
+          expect(@resource.changed?).to eq(false)
           @resource.positions << {
             'company' => "Down and Dirty, LP",
             'title'   => "Porn Star",
@@ -124,12 +124,12 @@ try_spec do
         end
 
         it "should know there's two positions" do
-          @resource.positions.length.should == 2
+          expect(@resource.positions.length).to eq(2)
         end
 
         it "should know which position is which" do
-          @resource.positions.first['title'].should == "Layperson"
-          @resource.positions.last['title'].should == "Porn Star"
+          expect(@resource.positions.first['title']).to eq("Layperson")
+          expect(@resource.positions.last['title']).to eq("Porn Star")
         end
 
         describe "when I change the details of one of the positions" do
@@ -140,27 +140,27 @@ try_spec do
           end
 
           it "should remember the changed detail" do
-            @resource.positions.last['details']['high_risk'].should == true
+            expect(@resource.positions.last['details']['high_risk']).to eq(true)
           end
         end
       end # when I add a new position
 
       describe "when I remove the position with a block-based mutator" do
         before :each do
-          @resource.changed?.should == false
+          expect(@resource.changed?).to eq(false)
           @resource.positions.reject! { |_| true }
           @resource.save!
           @resource.reload
         end
 
         it "should know there aren't any positions" do
-          @resource.positions.should == []
+          expect(@resource.positions).to eq([])
         end
       end
 
       describe "when I mutate positions through a reference" do
         before :each do
-          @resource.changed?.should == false
+          expect(@resource.changed?).to eq(false)
           @positions = @resource.positions
           @positions << {
             'company' => "Ooga Booga, Inc",
@@ -169,9 +169,9 @@ try_spec do
         end
 
         it "should reflect the change in both the property and the reference" do
-          @resource.positions.length.should == 2
-          @resource.positions.last['title'].should == 'Rocker'
-          @positions.last['title'].should == 'Rocker'
+          expect(@resource.positions.length).to eq(2)
+          expect(@resource.positions.last['title']).to eq('Rocker')
+          expect(@positions.last['title']).to eq('Rocker')
         end
       end
 

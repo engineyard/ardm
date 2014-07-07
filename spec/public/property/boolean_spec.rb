@@ -16,15 +16,15 @@ describe Ardm::Property::Boolean do
   describe '.options' do
     subject { described_class.options }
 
-    it { should be_kind_of(Hash) }
+    it { is_expected.to be_kind_of(Hash) }
 
-    it { should eql(:load_as => @load_as, :dump_as => @load_as, :coercion_method => :to_boolean) }
+    it { is_expected.to eql(:load_as => @load_as, :dump_as => @load_as, :coercion_method => :to_boolean) }
   end
 
   describe "default" do
     it "should set has_picture to the default (booleans are specifically weird in rails because presence validation fails for false)" do
       tshirt = Ardm::Fixtures::TShirt.create!
-      tshirt.should_not have_picture
+      expect(tshirt).not_to have_picture
     end
   end
 end

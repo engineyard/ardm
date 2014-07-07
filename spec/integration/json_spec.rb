@@ -16,12 +16,12 @@ try_spec do
 
       describe 'when dumped and loaded again' do
         before do
-          @resource.save.should be true
+          expect(@resource.save).to be true
           @resource.reload
         end
 
         it 'has nil positions list' do
-          @resource.positions.should be_nil
+          expect(@resource.positions).to be_nil
         end
       end
     end
@@ -36,15 +36,15 @@ try_spec do
 
       describe 'when dumped and loaded again' do
         before do
-          @resource.save.should be true
+          expect(@resource.save).to be true
           @resource.reload
         end
 
         it 'loads positions list to the state when it was dumped/persisted with keys being strings' do
-          @resource.positions.should == [
+          expect(@resource.positions).to eq([
             { 'company' => 'The Death Star, Inc',  'title' => 'Light sabre engineer'    },
             { 'company'  => 'Sane Little Company', 'title' => 'Chief Curiosity Officer' },
-          ]
+          ])
         end
       end
     end
@@ -56,12 +56,12 @@ try_spec do
 
       describe 'when dumped and loaded again' do
         before do
-          @resource.save.should be true
+          expect(@resource.save).to be true
           @resource.reload
         end
 
         it 'has empty positions list' do
-          @resource.positions.should == []
+          expect(@resource.positions).to eq([])
         end
       end
     end

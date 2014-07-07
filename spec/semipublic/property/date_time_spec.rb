@@ -24,24 +24,24 @@ describe Ardm::Property::DateTime do
           :sec   => '0'
         )
 
-        result.should be_kind_of(DateTime)
-        result.year.should eql(2006)
-        result.month.should eql(11)
-        result.day.should eql(23)
-        result.hour.should eql(12)
-        result.min.should eql(0)
-        result.sec.should eql(0)
+        expect(result).to be_kind_of(DateTime)
+        expect(result.year).to eql(2006)
+        expect(result.month).to eql(11)
+        expect(result.day).to eql(23)
+        expect(result.hour).to eql(12)
+        expect(result.min).to eql(0)
+        expect(result.sec).to eql(0)
       end
     end
 
     describe 'and value is a string' do
       it 'parses the string' do
-        property.typecast('Dec, 2006').month.should == 12
+        expect(property.typecast('Dec, 2006').month).to eq(12)
       end
     end
 
     it 'does not typecast non-datetime values' do
-      property.typecast('not-datetime').should eql('not-datetime')
+      expect(property.typecast('not-datetime')).to eql('not-datetime')
     end
   end
 end

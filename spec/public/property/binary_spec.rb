@@ -15,9 +15,9 @@ describe Ardm::Property::Binary do
   describe '.options' do
     subject { described_class.options }
 
-    it { should be_kind_of(Hash) }
+    it { is_expected.to be_kind_of(Hash) }
 
-    it { should eql(:load_as => @load_as, :dump_as => @load_as, :coercion_method => :to_string, :length => 50) }
+    it { is_expected.to eql(:load_as => @load_as, :dump_as => @load_as, :coercion_method => :to_string, :length => 50) }
   end
 
   if RUBY_VERSION >= "1.9"
@@ -30,11 +30,11 @@ describe Ardm::Property::Binary do
       end
 
       it 'should always dump with BINARY' do
-        model.properties[:bin_data].dump("foo".freeze).encoding.names.should include("BINARY")
+        expect(model.properties[:bin_data].dump("foo".freeze).encoding.names).to include("BINARY")
       end
 
       it 'should always load with BINARY' do
-        model.properties[:bin_data].load("foo".freeze).encoding.names.should include("BINARY")
+        expect(model.properties[:bin_data].load("foo".freeze).encoding.names).to include("BINARY")
       end
     end
   end

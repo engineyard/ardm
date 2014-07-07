@@ -15,19 +15,19 @@ try_spec do
     describe '.dump' do
       describe 'when input is a string' do
         it 'does not modify input' do
-          @property.dump(@input).should == @input
+          expect(@property.dump(@input)).to eq(@input)
         end
       end
 
       describe 'when input is nil' do
         it 'returns nil' do
-          @property.dump(nil).should be_nil
+          expect(@property.dump(nil)).to be_nil
         end
       end
 
       describe 'when input is a blank string' do
         it 'returns nil' do
-          @property.dump('').should be_nil
+          expect(@property.dump('')).to be_nil
         end
       end
     end
@@ -35,19 +35,19 @@ try_spec do
     describe '.load' do
       describe 'when value is a non-blank file path' do
         it 'returns Pathname for a path' do
-          @property.load(@input).should == @path
+          expect(@property.load(@input)).to eq(@path)
         end
       end
 
       describe 'when value is nil' do
         it 'return nil' do
-          @property.load(nil).should be_nil
+          expect(@property.load(nil)).to be_nil
         end
       end
 
       describe 'when value is a blank string' do
         it 'returns nil' do
-          @property.load('').should be_nil
+          expect(@property.load('')).to be_nil
         end
       end
     end
@@ -55,19 +55,19 @@ try_spec do
     describe '.typecast' do
       describe 'when a Pathname is given' do
         it 'does not modify input' do
-          @property.typecast(@path).should == @path
+          expect(@property.typecast(@path)).to eq(@path)
         end
       end
 
       describe 'when a nil is given' do
         it 'does not modify input' do
-          @property.typecast(nil).should == nil
+          expect(@property.typecast(nil)).to eq(nil)
         end
       end
 
       describe 'when a string is given' do
         it 'returns Pathname for given path' do
-          @property.typecast(@input).should == @path
+          expect(@property.typecast(@input)).to eq(@path)
         end
       end
     end

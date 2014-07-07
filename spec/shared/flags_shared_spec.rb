@@ -14,23 +14,23 @@ shared_examples "A property with flags" do
 
   describe ".generated_classes" do
     it "should cache the generated class" do
-      @property_klass.generated_classes[@flags].should_not be_nil
+      expect(@property_klass.generated_classes[@flags]).not_to be_nil
     end
   end
 
   it "should include :flags in accepted_options" do
-    @property_klass.accepted_options.should include(:flags)
+    expect(@property_klass.accepted_options).to include(:flags)
   end
 
   it "should respond to :generated_classes" do
-    @property_klass.should respond_to(:generated_classes)
+    expect(@property_klass).to respond_to(:generated_classes)
   end
 
   it "should respond to :flag_map" do
-    @property.should respond_to(:flag_map)
+    expect(@property).to respond_to(:flag_map)
   end
 
   it "should be custom" do
-    @property.custom?.should be(true)
+    expect(@property.custom?).to be(true)
   end
 end

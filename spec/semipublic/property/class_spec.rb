@@ -22,15 +22,15 @@ describe Ardm::Property::Class do
 
   describe '#typecast' do
     it 'returns same value if a class' do
-      property.typecast(model).should equal(model)
+      expect(property.typecast(model)).to equal(model)
     end
 
     it 'returns the class if found' do
-      property.typecast(model.name).should eql(model)
+      expect(property.typecast(model.name)).to eql(model)
     end
 
     it 'does not typecast non-class values' do
-      property.typecast('NoClass').should eql('NoClass')
+      expect(property.typecast('NoClass')).to eql('NoClass')
     end
   end
 end

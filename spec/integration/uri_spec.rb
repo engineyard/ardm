@@ -15,11 +15,11 @@ try_spec do
           :tags   => %w[ misc ]
         )
 
-        @resource.save.should be(true)
+        expect(@resource.save).to be(true)
       end
 
       it 'can be found by uri' do
-        Ardm::Fixtures::Bookmark.where(:uri => @uri).first.should == @resource
+        expect(Ardm::Fixtures::Bookmark.where(:uri => @uri).first).to eq(@resource)
       end
 
       describe 'when reloaded' do
@@ -28,7 +28,7 @@ try_spec do
         end
 
         it 'has no uri' do
-          @resource.uri.should be_nil
+          expect(@resource.uri).to be_nil
         end
       end
     end
@@ -43,11 +43,11 @@ try_spec do
           :tags   => %w[ misc ]
         )
 
-        @resource.save.should be(true)
+        expect(@resource.save).to be(true)
       end
 
       it 'can be found by uri' do
-        Ardm::Fixtures::Bookmark.where(:uri => @uri).first.should == @resource
+        expect(Ardm::Fixtures::Bookmark.where(:uri => @uri).first).to eq(@resource)
       end
 
       describe 'when reloaded' do
@@ -56,11 +56,11 @@ try_spec do
         end
 
         it 'is loaded as URI object' do
-          @resource.uri.should be_an_instance_of(Addressable::URI)
+          expect(@resource.uri).to be_an_instance_of(Addressable::URI)
         end
 
         it 'has the same original URI' do
-          @resource.uri.to_s.should == @uri
+          expect(@resource.uri.to_s).to eq(@uri)
         end
       end
     end
@@ -77,7 +77,7 @@ try_spec do
       end
 
       it 'is perfectly valid (URI type does not provide auto validations)' do
-        @resource.save.should be(true)
+        expect(@resource.save).to be(true)
       end
     end
 
@@ -114,11 +114,11 @@ try_spec do
             :tags   => %w[ misc ]
           )
 
-          @resource.save.should be(true)
+          expect(@resource.save).to be(true)
         end
 
         it 'can be found by uri' do
-          Ardm::Fixtures::Bookmark.where(:uri => uri).first.should_not be_nil
+          expect(Ardm::Fixtures::Bookmark.where(:uri => uri).first).not_to be_nil
         end
 
         describe 'when reloaded' do
@@ -127,7 +127,7 @@ try_spec do
           end
 
           it 'has the same original URI' do
-            @resource.uri.to_s.should eql(uri)
+            expect(@resource.uri.to_s).to eql(uri)
           end
         end
       end

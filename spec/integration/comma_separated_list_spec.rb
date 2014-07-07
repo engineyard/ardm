@@ -16,12 +16,12 @@ try_spec do
 
       describe 'when dumped and loaded again' do
         before do
-          @resource.save.should be true
+          expect(@resource.save).to be true
           @resource.reload
         end
 
         it 'has no interests' do
-          @resource.interests.should == nil
+          expect(@resource.interests).to eq(nil)
         end
       end
     end
@@ -33,22 +33,22 @@ try_spec do
 
       describe 'when dumped and loaded again' do
         before do
-          @resource.save.should be true
+          expect(@resource.save).to be true
           @resource.reload
         end
 
         it 'has empty interests list' do
-          @resource.interests.should == []
+          expect(@resource.interests).to eq([])
         end
       end
     end
 
     describe 'with interests information given as a Hash' do
       it 'raises ArgumentError' do
-        lambda do
+        expect do
           @resource.interests = { :hash => 'value' }
           @resource.save
-        end.should raise_error(ArgumentError, /must be a string, an array or nil/)
+        end.to raise_error(ArgumentError, /must be a string, an array or nil/)
       end
     end
 
@@ -60,24 +60,24 @@ try_spec do
 
       describe 'when dumped and loaded again' do
         before do
-          @resource.save.should be true
+          expect(@resource.save).to be true
           @resource.reload
         end
 
         it 'includes "fire" in interests' do
-          @resource.interests.should include('fire')
+          expect(@resource.interests).to include('fire')
         end
 
         it 'includes "water" in interests' do
-          @resource.interests.should include('water')
+          expect(@resource.interests).to include('water')
         end
 
         it 'includes "a whole lot of other interesting things" in interests' do
-          @resource.interests.should include('a whole lot of other interesting things')
+          expect(@resource.interests).to include('a whole lot of other interesting things')
         end
 
         it 'has blank entries removed' do
-          @resource.interests.any? { |i| Ardm::Ext.blank?(i) }.should be false
+          expect(@resource.interests.any? { |i| Ardm::Ext.blank?(i) }).to be false
         end
       end
     end

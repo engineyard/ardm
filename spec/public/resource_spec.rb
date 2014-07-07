@@ -78,7 +78,7 @@ describe Ardm::Record do
   #it_should_behave_like 'A Resource supporting Strategic Eager Loading'
 
   it 'A resource should respond to raise_on_save_failure' do
-    @user.should respond_to(:raise_on_save_failure)
+    expect(@user).to respond_to(:raise_on_save_failure)
   end
 
   describe '#raise_on_save_failure' do
@@ -91,7 +91,7 @@ describe Ardm::Record do
     subject { @user.raise_on_save_failure }
 
     describe 'when model.raise_on_save_failure has not been set' do
-      it { should be false }
+      it { is_expected.to be false }
     end
 
     describe 'when model.raise_on_save_failure has been set to true' do
@@ -99,7 +99,7 @@ describe Ardm::Record do
         @user_model.raise_on_save_failure = true
       end
 
-      it { should be true }
+      it { is_expected.to be true }
     end
 
     describe 'when resource.raise_on_save_failure has been set to true' do
@@ -107,12 +107,12 @@ describe Ardm::Record do
         @user.raise_on_save_failure = true
       end
 
-      it { should be true }
+      it { is_expected.to be true }
     end
   end
 
   it 'A model should respond to raise_on_save_failure=' do
-    @user_model.should respond_to(:raise_on_save_failure=)
+    expect(@user_model).to respond_to(:raise_on_save_failure=)
   end
 
   describe '#raise_on_save_failure=' do
@@ -124,7 +124,7 @@ describe Ardm::Record do
     describe 'with a true value' do
       subject { @user_model.raise_on_save_failure = true }
 
-      it { should be true }
+      it { is_expected.to be true }
 
       it 'should set raise_on_save_failure' do
         expect { subject }.to change {
@@ -136,7 +136,7 @@ describe Ardm::Record do
     describe 'with a false value' do
       subject { @user_model.raise_on_save_failure = false }
 
-      it { should be false }
+      it { is_expected.to be false }
 
       it 'should set raise_on_save_failure' do
         expect { subject }.to_not change {
@@ -156,7 +156,7 @@ describe Ardm::Record do
         end
 
         describe 'and it is a savable resource' do
-          it { should be true }
+          it { is_expected.to be true }
         end
 
         # FIXME: We cannot trigger a failing save with invalid properties anymore.
@@ -165,12 +165,12 @@ describe Ardm::Record do
 
         describe 'and it is an invalid resource' do
           before do
-            @user.should_receive(:save_self).and_return(false)
+            expect(@user).to receive(:save_self).and_return(false)
           end
 
           it 'should raise an exception' do
             expect { subject }.to raise_error(Ardm::SaveFailureError, "Blog::User##{method} returned false, Blog::User was not saved") { |error|
-              error.resource.should equal(@user)
+              expect(error.resource).to equal(@user)
             }
           end
         end
@@ -185,7 +185,7 @@ describe Ardm::Record do
         @user.referrer = @dkubb
         @user.save
         @user = @user_model.get(@user.key)
-        @user.referrer.should == @dkubb
+        expect(@user.referrer).to eq(@dkubb)
 
         @solnic = @user_model.create(:name => 'solnic', :age => 28)
 
@@ -205,21 +205,21 @@ describe Ardm::Record do
       end
 
       it 'should return true' do
-        @return.should be true
+        expect(@return).to be true
       end
 
       it 'should update attributes of Resource' do
-        @attributes.each { |key, value| @user.__send__(key).should == value }
+        @attributes.each { |key, value| expect(@user.__send__(key)).to eq(value) }
       end
 
       it 'should persist the changes' do
         resource = @user_model.get(@user.key)
-        @attributes.each { |key, value| resource.__send__(key).should == value }
+        @attributes.each { |key, value| expect(resource.__send__(key)).to eq(value) }
       end
 
       it 'should return correct parent' do
         resource = @user_model.get(@user.key)
-        resource.referrer.should == @solnic
+        expect(resource.referrer).to eq(@solnic)
       end
     end
   end
@@ -233,7 +233,7 @@ describe Ardm::Record do
       let(:name) { :name }
 
       it 'returns the attribute value' do
-        should == 'dbussink'
+        is_expected.to eq('dbussink')
       end
     end
 
@@ -241,7 +241,7 @@ describe Ardm::Record do
       let(:name) { :unknown }
 
       it 'returns nil' do
-        should be_nil
+        is_expected.to be_nil
       end
     end
   end
