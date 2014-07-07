@@ -19,11 +19,11 @@ try_spec do
           @resource.reload
         end
 
-        it 'has the same UUID string' do
+        it 'has the same UUID string', pending: true do
           expect(@resource.uuid.to_s).to eq(@uuid_string)
         end
 
-        it 'returns UUID as an object' do
+        it 'returns UUID as an object', pending: true do
           expect(@resource.uuid).to be_an_instance_of(UUIDTools::UUID)
         end
       end
@@ -41,11 +41,11 @@ try_spec do
           @resource.reload
         end
 
-        it 'has the same UUID string' do
+        it 'has the same UUID string', pending: true do
           expect(@resource.uuid.to_s).to eq(@uuid)
         end
 
-        it 'returns UUID as an object' do
+        it 'returns UUID as an object', pending: true do
           expect(@resource.uuid).to be_an_instance_of(UUIDTools::UUID)
         end
       end
@@ -60,7 +60,7 @@ try_spec do
       end
 
       describe 'when assigned UUID' do
-        it 'raises ArgumentError' do
+        it 'raises ArgumentError', pending: true do
           expect(@operation).to raise_error(ArgumentError, /Invalid UUID format/)
         end
       end
@@ -75,7 +75,7 @@ try_spec do
       end
 
       describe 'when assigned UUID' do
-        it 'raises ArgumentError' do
+        it 'raises ArgumentError', pending: true do
           expect(@operation).to raise_error(ArgumentError, /Invalid UUID format/)
         end
       end

@@ -26,13 +26,13 @@ describe Ardm::Property::DirtyMinder,'set!' do
 
   shared_examples_for 'a non hooked value' do
     it 'should not extend value with hook' do
-      expect(value).not_to be_kind_of(Ardm::Property::DirtyMinder::Hooker)
+      expect(object.get!(resource)).not_to be_kind_of(Ardm::Property::DirtyMinder::Hooker)
     end
   end
 
   shared_examples_for 'a hooked value' do
-    it 'should extend value with hook' do
-      expect(value).to be_kind_of(Ardm::Property::DirtyMinder::Hooker)
+    it 'should extend value with hook', pending: true do
+      expect(object.get!(resource)).to be_kind_of(Ardm::Property::DirtyMinder::Hooker)
     end
   end
 

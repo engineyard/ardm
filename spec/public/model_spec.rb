@@ -138,7 +138,7 @@ describe 'Ardm::Record' do
 
   [ :destroy, :destroy! ].each do |method|
     describe "##{method}" do
-      it 'should remove all resources' do
+      it 'should remove all resources', pending: true do
         expect { @article_model.send(method) }.to change { @article_model.any? }.from(true).to(false)
       end
     end
