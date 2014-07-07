@@ -15,10 +15,8 @@ try_spec do
     end
 
     describe 'with the default value' do
-      it 'returns it as an array' do
-        pending "FIXME: This probably should pass" do
-          @resource.size.should eq([Ardm::Fixtures::TShirt.properties[:size].default])
-        end
+      it 'returns it as an array', pending: true do
+        @resource.size.should eq([Ardm::Fixtures::TShirt.properties[:size].default])
       end
     end
 

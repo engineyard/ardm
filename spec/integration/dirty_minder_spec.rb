@@ -67,15 +67,7 @@ try_spec do
         end
 
         it "should remember the changed detail" do
-          # Works in active record (unless something is fooling me)
-          #pending "not supported (YET)" do
-            # TODO: Not supported (yet?) -- this is a much harder problem to
-            # solve: using mutating accessors of nested objects.  We could
-            # detect it from #dirty? (using the #hash method), but #dirty?
-            # only returns the status of known-mutated properties (not full,
-            # on-demand scan of object dirty-ness).
-            @resource.positions['details']['awesome'].should == 'VERY TRUE'
-          #end
+          @resource.positions['details']['awesome'].should == 'VERY TRUE'
         end
       end
 
@@ -148,15 +140,7 @@ try_spec do
           end
 
           it "should remember the changed detail" do
-            # Works in active record (unless something is fooling me)
-            #pending "not supported (YET)" do
-              # TODO: Not supported (yet?) -- this is a much harder problem to
-              # solve: using mutating accessors of nested objects.  We could
-              # detect it from #dirty? (using the #hash method), but #dirty?
-              # only returns the status of known-mutated properties (not full,
-              # on-demand scan of object dirty-ness).
-              @resource.positions.last['details']['high_risk'].should == true
-            #end
+            @resource.positions.last['details']['high_risk'].should == true
           end
         end
       end # when I add a new position

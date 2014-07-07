@@ -824,39 +824,33 @@ shared_examples 'A public Resource' do
         end
 
         it 'should save resource' do
-          pending_if !@user.respond_to?(:comments) do
-            @return.should be(true)
-          end
+          pending_if !@user.respond_to?(:comments)
+          @return.should be(true)
         end
 
         it 'should save the first resource created through new' do
-          pending_if !@user.respond_to?(:comments) do
-            @first_comment.new?.should be(false)
-          end
+          pending_if !@user.respond_to?(:comments)
+          @first_comment.new?.should be(false)
         end
 
         it 'should save the correct foreign key for the first resource' do
-          pending_if !@user.respond_to?(:comments) do
-            @first_comment.user.should eql(@user)
-          end
+          pending_if !@user.respond_to?(:comments)
+          @first_comment.user.should eql(@user)
         end
 
         it 'should save the second resource created through the constructor' do
-          pending "Changing a belongs_to parent should add the resource to the correct association" do
-            @second_comment.new?.should be(false)
-          end
+          pending "Changing a belongs_to parent should add the resource to the correct association"
+          @second_comment.new?.should be(false)
         end
 
         it 'should save the correct foreign key for the second resource' do
-          pending_if !@user.respond_to?(:comments) do
-            @second_comment.user.should eql(@user)
-          end
+          pending_if !@user.respond_to?(:comments)
+          @second_comment.user.should eql(@user)
         end
 
         it 'should create 2 extra resources in persistent storage' do
-          pending "Changing a belongs_to parent should add the resource to the correct association" do
-            @user.comments.size.should == @initial_comments + 2
-          end
+          pending "Changing a belongs_to parent should add the resource to the correct association"
+          @user.comments.size.should == @initial_comments + 2
         end
       end
 
@@ -875,9 +869,8 @@ shared_examples 'A public Resource' do
         end
 
         it 'should return true' do
-          pending_if !@user.respond_to?(:comments) do
-            @return.should be(true)
-          end
+          pending_if !@user.respond_to?(:comments)
+          @return.should be(true)
         end
 
         it 'should not be dirty' do
@@ -885,15 +878,13 @@ shared_examples 'A public Resource' do
         end
 
         it 'should have saved the first child resource' do
-          pending_if !@user.respond_to?(:comments) do
-            @first_comment.model.get(*@first_comment.key).body.should == 'It still has rough edges'
-          end
+          pending_if !@user.respond_to?(:comments)
+          @first_comment.model.get(*@first_comment.key).body.should == 'It still has rough edges'
         end
 
         it 'should not have saved the second child resource' do
-          pending_if !@user.respond_to?(:comments) do
-            @second_comment.model.get(*@second_comment.key).body.should == 'is it really?'
-          end
+          pending_if !@user.respond_to?(:comments)
+          @second_comment.model.get(*@second_comment.key).body.should == 'is it really?'
         end
       end
 
@@ -904,9 +895,8 @@ shared_examples 'A public Resource' do
         end
 
         it 'should not raise an exception when saving the resource' do
-          pending do
-            lambda { @first_comment.send(method).should be(false) }.should_not raise_error
-          end
+          pending
+          lambda { @first_comment.send(method).should be(false) }.should_not raise_error
         end
       end
 
@@ -946,27 +936,23 @@ shared_examples 'A public Resource' do
         end
 
         it 'should not be dirty' do
-          pending_if !@article.respond_to?(:paragraphs) do
-            @article.should_not be_dirty
-          end
+          pending_if !@article.respond_to?(:paragraphs)
+          @article.should_not be_dirty
         end
 
         it 'should not be dirty' do
-          pending_if !@article.respond_to?(:paragraphs) do
-            @paragraph.should_not be_dirty
-          end
+          pending_if !@article.respond_to?(:paragraphs)
+          @paragraph.should_not be_dirty
         end
 
         it 'should set the related resource' do
-          pending_if !@article.respond_to?(:paragraphs) do
-            @paragraph.article.should == @article
-          end
+          pending_if !@article.respond_to?(:paragraphs)
+          @paragraph.article.should == @article
         end
 
         it 'should set the foreign key properly' do
-          pending_if !@article.respond_to?(:paragraphs) do
-            @paragraph.article_id.should == @article.id
-          end
+          pending_if !@article.respond_to?(:paragraphs)
+          @paragraph.article_id.should == @article.id
         end
       end
 
@@ -1224,9 +1210,8 @@ shared_examples 'A public Resource' do
     end
 
     it 'should not overwrite dirty key' do
-      pending do
-        @user.name.should == 'dkubb'
-      end
+      pending
+      @user.name.should == 'dkubb'
     end
   end
 end

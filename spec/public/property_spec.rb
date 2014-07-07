@@ -284,9 +284,7 @@ describe Ardm::Property do
     end
 
     it 'is true for serial fields' do
-      pending do
-        Track.properties[:title].unique?.should be(true)
-      end
+      Track.properties[:title].unique?.should be(true)
     end
 
     it 'is true for keys' do
