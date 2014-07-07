@@ -16,7 +16,7 @@ try_spec do
 
       describe 'when dumped and loaded again' do
         before do
-          @resource.save.should be_true
+          @resource.save.should be true
           @resource.reload
         end
 
@@ -36,7 +36,7 @@ try_spec do
 
       describe 'when dumped and loaded again' do
         before do
-          @resource.save.should be_true
+          @resource.save.should be true
           @resource.reload
         end
 
@@ -56,7 +56,7 @@ try_spec do
 
       describe 'when dumped and loaded again' do
         before do
-          @resource.save.should be_true
+          @resource.save.should be true
           @resource.reload
         end
 

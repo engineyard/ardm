@@ -1,4 +1,4 @@
-share_examples_for 'A public Resource' do
+shared_examples 'A public Resource' do
   before :all do
     @no_join = defined?(Ardm::Adapters::InMemoryAdapter) && @adapter.kind_of?(Ardm::Adapters::InMemoryAdapter) ||
                defined?(Ardm::Adapters::YamlAdapter)     && @adapter.kind_of?(Ardm::Adapters::YamlAdapter)

@@ -1,4 +1,4 @@
-share_examples_for 'A public Property' do
+shared_examples 'A public Property' do
   before do
     %w[ @type @load_as @name @value @other_value ].each do |ivar|
       raise "+#{ivar}+ should be defined in before block" unless instance_variable_defined?(ivar)

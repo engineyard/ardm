@@ -91,7 +91,7 @@ describe Ardm::Record do
     subject { @user.raise_on_save_failure }
 
     describe 'when model.raise_on_save_failure has not been set' do
-      it { should be_false }
+      it { should be false }
     end
 
     describe 'when model.raise_on_save_failure has been set to true' do
@@ -99,7 +99,7 @@ describe Ardm::Record do
         @user_model.raise_on_save_failure = true
       end
 
-      it { should be_true }
+      it { should be true }
     end
 
     describe 'when resource.raise_on_save_failure has been set to true' do
@@ -107,7 +107,7 @@ describe Ardm::Record do
         @user.raise_on_save_failure = true
       end
 
-      it { should be_true }
+      it { should be true }
     end
   end
 
@@ -124,7 +124,7 @@ describe Ardm::Record do
     describe 'with a true value' do
       subject { @user_model.raise_on_save_failure = true }
 
-      it { should be_true }
+      it { should be true }
 
       it 'should set raise_on_save_failure' do
         expect { subject }.to change {
@@ -136,7 +136,7 @@ describe Ardm::Record do
     describe 'with a false value' do
       subject { @user_model.raise_on_save_failure = false }
 
-      it { should be_false }
+      it { should be false }
 
       it 'should set raise_on_save_failure' do
         expect { subject }.to_not change {
@@ -156,7 +156,7 @@ describe Ardm::Record do
         end
 
         describe 'and it is a savable resource' do
-          it { should be_true }
+          it { should be true }
         end
 
         # FIXME: We cannot trigger a failing save with invalid properties anymore.
@@ -200,13 +200,12 @@ describe Ardm::Record do
 
         # #key returns an array even though there's only one value.
         @attributes[relationship.foreign_key] = @solnic.key.first
-        puts @attributes.inspect
 
         @return = @user.__send__(method, @attributes)
       end
 
       it 'should return true' do
-        @return.should be_true
+        @return.should be true
       end
 
       it 'should update attributes of Resource' do
@@ -271,7 +270,7 @@ describe Ardm::Record do
 
     context 'with an unknown property' do
       let(:name)  { :unknown              }
-      let(:value) { mock('Unknown Value') }
+      let(:value) { double('Unknown Value') }
 
       it 'does not set the attribute' do
         expect { subject }.to_not change { object.attributes.dup }

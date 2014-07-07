@@ -123,7 +123,7 @@ describe 'Ardm::Record' do
 
         it { should be_saved }
 
-        its(:title) { should == attributes[:title] }
+        it { expect(subject.title).to eq attributes[:title] }
       end
 
       context 'with nil' do

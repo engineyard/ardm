@@ -1,4 +1,4 @@
-share_examples_for 'A semipublic Property' do
+shared_examples 'A semipublic Property' do
   module ::Blog
     class Article < Ardm::Record
       self.table_name = "articles"

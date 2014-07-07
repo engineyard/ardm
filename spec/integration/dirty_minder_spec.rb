@@ -54,7 +54,7 @@ try_spec do
         end
 
         it "should remember the new attribute" do
-          @resource.positions['pays_buttloads_of_money'].should be_true
+          @resource.positions['pays_buttloads_of_money'].should be true
         end
       end
 
