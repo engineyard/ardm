@@ -44,6 +44,14 @@ module Ardm
     yield if block_given? && active_record?
   end
 
+  def self.rails3?
+    self.active_record? && ::ActiveRecord::VERSION::STRING >= "3.0" && ::ActiveRecord::VERSION::STRING <= "4.0"
+  end
+
+  def self.rails4?
+    self.active_record? && !self.rails3?
+  end
+
   # Yield if Ardm has loaded DataMapper ORM.
   #
   # @api public
