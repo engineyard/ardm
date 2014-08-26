@@ -33,10 +33,17 @@ module Ardm
           ar[:foreign_key] = property.field
         end
 
-        block = if (conditions = ar.slice!(*keep)).any?
-                  lambda { where(conditions) }
-                end
-        [block, ar]
+        if Ardm.rails3?
+          if (conditions = ar.slice!(*keep)).any?
+            ar[:conditions] = conditions
+          end
+          [ar]
+        else
+          block = if (conditions = ar.slice!(*keep)).any?
+                    lambda { where(conditions) }
+                  end
+          [block, ar].compact
+        end
       end
 
       module ClassMethods
@@ -71,8 +78,8 @@ module Ardm
 
           options.delete(:default)
           options.delete(:required)
-          _, opts = Ardm::ActiveRecord::Associations.convert_options(self, options)
-          super field, opts
+          opts = Ardm::ActiveRecord::Associations.convert_options(self, options)
+          super field, *opts
           assoc = reflect_on_association(field)
           Ardm::ActiveRecord::Record.on_finalize << lambda do
             self.class_eval do
@@ -100,9 +107,16 @@ module Ardm
           options[:order] = Ardm::ActiveRecord::Query.order(self, options[:order]) if options[:order]
           opts = Ardm::ActiveRecord::Associations.convert_options(self, options, :through, :order)
 
-          case count
-          when 1      then has_one  name, *opts
-          when "many" then has_many name, *opts
+          if Ardm.rails3?
+            case count
+            when 1      then has_one  name, *opts
+            when "many" then has_many name, *opts
+            end
+          else
+            case count
+            when 1      then has_one  name, *opts
+            when "many" then has_many name, *opts
+            end
           end
         end
 
