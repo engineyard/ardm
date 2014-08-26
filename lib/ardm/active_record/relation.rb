@@ -57,7 +57,7 @@ module Ardm
       #end
 
       VALID_FIND_OPTIONS = [ :conditions, :include, :joins, :limit, :offset, :extend,
-        :order, :select, :readonly, :group, :having, :from, :lock ]
+                             :order, :select, :readonly, :group, :having, :from, :lock ]
 
       # We used to just patch this, like above, but we need to copy it over
       # completely for rails4 since it no longer supports the old style finder
@@ -76,7 +76,72 @@ module Ardm
           relation = relation.send(finder, finders[finder])
         end
 
-        relation = relation.where(conditions)           if conditions.any?
+        conditions.each do |key, value|
+          if assoc = relation.reflect_on_association(key)
+            conditions.delete(key)
+            # strip out assocations
+            case assoc.macro
+            when :belongs_to
+              id = value.is_a?(Hash) ? value.with_indifferent_access[:id] : value
+              relation = if value.is_a?(::ActiveRecord::Relation)
+                           if value.values.empty?
+                             relation.where.not(assoc.foreign_key => nil)
+                           else
+                             relation.where(assoc.foreign_key => value)
+                           end
+                         else
+                           relation.where(assoc.foreign_key => id)
+                         end
+            when :has_one
+              foreign_class = assoc.options[:class_name].constantize
+              foreign_key   = assoc.foreign_key
+              parent_key    = assoc.options[:child_key] || klass.primary_key
+
+              if value.is_a?(::Array) && value.empty?
+                # @fixme: dm basically no-ops cause it knows you are stupid
+                return klass.where(klass.primary_key => nil)
+              end
+
+              relation = if value.is_a?(::ActiveRecord::Base)
+                           relation.where(parent_key => value.send(assoc.foreign_key))
+                         elsif value.is_a?(::ActiveRecord::Relation)
+                           relation.where(parent_key => value.select(foreign_key))
+                         elsif value.nil?
+                           relation.where.not(parent_key => foreign_class.select(foreign_key).where.not(foreign_key => value))
+                         else
+                           relation.where(parent_key => foreign_class.select(foreign_key).where(value))
+                         end
+            when :has_many
+              foreign_class = assoc.options[:class_name].constantize
+              foreign_key   = assoc.foreign_key
+              parent_key    = assoc.options[:child_key] || klass.primary_key
+
+              relation = if value.is_a?(::ActiveRecord::Relation)
+                           relation.where(foreign_key => value)
+                         else
+                           relation.where(parent_key => foreign_class.select(foreign_class.primary_key).where.not(foreign_key => value))
+                         end
+            else
+              raise("unknown: #{assoc.inspect}")
+            end
+          end
+        end
+
+        processed_conditions = {}
+
+        conditions.each do |key, value|
+          key = key.is_a?(Ardm::Property) ? key.name : key
+
+          case key
+          when String, Symbol then
+            processed_conditions[key] = value
+          when Ardm::Query::Operator then
+            relation = key.to_arel(self, value).scope
+          else raise "unknown key: #{key.inspect} #{value.inspect}"
+          end
+        end
+
+        relation = relation.where(processed_conditions) if processed_conditions.any?
         relation = relation.where(finders[:conditions]) if options.has_key?(:conditions)
         relation = relation.includes(finders[:include]) if options.has_key?(:include)
         relation = relation.extending(finders[:extend]) if options.has_key?(:extend)

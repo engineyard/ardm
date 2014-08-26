@@ -14,7 +14,7 @@ try_spec do
           :status => 'confirmed'
         )
 
-        expect(@resource.save).to be true
+        expect(@resource.save).to be_truthy
         @resource.reload
       end
 
@@ -41,7 +41,7 @@ try_spec do
           :body   => "Note that at the very least, there should be a check to see whether or not the user is created before chown'ing a file to the user.",
           :status => 'confirmed'
         )
-        expect(@resource.save).to be true
+        expect(@resource.save).to be_truthy
       end
 
       it 'supports queries with equality operator on enumeration property' do

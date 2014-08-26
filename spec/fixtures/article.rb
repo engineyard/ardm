@@ -16,7 +16,7 @@ module Ardm
 
       timestamps :at
 
-      before_validation do
+      before(:valid?) do
         self.slug = self.title
       end
     end # Article

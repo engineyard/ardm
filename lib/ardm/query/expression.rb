@@ -7,20 +7,11 @@ module Ardm
         new(relation, target, value).scope
       end
 
-      def initialize(relation, target, value)
+      def initialize(relation, target, operator, value)
         @relation   = relation
         @value      = value
-
-        case target
-        when Ardm::Query::Operator
-          @target   = target.target
-          @operator = target.operator
-        when Symbol, String
-          @target = target
-          @operator = :eq
-        else
-          raise ArgumentError, "Unknown target #{target.inspect} in Expresion"
-        end
+        @target     = target
+        @operator   = operator
       end
 
       def resolved_target
@@ -54,14 +45,13 @@ module Ardm
           if association.macro == :belongs_to
             association.foreign_key.to_sym
           else
-            $stderr.puts "WARNING: #{association.macro} based queries not yet supported?"
-            association.primary_key.to_sym
+            association.klass.primary_key.to_sym
           end
         end
       end
 
       def arel_operator
-        value.respond_to?(:to_ary) ? operator.for_array : operator
+        value.respond_to?(:to_ary) ? operator.for_array : operator.operator
       end
 
       def arel_value(val = value)

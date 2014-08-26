@@ -72,10 +72,12 @@ describe Ardm::Property do
       @image.instance_variable_set(:@description, 'Is set by magic')
     end
 
-    it 'gets instance variable value from the resource directly', pending: true do
-      # if you know a better way to test direct instance variable access,
-      # go ahead and make changes to this example
-      expect(Image.properties[:description].get!(@image)).to eq('Is set by magic')
+    it 'gets instance variable value from the resource directly' do
+      skip "support for this in ActiveRecord is questionable" do
+        # if you know a better way to test direct instance variable access,
+        # go ahead and make changes to this example
+        expect(Image.properties[:description].get!(@image)).to eq('Is set by magic')
+      end
     end
   end
 
@@ -283,8 +285,10 @@ describe Ardm::Property do
       expect(Track.properties[:musicbrainz_hash].unique?).to be(true)
     end
 
-    it 'is true for serial fields', pending: true do
-      expect(Track.properties[:title].unique?).to be(true)
+    it 'is true for serial fields' do
+      skip do
+        expect(Track.properties[:title].unique?).should be(true)
+      end
     end
 
     it 'is true for keys' do

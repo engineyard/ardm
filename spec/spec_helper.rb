@@ -1,8 +1,9 @@
-require 'pry'
-require 'database_cleaner'
+Bundler.require(:default, :test)
 
 ENV['ORM'] ||= 'active_record'
 require 'ardm/env'
+
+Dir["#{Pathname(__FILE__).dirname.expand_path}/{shared,support}/*.rb"].each { |file| require file }
 
 Ardm.active_record do
   ActiveRecord::Base.configurations = { "ardm" => {
@@ -20,12 +21,17 @@ Ardm.active_record do
 end
 
 Ardm.data_mapper do
-  raise "TODO: DataMapper setup."
+  Bundler.require(:datamapper)
+  DataMapper.setup(:default, "sqlite3://#{File.expand_path("../../db/test.sqlite", __FILE__)}")
+  DataMapper.auto_migrate!
 end
 
-Dir["#{Pathname(__FILE__).dirname.expand_path}/shared/*.rb"].each { |file| require file }
-
 RSpec.configure do |config|
+  config.treat_symbols_as_metadata_keys_with_true_values = true
+  if ENV["ORM"] == "active_record"
+    config.filter_run_excluding(:dm => true)
+  end
+
   config.before(:suite) do
     DatabaseCleaner.strategy = :transaction
     DatabaseCleaner.clean_with(:truncation)

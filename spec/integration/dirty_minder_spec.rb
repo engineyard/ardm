@@ -54,7 +54,7 @@ try_spec do
         end
 
         it "should remember the new attribute" do
-          expect(@resource.positions['pays_buttloads_of_money']).to be true
+          expect(@resource.positions['pays_buttloads_of_money']).to be_truthy
         end
       end
 

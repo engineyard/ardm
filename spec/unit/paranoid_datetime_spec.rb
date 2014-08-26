@@ -8,7 +8,7 @@ module ::ParanoidDateTimeBlog
     property :deleted_at, ParanoidDateTime
     timestamps :at
 
-    before_destroy :before_destroy
+    before(:destroy, :before_destroy)
 
     def before_destroy; end
   end
@@ -56,7 +56,7 @@ describe Ardm::Property::ParanoidDateTime do
         @resource = @model.create
       end
 
-      it { expect(!!subject).to be true }
+      it { expect(subject).to be_truthy }
 
       it 'should not delete the resource from the datastore' do
         expect(method(:subject)).not_to change { @model.with_deleted.size }.from(1)
@@ -100,7 +100,7 @@ describe Ardm::Property::ParanoidDateTime do
         @resource = @model.create
       end
 
-      it { expect(!!subject).to be true }
+      it { expect(subject).to be_truthy }
 
       it 'should delete the resource from the datastore' do
         expect(method(:subject)).to change { @model.with_deleted.size }.from(1).to(0)
