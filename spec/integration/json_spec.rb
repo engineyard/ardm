@@ -16,7 +16,7 @@ try_spec do
 
       describe 'when dumped and loaded again' do
         before do
-          expect(@resource.save).to be true
+          expect(@resource.save).to be_truthy
           @resource.reload
         end
 
@@ -36,7 +36,7 @@ try_spec do
 
       describe 'when dumped and loaded again' do
         before do
-          expect(@resource.save).to be true
+          expect(@resource.save).to be_truthy
           @resource.reload
         end
 
@@ -56,7 +56,7 @@ try_spec do
 
       describe 'when dumped and loaded again' do
         before do
-          expect(@resource.save).to be true
+          expect(@resource.save).to be_truthy
           @resource.reload
         end
 

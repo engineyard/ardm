@@ -16,7 +16,7 @@ try_spec do
 
       describe 'when dumped and loaded again' do
         before do
-          expect(@resource.save).to be true
+          expect(@resource.save).to be_truthy
           @resource.reload
         end
 
@@ -33,7 +33,7 @@ try_spec do
 
       describe 'when dumped and loaded again' do
         before do
-          expect(@resource.save).to be true
+          expect(@resource.save).to be_truthy
           @resource.reload
         end
 
@@ -60,7 +60,7 @@ try_spec do
 
       describe 'when dumped and loaded again' do
         before do
-          expect(@resource.save).to be true
+          expect(@resource.save).to be_truthy
           @resource.reload
         end
 
@@ -77,7 +77,7 @@ try_spec do
         end
 
         it 'has blank entries removed' do
-          expect(@resource.interests.any? { |i| Ardm::Ext.blank?(i) }).to be false
+          expect(@resource.interests.any? { |i| Ardm::Ext.blank?(i) }).to be_falsey
         end
       end
     end

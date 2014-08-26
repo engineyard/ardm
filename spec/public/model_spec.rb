@@ -3,6 +3,12 @@ require 'spec_helper'
 module ::ModelBlog
   # FIXME: load order in tests is being problematic
   class ArticlePublication < Ardm::Record
+    self.table_name = "article_publications"
+
+    property :id, Serial
+
+    belongs_to :article,     model: 'ModelBlog::Article'
+    belongs_to :publication, model: 'ModelBlog::Publication'
   end
 
   class Article < Ardm::Record
@@ -16,7 +22,7 @@ module ::ModelBlog
     belongs_to :original, self, :required => false
     has n, :revisions, self, :child_key => [ :original_id ]
     has 1, :previous,  self, :child_key => [ :original_id ], :order => [ :id.desc ]
-    has n, :article_publications, model: ::ModelBlog::ArticlePublication
+    has n, :article_publications, model: 'ArticlePublication'
     has n, :publications, :through => :article_publications
   end
 
@@ -26,17 +32,19 @@ module ::ModelBlog
     property :id,   Serial
     property :name, String
 
-    has n, :article_publications, model: ::ModelBlog::ArticlePublication
-    has n, :acticles, :through => :article_publications
+    has n, :article_publications, model: ArticlePublication
+    has n, :articles, :through => :article_publications
   end
 
   class ArticlePublication < Ardm::Record
     self.table_name = "article_publications"
 
-    belongs_to :acticle,     model: '::ModelBlog::Article'
+    belongs_to :article,     model: '::ModelBlog::Article'
     belongs_to :publication, model: '::ModelBlog::Publication'
   end
 end
+
+Ardm::Record.finalize
 
 describe 'Ardm::Record' do
   before do
@@ -51,6 +59,7 @@ describe 'Ardm::Record' do
 
     @original = @articles.create(:title => 'Original Article')
     @article  = @articles.create(:title => 'Sample Article', :body => 'Sample', :original => @original)
+    expect(@article.reload.original).to eq(@original)
     @other    = @articles.create(:title => 'Other Article',  :body => 'Other')
   end
 
@@ -138,8 +147,8 @@ describe 'Ardm::Record' do
 
   [ :destroy, :destroy! ].each do |method|
     describe "##{method}" do
-      it 'should remove all resources', pending: true do
-        expect { @article_model.send(method) }.to change { @article_model.any? }.from(true).to(false)
+      it 'should remove all resources' do
+        expect { model.send(method) }.to change { model.any? }.from(true).to(false)
       end
     end
   end
@@ -187,7 +196,66 @@ describe 'Ardm::Record' do
     end
   end
 
-  # FIXME: these are very broken right now
-  #it_should_behave_like 'Finder Interface'
+  describe "finders" do
+    before(:each) do
+      ModelBlog::Article.destroy
+      @articles = ModelBlog::Article.all
+      @original = @articles.create(:title => 'Original Article')
+      @article  = @articles.create(:title => 'Sample Article', :body => 'Sample', :original => @original)
+    end
 
+    include_examples 'Finder Interface'
+  end
+
+  it 'Ardm::Record should respond to raise_on_save_failure' do
+    Ardm::Record.should respond_to(:raise_on_save_failure)
+  end
+
+  describe '.raise_on_save_failure' do
+    subject { Ardm::Record.raise_on_save_failure }
+
+    it { should be(false) }
+  end
+
+  it 'Ardm::Record should respond to raise_on_save_failure=' do
+    Ardm::Record.should respond_to(:raise_on_save_failure=)
+  end
+
+  it 'A model should respond to raise_on_save_failure' do
+    @article_model.should respond_to(:raise_on_save_failure)
+  end
+
+  describe '#raise_on_save_failure' do
+    after do
+      # reset to the default value
+      reset_raise_on_save_failure(Ardm::Record)
+      reset_raise_on_save_failure(@article_model)
+    end
+
+    subject { @article_model.raise_on_save_failure }
+
+    describe 'when Ardm::Record.raise_on_save_failure has not been set' do
+      it { should be(false) }
+    end
+
+    describe 'when Ardm::Record.raise_on_save_failure has been set to true' do
+      before do
+        Ardm::Record.raise_on_save_failure = true
+      end
+
+      it { should be(true) }
+    end
+
+    describe 'when model.raise_on_save_failure has been set to true' do
+      before do
+        @article_model.raise_on_save_failure = true
+      end
+
+      it { should be(true) }
+    end
+  end
+
+  it 'A model should respond to raise_on_save_failure=' do
+    @article_model.should respond_to(:raise_on_save_failure=)
+  end
 end

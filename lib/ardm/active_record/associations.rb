@@ -1,4 +1,4 @@
-require 'active_support/concern'
+
 
 module Ardm
   module ActiveRecord
@@ -33,14 +33,13 @@ module Ardm
           ar[:foreign_key] = property.field
         end
 
-        if (conditions = ar.slice!(*keep)).any?
-          ar[:conditions] = conditions
-        end
-        ar
+        block = if (conditions = ar.slice!(*keep)).any?
+                  lambda { where(conditions) }
+                end
+        [block, ar]
       end
 
       module ClassMethods
-
         def dump_associations_hash(options)
           options.inject({}) do |new_attrs, (key, value)|
             if reflection = reflect_on_association(key.to_sym)
@@ -72,10 +71,14 @@ module Ardm
 
           options.delete(:default)
           options.delete(:required)
-          opts = Ardm::ActiveRecord::Associations.convert_options(self, options)
+          _, opts = Ardm::ActiveRecord::Associations.convert_options(self, options)
           super field, opts
           assoc = reflect_on_association(field)
-          property assoc.foreign_key, assoc.klass.key.first.class
+          Ardm::ActiveRecord::Record.on_finalize << lambda do
+            self.class_eval do
+              property assoc.foreign_key, assoc.klass.key.first.class, key: false
+            end
+          end
           nil
         end
 
@@ -98,8 +101,8 @@ module Ardm
           opts = Ardm::ActiveRecord::Associations.convert_options(self, options, :through, :order)
 
           case count
-          when 1      then has_one  name, opts
-          when "many" then has_many name, opts
+          when 1      then has_one  name, *opts
+          when "many" then has_many name, *opts
           end
         end
 

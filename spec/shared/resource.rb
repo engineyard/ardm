@@ -628,7 +628,7 @@ shared_examples 'A public Resource' do
     describe 'on a resource that is changed outside another resource' do
       before do
         rescue_if @skip do
-          @user.dup.update(:description => 'Changed')
+          @user.clone.update(:description => 'Changed')
         end
       end
 
@@ -825,33 +825,39 @@ shared_examples 'A public Resource' do
         end
 
         it 'should save resource' do
-          pending_if !@user.respond_to?(:comments)
-          expect(@return).to be(true)
+          skip_if !@user.respond_to?(:comments) do
+            expect(@return).to be(true)
+          end
         end
 
         it 'should save the first resource created through new' do
-          pending_if !@user.respond_to?(:comments)
-          expect(@first_comment.new?).to be(false)
+          skip_if !@user.respond_to?(:comments) do
+            expect(@first_comment.new?).to be(false)
+          end
         end
 
         it 'should save the correct foreign key for the first resource' do
-          pending_if !@user.respond_to?(:comments)
-          expect(@first_comment.user).to eql(@user)
+          skip_if !@user.respond_to?(:comments) do
+            expect(@first_comment.user).to eql(@user)
+          end
         end
 
         it 'should save the second resource created through the constructor' do
-          skip "Changing a belongs_to parent should add the resource to the correct association"
-          expect(@second_comment.new?).to be(false)
+          skip "Changing a belongs_to parent should add the resource to the correct association" do
+            expect(@second_comment.new?).to be(false)
+          end
         end
 
         it 'should save the correct foreign key for the second resource' do
-          pending_if !@user.respond_to?(:comments)
-          expect(@second_comment.user).to eql(@user)
+          skip_if !@user.respond_to?(:comments) do
+            expect(@second_comment.user).to eql(@user)
+          end
         end
 
         it 'should create 2 extra resources in persistent storage' do
-          skip "Changing a belongs_to parent should add the resource to the correct association"
-          expect(@user.comments.size).to eq(@initial_comments + 2)
+          skip "Changing a belongs_to parent should add the resource to the correct association" do
+            expect(@user.comments.size).to eq(@initial_comments + 2)
+          end
         end
       end
 
@@ -870,8 +876,9 @@ shared_examples 'A public Resource' do
         end
 
         it 'should return true' do
-          pending_if !@user.respond_to?(:comments)
-          expect(@return).to be(true)
+          skip_if !@user.respond_to?(:comments) do
+            expect(@return).to be(true)
+          end
         end
 
         it 'should not be dirty' do
@@ -879,13 +886,15 @@ shared_examples 'A public Resource' do
         end
 
         it 'should have saved the first child resource' do
-          pending_if !@user.respond_to?(:comments)
-          expect(@first_comment.model.get(*@first_comment.key).body).to eq('It still has rough edges')
+          skip_if !@user.respond_to?(:comments) do
+            expect(@first_comment.model.get(*@first_comment.key).body).to eq('It still has rough edges')
+          end
         end
 
         it 'should not have saved the second child resource' do
-          pending_if !@user.respond_to?(:comments)
-          expect(@second_comment.model.get(*@second_comment.key).body).to eq('is it really?')
+          skip_if !@user.respond_to?(:comments) do
+            expect(@second_comment.model.get(*@second_comment.key).body).to eq('is it really?')
+          end
         end
       end
 
@@ -896,8 +905,9 @@ shared_examples 'A public Resource' do
         end
 
         it 'should not raise an exception when saving the resource' do
-          skip
-          expect { expect(@first_comment.send(method)).to be(false) }.not_to raise_error
+          skip do
+            expect { expect(@first_comment.send(method)).to be(false) }.not_to raise_error
+          end
         end
       end
 
@@ -937,23 +947,27 @@ shared_examples 'A public Resource' do
         end
 
         it 'should not be dirty' do
-          pending_if !@article.respond_to?(:paragraphs)
-          expect(@article).not_to be_dirty
+          skip_if !@article.respond_to?(:paragraphs) do
+            expect(@article).not_to be_dirty
+          end
         end
 
         it 'should not be dirty' do
-          pending_if !@article.respond_to?(:paragraphs)
-          expect(@paragraph).not_to be_dirty
+          skip_if !@article.respond_to?(:paragraphs) do
+            expect(@paragraph).not_to be_dirty
+          end
         end
 
         it 'should set the related resource' do
-          pending_if !@article.respond_to?(:paragraphs)
-          expect(@paragraph.article).to eq(@article)
+          skip_if !@article.respond_to?(:paragraphs) do
+            expect(@paragraph.article).to eq(@article)
+          end
         end
 
         it 'should set the foreign key properly' do
-          pending_if !@article.respond_to?(:paragraphs)
-          expect(@paragraph.article_id).to eq(@article.id)
+          skip_if !@article.respond_to?(:paragraphs) do
+            expect(@paragraph.article_id).to eq(@article.id)
+          end
         end
       end
 
@@ -1211,8 +1225,9 @@ shared_examples 'A public Resource' do
     end
 
     it 'should not overwrite dirty key' do
-      skip
-      expect(@user.name).to eq('dkubb')
+      skip do
+        expect(@user.name).to eq('dkubb')
+      end
     end
   end
 end

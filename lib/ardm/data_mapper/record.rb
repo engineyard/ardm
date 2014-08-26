@@ -1,34 +1,31 @@
-require 'awsm/resource'
+require 'active_support/concern'
+require 'dm-core'
 
 module Ardm
   module DataMapper
-    module Record
-      extend ActiveSupport::Concern
+    class Record
+      extend Forwardable
 
-      module ClassMethods
-        extend Forwardable
+      def self.inherited(base)
+        base.send(:include, ::DataMapper::Resource)
+      end
 
-        def inherited(base)
-          base.send(:include, DataMapper::Resource)
-          #base.send(:extend, DataMapper::CollectionRaise)
+      def self.finalize
+        ::DataMapper.finalize
+      end
 
-          unless %w[Alert Association Nonce Account::Cancellation::Handler].include?(base.name)
-            base.timestamps :at
-          end
-        end
+      def self.alias_attribute(new, old)
+        alias_method new, old
+      end
 
-        def_delegators :datamapper, :repository, :finalize, :logger, :logger=
-        def datamapper() DataMapper end
+      def self.attr_accessible(*attrs)
+      end
 
-        def alias_attribute(new, old)
-          alias_method new, old
-        end
+      def self.abstract_class=(val)
+      end
 
-        def attr_accessible(*attrs)
-        end
-
-        def abstract_class=(val)
-        end
+      def self.table_name=(name)
+        self.storage_names[:default] = name
       end
     end
   end
