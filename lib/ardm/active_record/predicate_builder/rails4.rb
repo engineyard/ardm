@@ -58,19 +58,26 @@ module Ardm
                 end
               else
                 if Ardm::Query::Operator === column
-                  column = column.target.to_s
                   operator = column.operator
+                  target_column = column.target.to_s
                 else
-                  column = column.to_s
+                  target_column = column.to_s
                   operator = nil
                 end
 
-                if column.include?('.')
-                  table_name, column = column.split('.', 2)
+                if target_column.include?('.')
+                  table_name, target_column = target_column.split('.', 2)
                   table = Arel::Table.new(table_name, default_table.engine)
                 end
 
-                queries.concat expand(klass, table, column, value)
+                query = expand(klass, table, target_column, value)
+                # TODO make nicer
+                if [:not_eq, :not_in].include?(operator)
+                  # Logical not factorization !(a && b) == (!a || !b)
+                  query.map! &:not
+                  query = [query.inject { |composite, predicate| composite.or(predicate) }]
+                end
+                queries.concat query
               end
             end
 
