@@ -21,7 +21,7 @@ shared_examples 'Finder Interface' do
     skip if @skip
   end
 
-  def skip_if(message, condition)
+  def skip_if(message=nil, condition)
     skip(message) if condition
   end
 
