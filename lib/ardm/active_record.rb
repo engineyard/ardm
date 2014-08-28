@@ -28,12 +28,18 @@ require 'active_record/relation'
 
 require 'ardm/active_record/record'
 require 'ardm/active_record/relation'
+require 'ardm/active_record/data_mapper_constant_proxy'
 
 module Ardm
   Record = Ardm::ActiveRecord::Record
   SaveFailureError = ::ActiveRecord::RecordNotSaved
   RecordNotFound = ::ActiveRecord::RecordNotFound
+
+  def self.define_datamapper_constant!
+    require 'ardm/active_record/data_mapper_constant'
+  end
 end
+
 
 #::ActiveRecord::Base.class_eval do
 #  include Ardm::ActiveRecord::Base

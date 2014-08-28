@@ -1,0 +1,1 @@
+::DataMapper = Ardm::ActiveRecord::DataMapperConstantProxy
