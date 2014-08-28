@@ -1,4 +1,6 @@
 module Ardm
+  NotImplemented = Class.new(RuntimeError)
+
   # Check which ORM is loaded in Ardm.
   #
   # @api public

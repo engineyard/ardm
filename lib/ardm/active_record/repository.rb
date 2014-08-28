@@ -5,12 +5,16 @@ module Ardm
     module Repository
       extend ActiveSupport::Concern
 
-      def repository
+      def repository(name=nil)
         self.class.repository
       end
 
       module ClassMethods
-        def repository
+        def repository(name=nil)
+          if name && name != :default
+            raise Ardm::NotImplemented, "Alternate repository names not supported"
+          end
+
           if block_given?
             yield
           else
