@@ -2,6 +2,7 @@ require 'active_support/concern'
 
 require 'ardm/active_record/associations'
 require 'ardm/active_record/dirty'
+require 'ardm/active_record/finalize'
 require 'ardm/active_record/hooks'
 require 'ardm/active_record/is'
 require 'ardm/active_record/inheritance'
@@ -35,6 +36,7 @@ module Ardm
       extend ActiveSupport::Concern
 
       include Ardm::ActiveRecord::Associations
+      include Ardm::ActiveRecord::Finalize
       include Ardm::ActiveRecord::Hooks
       include Ardm::ActiveRecord::Dirty
       include Ardm::ActiveRecord::Is

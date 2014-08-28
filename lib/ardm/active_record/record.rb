@@ -14,9 +14,6 @@ module Ardm
 
       JSON = Json
 
-      def self.finalize
-      end
-
       def self.execute_sql(sql)
         connection.execute(sql)
       end
