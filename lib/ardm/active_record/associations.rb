@@ -39,8 +39,15 @@ module Ardm
           end
           [ar]
         else
-          block = if (conditions = ar.slice!(*keep)).any?
+          order = ar.delete(:order)
+          conditions = ar.slice!(*keep)
+          # sigh
+          block = if conditions.any? && order
+                    lambda { where(conditions).order(order) }
+                  elsif conditions.any?
                     lambda { where(conditions) }
+                  elsif order
+                    lambda { order(order) }
                   end
           [block, ar].compact
         end
