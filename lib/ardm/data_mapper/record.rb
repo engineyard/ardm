@@ -4,8 +4,6 @@ require 'dm-core'
 module Ardm
   module DataMapper
     class Record
-      extend Forwardable
-
       def self.inherited(base)
         base.send(:include, ::DataMapper::Resource)
       end
