@@ -24,7 +24,7 @@ module Ardm
           attr_accessible prop.name
           attr_accessible prop.field
         rescue => e
-          puts "WARNING: Error silenced. FIXME before release.\n#{e}" unless $attr_accessible_warning
+          puts "WARNING: `attr_accessible` not found. Include 'protected_attributes' gem in rails >= 4 (or if you need it).\n#{e}" unless $attr_accessible_warning
           $attr_accessible_warning = true
         end
         prop
