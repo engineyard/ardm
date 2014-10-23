@@ -12,6 +12,18 @@ module Ardm
         ::DataMapper.finalize
       end
 
+      def self.repository
+        ::DataMapper.repository
+      end
+
+      def self.logger
+        ::DataMapper.logger
+      end
+
+      def self.logger=(logger)
+        ::DataMapper.logger = logger
+      end
+
       def self.alias_attribute(new, old)
         alias_method new, old
       end
