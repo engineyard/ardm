@@ -12,8 +12,8 @@ module Ardm
         ::DataMapper.finalize
       end
 
-      def self.repository
-        ::DataMapper.repository
+      def self.repository(*args, &block)
+        ::DataMapper.repository(*args, &block)
       end
 
       def self.logger
