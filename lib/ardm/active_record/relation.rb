@@ -32,15 +32,15 @@ module Ardm
           end
 
           def first_or_create(attributes = nil, options = {}, &block)
-            first(attributes) || create(attributes, options, &block)
+            all(attributes).first || all(attributes).create(options, &block)
           end
 
           def first_or_create!(attributes = nil, options = {}, &block)
-            first(attributes) || create!(attributes, options, &block)
+            all(attributes).first || all(attributes).create!(options, &block)
           end
 
           def first_or_initialize(attributes = nil, options = {}, &block)
-            first(attributes) || create(attributes, options, &block)
+            all(attributes).first || all(attributes).create(options, &block)
           end
         end
       end
@@ -62,7 +62,7 @@ module Ardm
       # We used to just patch this, like above, but we need to copy it over
       # completely for rails4 since it no longer supports the old style finder
       # methods that act more like the datamapper finders.
-      def apply_finder_options(options)
+      def apply_finder_options(options, *args)
         relation = clone
         return relation if options.nil?
 

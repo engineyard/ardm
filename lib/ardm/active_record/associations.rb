@@ -54,6 +54,12 @@ module Ardm
       end
 
       module ClassMethods
+        # The reflections returned here don't look like datamapper relationships.
+        # @todo improve this if needed with a wrapper
+        def relationships
+          reflections
+        end
+
         def dump_associations_hash(options)
           options.inject({}) do |new_attrs, (key, value)|
             if reflection = reflect_on_association(key.to_sym)

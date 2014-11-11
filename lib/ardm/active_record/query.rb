@@ -26,6 +26,10 @@ module Ardm
       end
 
       module ClassMethods
+        def execute_sql(sql)
+          connection.execute(sql)
+        end
+
         # hook into query engine in the most general way possible
         def expand_hash_conditions_for_aggregates(options)
           complex, simple = options.partition {|k,v| Ardm::Query::Operator === k }

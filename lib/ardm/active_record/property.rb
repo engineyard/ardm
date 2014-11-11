@@ -87,6 +87,19 @@ module Ardm
           @properties ||= PropertySet.new
         end
 
+        def timestamps(at=:at)
+          case at
+          when :at
+            property :created_at, DateTime
+            property :updated_at, DateTime
+          when :on
+            property :created_on, Date
+            property :updated_on, Date
+          else
+            raise ArgumentError, "Unknown argument: timestamps(#{at.inspect})"
+          end
+        end
+
         def initialize_attributes(attributes, options = {})
           super(attributes, options)
 
@@ -304,6 +317,18 @@ module Ardm
           write_attribute property.field, property.typecast(value)
           read_attribute property.field
         end
+      end
+
+      def assign_attributes(attrs, *a)
+        new_attrs = attrs.inject({}) do |memo,(name,value)|
+          if property = self.class.properties[name]
+            memo[property.field] = property.typecast(value)
+          else
+            memo[name] = value
+          end
+          memo
+        end
+        super new_attrs, *a
       end
 
       # Retrieve the key(s) for this resource.

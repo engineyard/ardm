@@ -6,6 +6,7 @@ require 'ardm/active_record/finalize'
 require 'ardm/active_record/hooks'
 require 'ardm/active_record/is'
 require 'ardm/active_record/inheritance'
+require 'ardm/active_record/persistence'
 require 'ardm/active_record/property'
 require 'ardm/active_record/query'
 require 'ardm/active_record/repository'
@@ -41,6 +42,7 @@ module Ardm
       include Ardm::ActiveRecord::Dirty
       include Ardm::ActiveRecord::Is
       include Ardm::ActiveRecord::Inheritance
+      include Ardm::ActiveRecord::Persistence
       include Ardm::ActiveRecord::Property
       include Ardm::ActiveRecord::Query
       include Ardm::ActiveRecord::Repository
