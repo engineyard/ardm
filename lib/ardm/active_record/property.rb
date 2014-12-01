@@ -113,10 +113,10 @@ module Ardm
         end
 
         def columns
-          @columns ||= _ardm_load_columns
+          @columns ||= _ardm_load_columns(super)
         end
 
-        def _ardm_load_columns
+        def _ardm_load_columns(ar_columns)
           properties.map do |property|
             sql_type = connection.type_to_sql(
               property.dump_as.name.to_sym,
@@ -132,9 +132,11 @@ module Ardm
               property.allow_nil?
             )
 
+            ar_columns.reject! { |c| c.name == column.name }
+
             column.primary = property.key?
             column
-          end
+          end + ar_columns
         end
 
         # Hook into the query system when we would be finding composed_of
