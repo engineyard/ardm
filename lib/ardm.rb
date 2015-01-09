@@ -1,3 +1,5 @@
+require 'ardm/deprecation'
+
 module Ardm
   NotImplemented = Class.new(RuntimeError)
 

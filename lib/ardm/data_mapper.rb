@@ -1,3 +1,4 @@
+require 'ardm'
 require 'ardm/data_mapper/record'
 
 module Ardm

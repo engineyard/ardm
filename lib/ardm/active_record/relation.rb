@@ -45,6 +45,12 @@ module Ardm
         end
       end
 
+      def method_missing(meth, *a, &b)
+        super
+      rescue => e
+        raise NoMethodError, "Relation chain? #{self}.#{meth}\n#{e}"
+      end
+
       def all(options={})
         apply_finder_options(options)
       end

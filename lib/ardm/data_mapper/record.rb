@@ -1,5 +1,6 @@
 require 'active_support/concern'
 require 'dm-core'
+require 'ardm/data_mapper/collection'
 
 module Ardm
   module DataMapper
