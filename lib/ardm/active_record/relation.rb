@@ -100,53 +100,147 @@ module Ardm
           relation = relation.send(finder, finders[finder])
         end
 
+        debug = Proc.new do |x|
+          # un-comment here for ALL THE PUTS:
+          # puts x
+        end
+
         conditions.each do |key, value|
-          if assoc = relation.reflect_on_association(key)
-            conditions.delete(key)
-            # strip out assocations
-            case assoc.macro
-            when :belongs_to
-              id = value.is_a?(Hash) ? value.with_indifferent_access[:id] : value
-              relation = if value.is_a?(::ActiveRecord::Relation)
-                           if value.values.empty?
-                             relation.where.not(assoc.foreign_key => nil)
-                           else
-                             relation.where(assoc.foreign_key => value)
-                           end
-                         else
-                           relation.where(assoc.foreign_key => id)
-                         end
-            when :has_one
-              foreign_class = assoc.options[:class_name].constantize
-              foreign_key   = assoc.foreign_key
-              parent_key    = assoc.options[:child_key] || klass.primary_key
 
-              if value.is_a?(::Array) && value.empty?
-                # @fixme: dm basically no-ops cause it knows you are stupid
-                return klass.where(klass.primary_key => nil)
+          if value.is_a?(Hash)
+            value = value.with_indifferent_access[:id]
+          end
+
+          unmodified_key = key
+          the_positive = true
+          if key.is_a?(Ardm::Query::Operator)
+            if assoc = relation.reflect_on_association(key.target)
+              debug.call "IT's an Operator #{key.target}.#{key.operator} on an association #{assoc.inspect}"
+              if key.operator == :not_eq
+                the_positive = false
+              else
+                raise "Fail. can't apply #{key.target}.#{key.operator} because #{key.target} is an association."
               end
+            end
+            key = key.target
+          end
+          assoc = relation.reflect_on_association(key)
 
-              relation = if value.is_a?(::ActiveRecord::Base)
-                           relation.where(parent_key => value.send(assoc.foreign_key))
-                         elsif value.is_a?(::ActiveRecord::Relation)
-                           relation.where(parent_key => value.select(foreign_key))
-                         elsif value.nil?
-                           relation.where.not(parent_key => foreign_class.select(foreign_key).where.not(foreign_key => value))
-                         else
-                           relation.where(parent_key => foreign_class.select(foreign_key).where(value))
-                         end
-            when :has_many
-              foreign_class = assoc.options[:class_name].constantize
-              foreign_key   = assoc.foreign_key
-              parent_key    = assoc.options[:child_key] || klass.primary_key
+          fallback = Proc.new do
+            debug.call "checking all of #{relation.size} things for #{key} == #{value.inspect}"
+            select_matching = relation.select do |x|
+              debug.call "given #{x.inspect}"
+              actual = x.send(key)
+              expected = value
+              debug.call "in #{the_positive} actual #{actual.inspect} \nvs expected #{expected.inspect}"
+              if expected.is_a?(::ActiveRecord::Relation)
+                if the_positive
+                  result = expected.to_a.include?(actual)
+                else
+                  result = !expected.to_a.include?(actual)
+                end
+                debug.call "result #{result}"
+                result
+              elsif expected.is_a?(Fixnum)
+                if the_positive
+                  result = (actual.try(:id) == expected)
+                else
+                  result = (actual.try(:id) != expected)
+                end
+                debug.call "result #{result}"
+                result
+              else
+                if the_positive
+                  result = (actual == expected)
+                else
+                  result = (actual != expected)
+                end
+                debug.call "result #{result}"
+                result
+              end
+            end
+            relation.where(id: select_matching)
+          end
 
-              relation = if value.is_a?(::ActiveRecord::Relation)
-                           relation.where(foreign_key => value)
-                         else
-                           relation.where(parent_key => foreign_class.select(foreign_class.primary_key).where.not(foreign_key => value))
-                         end
+          set_relation = Proc.new do |new_relation_proc|
+            debug.call "the_positive #{the_positive}"
+            debug.call caller[0]
+            begin
+              new_relation = new_relation_proc.call
+              selected = fallback.call.to_a
+              debug.call "comparing #{new_relation.to_a} with #{selected}"
+              unless new_relation.to_a == selected
+                debug.call "MATCHING FAILED HERE -- #{new_relation.to_a} vs #{selected}"
+                debug.call caller
+              end
+              relation = new_relation
+            rescue => e
+              debug.call e.inspect
+              debug.call e.backtrace
+              debug.call "USING FALLBACK, you should really pry this spot and figure it out"
+              # binding.pry
+              relation = fallback.call
+            end
+          end
+
+          if assoc
+            conditions.delete(unmodified_key)
+            if !the_positive && (relation.klass == assoc.options[:class_name].try(:constantize))
+              debug.call "We would need special handling for this!, #{key} => #{value}. falling back to iteration and comparison"
+              relation = fallback.call
             else
-              raise("unknown: #{assoc.inspect}")
+              # strip out assocations
+              case assoc.macro
+              when :belongs_to
+                if value.is_a?(::ActiveRecord::Relation)
+                  if value.values.empty?
+                    set_relation[->{relation.where.not(assoc.foreign_key => nil)}]
+                  else
+                    set_relation[->{relation.where(assoc.foreign_key => value)}]
+                  end
+                else
+                  if the_positive
+                    set_relation[->{relation.where(assoc.foreign_key => value)}]
+                  else
+                    set_relation[->{relation.where.not(assoc.foreign_key => value)}]
+                  end
+                end
+              when :has_one
+                foreign_class = assoc.options[:class_name].constantize
+                foreign_key   = assoc.foreign_key
+                parent_key    = assoc.options[:child_key] || klass.primary_key
+
+                if value.is_a?(::Array) && value.empty?
+                  # @fixme: dm basically no-ops cause it knows you are stupid
+                  return set_relation[->{klass.where(klass.primary_key => nil)}]
+                end
+
+                if value.is_a?(::ActiveRecord::Base)
+                  set_relation[->{relation.where(parent_key => value.send(assoc.foreign_key))}]
+                elsif value.is_a?(::ActiveRecord::Relation)
+                  if the_positive
+                    set_relation[->{relation.where(parent_key => value.select(&foreign_key))}]
+                  else
+                    set_relation[->{relation.where.not(parent_key => value.select(&foreign_key))}]
+                  end
+                elsif value.nil?
+                  set_relation[->{relation.where.not(parent_key => foreign_class.select(&foreign_key).where.not(foreign_key => value))}]
+                else
+                  set_relation[->{relation.where(parent_key => foreign_class.select(&foreign_key).where(value))}]
+                end
+              when :has_many
+                foreign_class = assoc.options[:class_name].constantize
+                foreign_key   = assoc.foreign_key
+                parent_key    = assoc.options[:child_key] || klass.primary_key
+
+                if value.is_a?(::ActiveRecord::Relation)
+                  set_relation[->{relation.where(foreign_key => value)}]
+                else
+                  set_relation[->{relation.where(parent_key => foreign_class.select(foreign_class.primary_key).where.not(foreign_key => value))}]
+                end
+              else
+                raise("unknown: #{assoc.inspect}")
+              end
             end
           end
         end
@@ -154,6 +248,7 @@ module Ardm
         processed_conditions = {}
 
         conditions.each do |key, value|
+          debug.call "remaining conditions #{key}"
           key = key.is_a?(Ardm::Property) ? key.name : key
 
           case key

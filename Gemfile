@@ -11,6 +11,7 @@ group :test do
   gem 'activerecord', '~> 4.0.0'
   gem 'addressable'
   gem 'database_cleaner'
+  # , git: "git://github.com/lanej/database_cleaner.git", branch: "datamapper-fix"
   gem 'rspec-its'
 end
 
