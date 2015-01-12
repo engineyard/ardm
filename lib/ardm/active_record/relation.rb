@@ -84,7 +84,9 @@ module Ardm
 
         debug = Proc.new do |x|
           # un-comment here for ALL THE PUTS:
-          # puts x
+          if ENV["DEBUG"]
+            puts x
+          end
         end
 
         conditions.each do |key, value|
@@ -116,30 +118,64 @@ module Ardm
               expected = value
               debug.call "in #{the_positive} actual #{actual.inspect} \nvs expected #{expected.inspect}"
               if expected.is_a?(::ActiveRecord::Relation)
-                if the_positive
-                  result = expected.to_a.include?(actual)
+                if actual.is_a?(::ActiveRecord::Relation)
+                  if the_positive
+                    result = (actual.to_a == expected.to_a)
+                  else
+                    result = (actual.to_a != expected.to_a)
+                  end
                 else
-                  result = !expected.to_a.include?(actual)
+                  if the_positive
+                    result = expected.to_a.include?(actual)
+                  else
+                    result = !expected.to_a.include?(actual)
+                  end
                 end
-                debug.call "result #{result}"
-                result
               elsif expected.is_a?(Fixnum)
-                if the_positive
-                  result = (actual.try(:id) == expected)
+                if actual.is_a?(::ActiveRecord::Relation)
+                  if the_positive
+                    result = actual.map(&:id).include?(expected)
+                  else
+                    result = !actual.map(&:id).include?(expected)
+                  end
                 else
-                  result = (actual.try(:id) != expected)
+                  if the_positive
+                    result = (actual.try(:id) == expected)
+                  else
+                    result = (actual.try(:id) != expected)
+                  end
                 end
-                debug.call "result #{result}"
-                result
+              elsif expected.nil?
+                if actual.is_a?(::ActiveRecord::Relation)
+                  if the_positive
+                    result = actual.empty?
+                  else
+                    result = !actual.empty?
+                  end
+                else
+                  if the_positive
+                    result = actual.nil?
+                  else
+                    result = !actual.nil?
+                  end
+                end
               else
-                if the_positive
-                  result = (actual == expected)
+                if actual.is_a?(::ActiveRecord::Relation)
+                  if the_positive
+                    result = actual.include?(expected)
+                  else
+                    result = !actual.include?(expected)
+                  end
                 else
-                  result = (actual != expected)
+                  if the_positive
+                    result = (actual == expected)
+                  else
+                    result = (actual != expected)
+                  end
                 end
-                debug.call "result #{result}"
-                result
               end
+              debug.call "result #{result}"
+              result
             end
             relation.where(id: select_matching)
           end
@@ -167,8 +203,15 @@ module Ardm
 
           if assoc
             conditions.delete(unmodified_key)
-            if !the_positive && (relation.klass == assoc.options[:class_name].try(:constantize))
-              debug.call "We would need special handling for this!, #{key} => #{value}. falling back to iteration and comparison"
+
+            # TODO: still need this?
+            # if value.is_a?(::Array) && value.empty?
+            #   # @fixme: dm basically no-ops cause it knows you are stupid
+            #   return klass.where(klass.primary_key => nil)
+            # end
+
+            if relation.klass == assoc.options[:class_name].try(:constantize)
+              debug.call "Special handling would be needed for #{key} => #{value} on #{relation.klass}. falling back to iteration and comparison"
               relation = fallback.call
             else
               # strip out assocations
@@ -211,14 +254,19 @@ module Ardm
                   set_relation[->{relation.where(parent_key => foreign_class.select(&foreign_key).where(value))}]
                 end
               when :has_many
-                foreign_class = assoc.options[:class_name].constantize
-                foreign_key   = assoc.foreign_key
-                parent_key    = assoc.options[:child_key] || klass.primary_key
-
-                if value.is_a?(::ActiveRecord::Relation)
-                  set_relation[->{relation.where(foreign_key => value)}]
+                if assoc.options[:through]
+                  debug.call "Special handling would be needed for has_many through. #{key} => #{value} on #{relation.klass}. falling back to iteration and comparison"
+                  relation = fallback.call
                 else
-                  set_relation[->{relation.where(parent_key => foreign_class.select(foreign_class.primary_key).where.not(foreign_key => value))}]
+                  foreign_class = assoc.options[:class_name].constantize
+                  foreign_key   = assoc.foreign_key
+                  parent_key    = assoc.options[:child_key] || klass.primary_key
+
+                  if value.is_a?(::ActiveRecord::Relation)
+                    set_relation[->{relation.where(foreign_key => value)}]
+                  else
+                    set_relation[->{relation.where(parent_key => foreign_class.select(foreign_class.primary_key).where.not(foreign_key => value))}]
+                  end
                 end
               else
                 raise("unknown: #{assoc.inspect}")
@@ -258,13 +306,17 @@ module Ardm
         super(operation, column_name, options)
       end
 
-      def method_missing(meth, *a, &b)
-        if a.empty? && association = reflect_on_association(meth.to_sym)
-          case association.macro
-          when :belongs_to
-            association.klass.where(klass.primary_key => self.select(association.foreign_key))
-          when :has_many, :has_one
-            association.klass.where(association.foreign_key => self.clone)
+      def method_missing(meth, *args, &b)
+        association = reflect_on_association(meth.to_sym) ||
+                      reflect_on_association(meth.to_s.singularize.to_sym) ||
+                      reflect_on_association(meth.to_s.pluralize.to_sym)
+        if association
+          ids = self.map(&association.name)
+          result = association.klass.all(id: ids)
+          if args.empty?
+            result
+          else
+            result.all(*args)
           end
         else
           super
