@@ -718,9 +718,7 @@ shared_examples 'Finder Interface' do
         end
 
         it 'should be expected Resources' do
-          skip 'TODO' do
-            expect(@return).to eq([ @article ])
-          end
+          expect(@return).to eq([ @article ])
         end
 
         it 'should have a valid query', :dm do
@@ -738,9 +736,7 @@ shared_examples 'Finder Interface' do
         end
 
         it 'should be expected Resources' do
-          skip 'TODO' do
-            expect(@return).to eq([ @article ])
-          end
+          expect(@return).to eq([ @article ])
         end
 
         it 'should have a valid query', :dm do
@@ -762,9 +758,7 @@ shared_examples 'Finder Interface' do
         end
 
         it 'should be expected Resources' do
-          skip 'TODO' do
-            expect(@return).to eq([ @article ])
-          end
+          expect(@return).to eq([ @article ])
         end
 
         it 'should have a valid query', :dm do
@@ -781,7 +775,7 @@ shared_examples 'Finder Interface' do
           expect(@return).to be_kind_of(Ardm::Collection)
         end
 
-        it 'should be an empty Collection' do
+        it 'should be an empty Collection', focus: true do
           expect(@return).to be_empty
         end
 
@@ -799,10 +793,9 @@ shared_examples 'Finder Interface' do
           expect(@return).to be_kind_of(Ardm::Collection)
         end
 
-        it 'should be empty' do
-          skip 'TODO' do
-            expect(@return).to be_empty
-          end
+        it 'should be empty', focus: true do
+          skip "TODO: not why this is expected to be empty... there are some articles with nil publications"
+          expect(@return).to be_empty
         end
 
         it 'should have a valid query', :dm do
@@ -824,9 +817,7 @@ shared_examples 'Finder Interface' do
         end
 
         it 'should be expected Resources' do
-          skip 'TODO' do
-            expect(@return).to eq([ @article ])
-          end
+          expect(@return).to eq([ @article ])
         end
 
         it 'should have a valid query', :dm do
@@ -963,7 +954,7 @@ shared_examples 'Finder Interface' do
       end
 
       it 'should set the association for each Resource' do
-        pending "Umm... there are 3 @articles ... so not sure how calling map would ever result in an array of 2 objects"
+        skip "Umm... there are 3 @articles ... so not sure how calling map would ever result in an array of 2 objects"
         expect(@articles.map { |resource| resource.original }).to eq([ @original, @original ])
       end
     end
@@ -971,7 +962,7 @@ shared_examples 'Finder Interface' do
     describe 'with a has 1 relationship method' do
       before do
         unless @many_to_many
-          pending %Q{
+          skip %Q{
             So it seems this test is trying to make a new record AND modify 2 relationships
             ...and then without saving any of that to the database...
             it's trying to execute an association chain to find the corresponding (un-saved) correct things
@@ -1036,7 +1027,7 @@ shared_examples 'Finder Interface' do
     describe 'with a has n relationship method' do
       before do
         unless @many_to_many
-          pending %Q{
+          skip %Q{
             So it seems this test is trying to make a new record AND modify 2 relationships
             ...and then without saving any of that to the database...
             it's trying to execute an association chain to find the corresponding (un-saved) correct things
