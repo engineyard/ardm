@@ -120,16 +120,9 @@ module Ardm
           options[:order] = Ardm::ActiveRecord::Query.order(self, options[:order]) if options[:order]
           opts = Ardm::ActiveRecord::Associations.convert_options(self, options, :through, :order)
 
-          if Ardm.rails3?
-            case count
-            when 1      then has_one  name, *opts
-            when "many" then has_many name, *opts
-            end
-          else
-            case count
-            when 1      then has_one  name, *opts
-            when "many" then has_many name, *opts
-            end
+          case count
+          when 1      then has_one  name, *opts
+          when "many" then has_many name, *opts
           end
         end
 
