@@ -432,7 +432,7 @@ shared_examples 'Finder Interface' do
         end
 
         it 'should be equivalent to collection query' do
-          expect(@return).to eq(@articles.all(:original => @article_model.all))
+          expect(@return.to_a).to eq(@articles.all(:original => @article_model.all).to_a)
         end
       end
     end
@@ -542,12 +542,6 @@ shared_examples 'Finder Interface' do
         end
 
         it 'should be equivalent to negated collection query' do
-          # SELECT "id", "title", "original_id" FROM "articles" WHERE NOT("id" IN (SELECT "original_id" FROM "articles" WHERE NOT("original_id" IS NULL))) ORDER BY "id"
-          # ar:
-          # SELECT "articles".* FROM "articles" WHERE ("articles"."original_id" IS NOT NULL)
-          # SELECT "articles".* FROM "articles" WHERE ("articles"."id" NOT IN (SELECT original_id FROM "articles" WHERE ("articles"."original_id" IS NOT NULL)))
-          puts "@return:#{@return.to_sql}"
-          puts "negated:#{@articles.all(:previous.not => @article_model.all(:original.not => nil)).to_sql}"
           expect(@return).to eq(@articles.all(:previous.not => @article_model.all(:original.not => nil)))
         end
       end
@@ -651,7 +645,7 @@ shared_examples 'Finder Interface' do
           expect(@return).to be_empty
         end
 
-        it 'should not have a valid query' do
+        it 'should not have a valid query', :dm do
           expect(@return.query).not_to be_valid
         end
       end
@@ -671,7 +665,6 @@ shared_examples 'Finder Interface' do
           end
         else
           it 'should be expected Resources' do
-            # SELECT "id", "title", "original_id" FROM "articles" WHERE NOT("id" IN (SELECT "original_id" FROM "articles" WHERE NOT("original_id" IS NULL))) ORDER BY "id"
             expect(@return).to eq([ @new ])
           end
         end
@@ -680,7 +673,8 @@ shared_examples 'Finder Interface' do
           expect(@return.query).to be_valid
         end
 
-        it 'should be equivalent to negated collection query' do
+        #TODO? DM has funny ideas about has_many key => array value
+        it 'should be equivalent to negated collection query', :dm do
           expect(@return).to eq(@articles.all(:revisions.not => @article_model.all(:original.not => nil)))
         end
       end
@@ -702,7 +696,8 @@ shared_examples 'Finder Interface' do
           expect(@return.query).to be_valid
         end
 
-        it 'should be equivalent to collection query' do
+        #TODO? DM has funny ideas about has_many key => array value
+        it 'should be equivalent to collection query', :dm do
           expect(@return).to eq(@articles.all(:revisions => @article_model.all))
         end
       end
@@ -790,7 +785,7 @@ shared_examples 'Finder Interface' do
           expect(@return).to be_empty
         end
 
-        it 'should not have a valid query' do
+        it 'should not have a valid query', :dm do
           expect(@return.query).not_to be_valid
         end
       end
@@ -895,14 +890,14 @@ shared_examples 'Finder Interface' do
       @copy.to_a
     end
 
-    it { is_expected.to equal(@articles) }
+    it { is_expected.to equal(@articles.to_a) }
 
     it { expect(method(:subject)).to change { yields.dup }.from([]).to(@copy.to_a) }
   end
 
   it { expect(@articles).to respond_to(:fetch) }
 
-  describe '#fetch' do
+  describe '#fetch', :dm do
     subject { @articles.fetch(*args, &block) }
 
     let(:block) { nil }
@@ -954,11 +949,9 @@ shared_examples 'Finder Interface' do
 
     describe 'with a belongs_to relationship method' do
       before do
-        rescue_if 'Model#method_missing should delegate to relationships', @articles.kind_of?(Class) do
-          @articles.create(:body => 'Another Article', :original => @original)
+        @articles.create(:body => 'Another Article', :original => @original)
 
-          @return = @collection = @articles.originals
-        end
+        @return = @collection = @articles.originals
       end
 
       it 'should return a Collection', :dm do
@@ -970,12 +963,21 @@ shared_examples 'Finder Interface' do
       end
 
       it 'should set the association for each Resource' do
+        pending "Umm... there are 3 @articles ... so not sure how calling map would ever result in an array of 2 objects"
         expect(@articles.map { |resource| resource.original }).to eq([ @original, @original ])
       end
     end
 
     describe 'with a has 1 relationship method' do
       before do
+        unless @many_to_many
+          pending %Q{
+            So it seems this test is trying to make a new record AND modify 2 relationships
+            ...and then without saving any of that to the database...
+            it's trying to execute an association chain to find the corresponding (un-saved) correct things
+            I don't think anything will ever work this way with ActiveRecord...
+          }
+        end
         # FIXME: create is necessary for m:m so that the intermediary
         # is created properly.  This does not occur with @new.save
         @new = @articles.send(@many_to_many ? :create : :new)
@@ -1033,6 +1035,14 @@ shared_examples 'Finder Interface' do
 
     describe 'with a has n relationship method' do
       before do
+        unless @many_to_many
+          pending %Q{
+            So it seems this test is trying to make a new record AND modify 2 relationships
+            ...and then without saving any of that to the database...
+            it's trying to execute an association chain to find the corresponding (un-saved) correct things
+            I don't think anything will ever work this way with ActiveRecord...
+          }
+        end
         # FIXME: create is necessary for m:m so that the intermediary
         # is created properly.  This does not occur with @new.save
         @new = @articles.send(@many_to_many ? :create : :new)
@@ -1133,7 +1143,7 @@ shared_examples 'Finder Interface' do
         end
 
         { :id => true, :name => false }.each do |attribute, expected|
-          it "should have query field #{attribute.inspect} #{'not' unless expected} loaded".squeeze(' ') do
+          it "should have query field #{attribute.inspect} #{'not' unless expected} loaded".squeeze(' '), :dm do
             @collection.each { |resource| expect(resource.attribute_loaded?(attribute)).to eq(expected) }
           end
         end
