@@ -203,19 +203,24 @@ module Ardm
             debug.call caller[0]
             begin
               new_relation = new_relation_proc.call
-              selected = fallback.call.to_a
-              debug.call "comparing #{new_relation.to_a} with #{selected}"
-              unless new_relation.to_a == selected
-                debug.call "MATCHING FAILED HERE -- #{new_relation.to_a} vs #{selected}"
-                debug.call caller
+              if ENV["DEBUG"]
+                selected = fallback.call.to_a
+                puts "comparing #{new_relation.to_a} with #{selected}"
+                unless new_relation.to_a == selected
+                  puts "MATCHING FAILED HERE -- #{new_relation.to_a} vs #{selected}"
+                  puts caller
+                end
               end
               relation = new_relation
             rescue => e
-              debug.call e.inspect
-              debug.call e.backtrace
-              debug.call "USING FALLBACK, you should really pry this spot and figure it out"
-              # binding.pry
-              relation = fallback.call
+              if ENV["DEBUG"]
+                puts e.inspect
+                puts e.backtrace
+                puts "USING FALLBACK, you should really pry this spot and figure it out"
+                relation = fallback.call
+              else
+                raise e
+              end
             end
           end
 
