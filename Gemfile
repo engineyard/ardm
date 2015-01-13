@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+rails_version = ENV["RAILS_VERSION"] || "4.0"
+
 gemspec
 
 gem 'pry'
@@ -8,7 +10,7 @@ gem 'awesome_print'
 
 group :test do
   gem 'sqlite3'
-  gem 'activerecord', '~> 4.0.0'
+  gem 'activerecord', "~> #{rails_version}.0"
   gem 'addressable'
   gem 'database_cleaner'
   gem 'rspec-its'
