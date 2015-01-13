@@ -14,6 +14,7 @@ module Ardm
         ar = options.dup
         ar[:class_name]  = ar.delete(:model)      if ar[:model]
         ar[:foreign_key] = ar.delete(:child_key)  if ar[:child_key]
+        ar[:source]      = ar.delete(:via)        if ar[:via]
         ar[:foreign_key] = ar[:foreign_key].first if ar[:foreign_key].respond_to?(:to_ary)
 
         if ar[:foreign_key] && property = klass.properties[ar[:foreign_key]]
@@ -105,7 +106,7 @@ module Ardm
           end
 
           options[:order] = Ardm::ActiveRecord::Query.order(self, options[:order]) if options[:order]
-          opts = Ardm::ActiveRecord::Associations.convert_options(self, options, :through, :order)
+          opts = Ardm::ActiveRecord::Associations.convert_options(self, options, :through, :order, :source)
 
           case count
           when 1      then has_one  name, *opts
