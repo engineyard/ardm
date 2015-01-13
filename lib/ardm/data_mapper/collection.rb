@@ -6,5 +6,13 @@ DataMapper::Collection.class_eval do
     Ardm::Deprecation.warn("Relation chain #{model.name}.#{relationship.name}")
     old_delegate_to_relationship(relationship, query)
   end
+
+  def includes(*)
+    self
+  end
+
+  def references(*)
+    self
+  end
 end
 
