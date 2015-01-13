@@ -46,12 +46,23 @@ module Ardm
         !new_record?
       end
 
-      def save_self(run_callbacks=true)
-        save(run_callbacks)
+      def save_self(execute_hooks = true)
+        save(execute_hooks)
       end
 
-      def save(run_callbacks=true)
-        unless run_callbacks
+      # @todo: be more like DM:
+      # DM version of this method pasted here as a comment for your convenience
+      # # short-circuit if the resource is not dirty
+      # return saved? unless dirty_self?
+      #
+      # if execute_hooks
+      #   new? ? create_with_hooks : update_with_hooks
+      # else
+      #   _persist
+      # end
+      # clean?
+      def save(execute_hooks=true)
+        unless execute_hooks
           raise Ardm::NotImplemented, "ActiveRecord doesn't support saving without callbacks"
         end
 

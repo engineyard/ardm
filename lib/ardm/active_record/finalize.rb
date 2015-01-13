@@ -10,7 +10,13 @@ module Ardm
       end
 
       module ClassMethods
+        def on_finalize(&block)
+          block.call if @finalized
+          Ardm::ActiveRecord::Finalize.on_finalize << block
+        end
+
         def finalize
+          @finalized = true
           Ardm::ActiveRecord::Finalize.on_finalize.each { |f| f.call }
         end
       end

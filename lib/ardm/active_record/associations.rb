@@ -1,5 +1,3 @@
-
-
 module Ardm
   module ActiveRecord
     module Associations
@@ -67,6 +65,7 @@ module Ardm
         end
 
         def belongs_to(field, *args)
+          puts "#{self.name} belongs to #{field}"
           options = args.shift || {}
 
           if String === options || Class === options # belongs_to :name, 'Class', options: 'here'
@@ -85,7 +84,7 @@ module Ardm
           Ardm::ActiveRecord::Finalize.on_finalize do
             assoc = reflect_on_association(field)
             klass.class_eval do
-              # @todo String is a hack... hoping AR can convert strings to integers during save for integer keys.
+              puts "Adding belongs_to property #{assoc.foreign_key} #{assoc.klass.key.first.class}"
               property assoc.foreign_key, assoc.primary_key_column.sql_type == "Integer" ? Integer : String, key: false
             end
           end
