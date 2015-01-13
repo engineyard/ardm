@@ -5,19 +5,6 @@ module Ardm
     module Associations
       extend ActiveSupport::Concern
 
-      def assign_attributes(attrs, *a)
-        new_attrs = attrs.inject({}) do |memo,(k,v)|
-          if assoc = self.class.reflect_on_association(k)
-            memo[assoc.foreign_key] = v && v.send(v.class.primary_key)
-          else
-            memo[k] = v
-          end
-          memo
-        end
-        super new_attrs, *a
-      end
-
-
       # Convert options from DM style to AR style.
       #
       # Keep any unknown keys to use as conditions.
