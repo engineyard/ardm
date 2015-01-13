@@ -46,8 +46,16 @@ module Ardm
         !new_record?
       end
 
-      def save_self(*args)
-        save(*args)
+      def save_self(run_callbacks=true)
+        save(run_callbacks)
+      end
+
+      def save(run_callbacks=true)
+        unless run_callbacks
+          raise Ardm::NotImplemented, "ActiveRecord doesn't support saving without callbacks"
+        end
+
+        super() # no args!
       end
 
       def save!(*args)
