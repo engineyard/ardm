@@ -3,14 +3,15 @@ module Ardm
     module Finalize
       extend ActiveSupport::Concern
 
-      included do
-        class_attribute :on_finalize
-        self.on_finalize = []
+      def self.on_finalize(&block)
+        @on_finalize ||= []
+        @on_finalize << block if block_given?
+        @on_finalize
       end
 
       module ClassMethods
         def finalize
-          on_finalize.each { |f| f.call }
+          Ardm::ActiveRecord::Finalize.on_finalize.each { |f| f.call }
         end
       end
     end
