@@ -16,7 +16,7 @@ describe Ardm::Record do
   end
 
   # FIXME
-  #it_should_behave_like 'A public Resource'
+  include_examples 'A public Resource'
   #it_should_behave_like 'A Resource supporting Strategic Eager Loading'
 
   it 'A resource should respond to raise_on_save_failure' do

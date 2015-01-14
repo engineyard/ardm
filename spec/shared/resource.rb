@@ -1,15 +1,16 @@
 shared_examples 'A public Resource' do
-  before :all do
+  before do
     @no_join = defined?(Ardm::Adapters::InMemoryAdapter) && @adapter.kind_of?(Ardm::Adapters::InMemoryAdapter) ||
                defined?(Ardm::Adapters::YamlAdapter)     && @adapter.kind_of?(Ardm::Adapters::YamlAdapter)
 
-    relationship        = @user_model.relationships[:referrer]
-    @one_to_one_through = relationship.kind_of?(Ardm::Associations::OneToOne::Relationship) && relationship.respond_to?(:through)
+    # it seems like we'll always skip this because the adaper is never going to be the in memory adapter
+    #relationship        = @user_model.relationships[:referrer]
+    #@one_to_one_through = relationship.kind_of?(Ardm::ActiveRecord::Associations::OneToOne::Relationship) && relationship.respond_to?(:through)
 
     @skip = @no_join && @one_to_one_through
   end
 
-  before :all do
+  before do
     unless @skip
       %w[ @user_model @user @comment_model ].each do |ivar|
         raise "+#{ivar}+ should be defined in before block" unless instance_variable_get(ivar)
@@ -26,7 +27,7 @@ shared_examples 'A public Resource' do
 
     describe "##{method}" do
       describe 'when comparing to the same resource' do
-        before :all do
+        before do
           @other  = @user
           @return = @user.__send__(method, @other)
         end
@@ -37,7 +38,7 @@ shared_examples 'A public Resource' do
       end
 
       describe 'when comparing to an resource that does not respond to resource methods' do
-        before :all do
+        before do
           @other  = Object.new
           @return = @user.__send__(method, @other)
         end
@@ -48,7 +49,7 @@ shared_examples 'A public Resource' do
       end
 
       describe 'when comparing to a resource with the same properties, but the model is a subclass' do
-        before :all do
+        before do
           rescue_if @skip do
             @other  = @author_model.new(@user.attributes)
             @return = @user.__send__(method, @other)
@@ -61,7 +62,7 @@ shared_examples 'A public Resource' do
       end
 
       describe 'when comparing to a resource with the same repository, key and neither self or the other resource is dirty' do
-        before :all do
+        before do
           rescue_if @skip do
             @other  = @user_model.get(*@user.key)
             @return = @user.__send__(method, @other)
@@ -74,7 +75,7 @@ shared_examples 'A public Resource' do
       end
 
       describe 'when comparing to a resource with the same repository, key but either self or the other resource is dirty' do
-        before :all do
+        before do
           rescue_if @skip do
             @user.age = 20
             @other  = @user_model.get(*@user.key)
@@ -88,7 +89,7 @@ shared_examples 'A public Resource' do
       end
 
       describe 'when comparing to a resource with the same properties' do
-        before :all do
+        before do
           rescue_if @skip do
             @other  = @user_model.new(@user.attributes)
             @return = @user.__send__(method, @other)
@@ -99,28 +100,6 @@ shared_examples 'A public Resource' do
           expect(@return).to be(true)
         end
       end
-
-      with_alternate_adapter do
-        before :all do
-          if @user_model.respond_to?(:auto_migrate!)
-            # force the user model to be available in the alternate repository
-            @user_model.auto_migrate!(@adapter.name)
-          end
-        end
-
-        describe 'when comparing to a resource with a different repository, but the same properties' do
-          before :all do
-            rescue_if @skip do
-              @other = @repository.scope { @user_model.create(@user.attributes) }
-              @return = @user.__send__(method, @other)
-            end
-          end
-
-          it 'should return false' do
-            expect(@return).to be(false)
-          end
-        end
-      end
     end
   end
 
@@ -128,7 +107,7 @@ shared_examples 'A public Resource' do
 
   describe '#<=>' do
     describe 'when the default order properties are equal with another resource' do
-      before :all do
+      before do
         rescue_if @skip && RUBY_VERSION < '1.9.2' do
           @other = @user_model.new(:name => 'dbussink')
           @return = @user <=> @other
@@ -141,7 +120,7 @@ shared_examples 'A public Resource' do
     end
 
     describe 'when the default order property values are sorted before another resource' do
-      before :all do
+      before do
         rescue_if @skip && RUBY_VERSION < '1.9.2' do
           @other = @user_model.new(:name => 'c')
           @return = @user <=> @other
@@ -154,7 +133,7 @@ shared_examples 'A public Resource' do
     end
 
     describe 'when the default order property values are sorted after another resource' do
-      before :all do
+      before do
         rescue_if @skip && RUBY_VERSION < '1.9.2' do
           @other = @user_model.new(:name => 'e')
           @return = @user <=> @other
@@ -195,7 +174,7 @@ shared_examples 'A public Resource' do
 
   describe '#attributes' do
     describe 'with a new resource' do
-      before :all do
+      before do
         rescue_if @skip do
           @user = @user.model.new
         end
@@ -207,7 +186,7 @@ shared_examples 'A public Resource' do
     end
 
     describe 'with a new resource with a property set' do
-      before :all do
+      before do
         rescue_if @skip do
           @user = @user.model.new
           @user.name = 'dbussink'
@@ -232,7 +211,7 @@ shared_examples 'A public Resource' do
 
   describe '#attributes=' do
     describe 'when a public mutator is specified' do
-      before :all do
+      before do
         rescue_if @skip do
           @user.attributes = { :name => 'dkubb' }
         end
@@ -257,7 +236,7 @@ shared_examples 'A public Resource' do
 
     describe "##{method}" do
       describe 'on a single resource' do
-        before :all do
+        before do
           @resource = @user_model.create(:name => 'hacker', :age => 20, :comment => @comment)
 
           @return = @resource.__send__(method)
@@ -296,7 +275,7 @@ shared_examples 'A public Resource' do
     end
 
     describe 'on a record, with no dirty attributes, and dirty parents' do
-      before :all do
+      before do
         rescue_if @skip do
           expect(@user).not_to be_dirty
 
@@ -309,7 +288,7 @@ shared_examples 'A public Resource' do
     end
 
     describe 'on a record, with no dirty attributes, and dirty children' do
-      before :all do
+      before do
         rescue_if @skip do
           expect(@user).not_to be_dirty
 
@@ -322,7 +301,7 @@ shared_examples 'A public Resource' do
     end
 
     describe 'on a record, with no dirty attributes, and dirty siblings' do
-      before :all do
+      before do
         rescue_if @skip do
           expect(@user).not_to be_dirty
 
@@ -364,7 +343,7 @@ shared_examples 'A public Resource' do
     end
 
     describe 'on a record with itself as a parent (circular dependency)' do
-      before :all do
+      before do
         rescue_if @skip do
           @user.parent = @user
         end
@@ -378,7 +357,7 @@ shared_examples 'A public Resource' do
     end
 
     describe 'on a record with itself as a child (circular dependency)' do
-      before :all do
+      before do
         rescue_if @skip do
           @user.children = [ @user ]
         end
@@ -392,7 +371,7 @@ shared_examples 'A public Resource' do
     end
 
     describe 'on a record with a parent as a child (circular dependency)' do
-      before :all do
+      before do
         rescue_if @skip do
           @user.children = [ @user.parent = @user_model.new(:name => 'Parent', :comment => @comment) ]
           expect(@user.save).to be(true)
@@ -411,7 +390,7 @@ shared_examples 'A public Resource' do
 
   describe '#eql?' do
     describe 'when comparing to the same resource' do
-      before :all do
+      before do
         @other  = @user
         @return = @user.eql?(@other)
       end
@@ -422,7 +401,7 @@ shared_examples 'A public Resource' do
     end
 
     describe 'when comparing to an resource that does not respond to model' do
-      before :all do
+      before do
         @other  = Object.new
         @return = @user.eql?(@other)
       end
@@ -433,7 +412,7 @@ shared_examples 'A public Resource' do
     end
 
     describe 'when comparing to a resource with the same properties, but the model is a subclass' do
-      before :all do
+      before do
         rescue_if @skip do
           @other  = @author_model.new(@user.attributes)
           @return = @user.eql?(@other)
@@ -446,7 +425,7 @@ shared_examples 'A public Resource' do
     end
 
     describe 'when comparing to a resource with a different key' do
-      before :all do
+      before do
         @other  = @user_model.create(:name => 'dkubb', :age => 33, :comment => @comment)
         @return = @user.eql?(@other)
       end
@@ -457,7 +436,7 @@ shared_examples 'A public Resource' do
     end
 
     describe 'when comparing to a resource with the same repository, key and neither self or the other resource is dirty' do
-      before :all do
+      before do
         rescue_if @skip do
           @other  = @user_model.get(*@user.key)
           @return = @user.eql?(@other)
@@ -470,7 +449,7 @@ shared_examples 'A public Resource' do
     end
 
     describe 'when comparing to a resource with the same repository, key but either self or the other resource is dirty' do
-      before :all do
+      before do
         rescue_if @skip do
           @user.age = 20
           @other  = @user_model.get(*@user.key)
@@ -484,7 +463,7 @@ shared_examples 'A public Resource' do
     end
 
     describe 'when comparing to a resource with the same properties' do
-      before :all do
+      before do
         rescue_if @skip do
           @other  = @user_model.new(@user.attributes)
           @return = @user.eql?(@other)
@@ -495,35 +474,13 @@ shared_examples 'A public Resource' do
         expect(@return).to be(true)
       end
     end
-
-    with_alternate_adapter do
-      before :all do
-        if @user_model.respond_to?(:auto_migrate!)
-          # force the user model to be available in the alternate repository
-          @user_model.auto_migrate!(@adapter.name)
-        end
-      end
-
-      describe 'when comparing to a resource with a different repository, but the same properties' do
-        before :all do
-          rescue_if @skip do
-            @other = @repository.scope { @user_model.create(@user.attributes) }
-            @return = @user.eql?(@other)
-          end
-        end
-
-        it 'should return false' do
-          expect(@return).to be(false)
-        end
-      end
-    end
   end
 
   it { expect(@user).to respond_to(:inspect) }
 
   describe '#inspect' do
 
-    before :all do
+    before do
       rescue_if @skip do
         @user = @user_model.get(*@user.key)
         @inspected = @user.inspect
@@ -544,7 +501,7 @@ shared_examples 'A public Resource' do
 
   describe '#key' do
 
-    before :all do
+    before do
       rescue_if @skip do
         @key = @user.key
         @user.name = 'dkubb'
@@ -667,7 +624,7 @@ shared_examples 'A public Resource' do
 
   describe '#readonly?' do
     describe 'on a new resource' do
-      before :all do
+      before do
         rescue_if @skip do
           @user = @user.model.new
         end
@@ -679,7 +636,7 @@ shared_examples 'A public Resource' do
     end
 
     describe 'on a saved resource' do
-      before :all do
+      before do
         rescue_if @skip do
           expect(@user).to be_saved
         end
@@ -691,7 +648,7 @@ shared_examples 'A public Resource' do
     end
 
     describe 'on a destroyed resource' do
-      before :all do
+      before do
         rescue_if @skip do
           expect(@user.destroy).to be(true)
         end
@@ -703,7 +660,7 @@ shared_examples 'A public Resource' do
     end
 
     describe 'on an anonymous resource' do
-      before :all do
+      before do
         rescue_if @skip do
           # load the user without a key
           @user = @user.model.first(:fields => @user_model.properties - @user_model.key)
@@ -720,7 +677,7 @@ shared_examples 'A public Resource' do
     it { expect(@user).to respond_to(method) }
 
     describe "##{method}" do
-      before :all do
+      before do
         @user_model.class_eval do
           attr_accessor :save_hook_call_count
 
@@ -732,7 +689,7 @@ shared_examples 'A public Resource' do
       end
 
       describe 'on a new, not dirty resource' do
-        before :all do
+        before do
           @user = @user_model.new
           @return = @user.__send__(method)
         end
@@ -747,7 +704,7 @@ shared_examples 'A public Resource' do
       end
 
       describe 'on a not new, not dirty resource' do
-        before :all do
+        before do
           rescue_if @skip do
             @return = @user.__send__(method)
           end
@@ -763,7 +720,7 @@ shared_examples 'A public Resource' do
       end
 
       describe 'on a not new, dirty resource' do
-        before :all do
+        before do
           rescue_if @skip do
             @user.age = 26
             @return = @user.__send__(method)
@@ -784,7 +741,7 @@ shared_examples 'A public Resource' do
       end
 
       describe 'on a new, invalid resource' do
-        before :all do
+        before do
           @user = @user_model.new(:name => nil)
           expect { @user.__send__(method) }.to(raise_error(Ardm::Property::InvalidValueError) do |error|
             expect(error.property).to eq(@user_model.properties[:name])
@@ -797,7 +754,7 @@ shared_examples 'A public Resource' do
       end
 
       describe 'on a dirty invalid resource' do
-        before :all do
+        before do
           rescue_if @skip do
             @user.name = nil
           end
@@ -825,19 +782,19 @@ shared_examples 'A public Resource' do
         end
 
         it 'should save resource' do
-          skip_if !@user.respond_to?(:comments) do
+          if @user.respond_to?(:comments)
             expect(@return).to be(true)
           end
         end
 
         it 'should save the first resource created through new' do
-          skip_if !@user.respond_to?(:comments) do
+          if @user.respond_to?(:comments)
             expect(@first_comment.new?).to be(false)
           end
         end
 
         it 'should save the correct foreign key for the first resource' do
-          skip_if !@user.respond_to?(:comments) do
+          if @user.respond_to?(:comments)
             expect(@first_comment.user).to eql(@user)
           end
         end
@@ -849,7 +806,7 @@ shared_examples 'A public Resource' do
         end
 
         it 'should save the correct foreign key for the second resource' do
-          skip_if !@user.respond_to?(:comments) do
+          if @user.respond_to?(:comments)
             expect(@second_comment.user).to eql(@user)
           end
         end
@@ -862,7 +819,7 @@ shared_examples 'A public Resource' do
       end
 
       describe 'with dirty resources in a has relationship' do
-        before :all do
+        before do
           rescue_if 'TODO: fix for one to one association', !@user.respond_to?(:comments) do
             @first_comment  = @user.comments.create(:body => 'DM is great!')
             @second_comment = @comment_model.create(:user => @user, :body => 'is it really?')
@@ -876,7 +833,7 @@ shared_examples 'A public Resource' do
         end
 
         it 'should return true' do
-          skip_if !@user.respond_to?(:comments) do
+          if @user.respond_to?(:comments)
             expect(@return).to be(true)
           end
         end
@@ -886,20 +843,20 @@ shared_examples 'A public Resource' do
         end
 
         it 'should have saved the first child resource' do
-          skip_if !@user.respond_to?(:comments) do
+          if @user.respond_to?(:comments)
             expect(@first_comment.model.get(*@first_comment.key).body).to eq('It still has rough edges')
           end
         end
 
         it 'should not have saved the second child resource' do
-          skip_if !@user.respond_to?(:comments) do
+          if @user.respond_to?(:comments)
             expect(@second_comment.model.get(*@second_comment.key).body).to eq('is it really?')
           end
         end
       end
 
       describe 'with a new dependency' do
-        before :all do
+        before do
           @first_comment      = @comment_model.new(:body => "DM is great!")
           @first_comment.user = @user_model.new(:name => 'dkubb')
         end
@@ -912,7 +869,7 @@ shared_examples 'A public Resource' do
       end
 
       describe 'with a dirty dependency' do
-        before :all do
+        before do
           rescue_if @skip do
             @user.name = 'dbussink-the-second'
 
@@ -937,7 +894,7 @@ shared_examples 'A public Resource' do
       end
 
       describe 'with a new resource and new relations' do
-        before :all do
+        before do
           @article = @article_model.new(:body => "Main")
           rescue_if 'TODO: fix for one to one association', (!@article.respond_to?(:paragraphs)) do
             @paragraph = @article.paragraphs.new(:text => 'Content')
@@ -947,32 +904,32 @@ shared_examples 'A public Resource' do
         end
 
         it 'should not be dirty' do
-          skip_if !@article.respond_to?(:paragraphs) do
+          if @article.respond_to?(:paragraphs)
             expect(@article).not_to be_dirty
           end
         end
 
         it 'should not be dirty' do
-          skip_if !@article.respond_to?(:paragraphs) do
+          if @article.respond_to?(:paragraphs)
             expect(@paragraph).not_to be_dirty
           end
         end
 
         it 'should set the related resource' do
-          skip_if !@article.respond_to?(:paragraphs) do
+          if @article.respond_to?(:paragraphs)
             expect(@paragraph.article).to eq(@article)
           end
         end
 
         it 'should set the foreign key properly' do
-          skip_if !@article.respond_to?(:paragraphs) do
+          if @article.respond_to?(:paragraphs)
             expect(@paragraph.article_id).to eq(@article.id)
           end
         end
       end
 
       describe 'with a dirty resource with a changed key' do
-        before :all do
+        before do
           rescue_if @skip do
             @original_key = @user.key
             @user.name = 'dkubb'
@@ -998,7 +955,7 @@ shared_examples 'A public Resource' do
       end
 
       describe 'on a new resource with unsaved parent and grandparent' do
-        before :all do
+        before do
           @grandparent = @user_model.new(:name => 'dkubb',       :comment => @comment)
           @parent      = @user_model.new(:name => 'ashleymoran', :comment => @comment, :referrer => @grandparent)
           @child       = @user_model.new(:name => 'mrship',      :comment => @comment, :referrer => @parent)
@@ -1036,7 +993,7 @@ shared_examples 'A public Resource' do
       end
 
       describe 'on a destroyed resource' do
-        before :all do
+        before do
           rescue_if @skip do
             @user.destroy
           end
@@ -1050,7 +1007,7 @@ shared_examples 'A public Resource' do
       end
 
       describe 'on a record with itself as a parent (circular dependency)' do
-        before :all do
+        before do
           rescue_if @skip do
             @user.parent = @user
           end
@@ -1064,7 +1021,7 @@ shared_examples 'A public Resource' do
       end
 
       describe 'on a record with itself as a child (circular dependency)' do
-        before :all do
+        before do
           rescue_if @skip do
             @user.children = [ @user ]
           end
@@ -1078,7 +1035,7 @@ shared_examples 'A public Resource' do
       end
 
       describe 'on a record with a parent as a child (circular dependency)' do
-        before :all do
+        before do
           rescue_if @skip do
             @user.children = [ @user.parent = @user_model.new(:name => 'Parent', :comment => @comment) ]
           end
@@ -1118,7 +1075,7 @@ shared_examples 'A public Resource' do
 
     describe "##{method}" do
       describe 'with attributes' do
-        before :all do
+        before do
           rescue_if @skip do
             @attributes = { :description => 'Changed' }
             @return = @user.__send__(method, @attributes)
@@ -1140,7 +1097,7 @@ shared_examples 'A public Resource' do
       end
 
       describe 'with attributes where one is a parent association' do
-        before :all do
+        before do
           rescue_if @skip do
             @attributes = { :referrer => @user_model.create(:name => 'dkubb', :age => 33, :comment => @comment) }
             @return = @user.__send__(method, @attributes)
@@ -1174,7 +1131,7 @@ shared_examples 'A public Resource' do
       end
 
       describe 'on a new resource' do
-        before :all do
+        before do
           rescue_if @skip do
             @user = @user.model.new(@user.attributes)
             @user.age = 99
@@ -1189,7 +1146,7 @@ shared_examples 'A public Resource' do
       end
 
       describe 'on a dirty resource' do
-        before :all do
+        before do
           rescue_if @skip do
             @user.age = 99
           end
@@ -1205,7 +1162,7 @@ shared_examples 'A public Resource' do
   end
 
   describe 'lazy loading' do
-    before :all do
+    before do
       rescue_if @skip do
         @user.name    = 'dkubb'
         @user.age     = 33

@@ -20,6 +20,10 @@ module Ardm
         end
         prop
       end
+
+      def model
+        self.class
+      end
     end
   end
 end
