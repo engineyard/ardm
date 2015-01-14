@@ -81,10 +81,12 @@ module Ardm
           options.delete(:required)
           opts = Ardm::ActiveRecord::Associations.convert_options(self, options)
           super field, *opts
-          assoc = reflect_on_association(field)
-          Ardm::ActiveRecord::Record.on_finalize << lambda do
-            self.class_eval do
-              property assoc.foreign_key, assoc.klass.key.first.class, key: false
+          klass = self
+          Ardm::ActiveRecord::Finalize.on_finalize do
+            assoc = reflect_on_association(field)
+            klass.class_eval do
+              # @todo String is a hack... hoping AR can convert strings to integers during save for integer keys.
+              property assoc.foreign_key, assoc.primary_key_column.sql_type == "Integer" ? Integer : String, key: false
             end
           end
           nil
