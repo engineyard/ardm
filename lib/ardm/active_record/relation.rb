@@ -10,6 +10,7 @@ module Ardm
         alias_method :destory_without_ardm, :destroy
         alias_method :update_without_ardm, :update
         alias_method :first_without_ardm, :first
+        alias_method :first_without_ardm!, :first!
 
         # we need to overrite the implementation in the class
         class_eval do
@@ -37,6 +38,14 @@ module Ardm
               all(*args).first_without_ardm
             else
               first_without_ardm
+            end
+          end
+
+          def first!(*args)
+            if args.any?
+              all(*args).first_without_ardm!
+            else
+              first_without_ardm!
             end
           end
 
