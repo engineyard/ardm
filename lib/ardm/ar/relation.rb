@@ -1,8 +1,8 @@
 require 'active_support/concern'
-require 'ardm/active_record/collection'
+require 'ardm/ar/collection'
 
 module Ardm
-  module ActiveRecord
+  module Ar
     module Relation
       extend ActiveSupport::Concern
 

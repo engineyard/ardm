@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Ardm::ActiveRecord::DataMapperConstantProxy do
+describe Ardm::Ar::DataMapperConstantProxy do
   it 'defines Resource' do
     expect(described_class::Resource).to be_kind_of(Module)
   end

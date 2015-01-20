@@ -1,5 +1,5 @@
 module Ardm
-  module ActiveRecord
+  module Ar
     module Is
       module StateMachine
         extend ActiveSupport::Concern

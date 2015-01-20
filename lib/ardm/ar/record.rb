@@ -1,11 +1,11 @@
 require 'active_record'
 require 'ardm'
-require 'ardm/active_record/base'
+require 'ardm/ar/base'
 
 module Ardm
-  module ActiveRecord
+  module Ar
     class Record < ::ActiveRecord::Base
-      include Ardm::ActiveRecord::Base
+      include Ardm::Ar::Base
 
       self.abstract_class = true
 

@@ -1,5 +1,5 @@
 module Ardm
-  module ActiveRecord
+  module Ar
     module Dirty
       def dirty?
         changed?

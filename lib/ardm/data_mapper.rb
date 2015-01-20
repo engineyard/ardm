@@ -1,10 +1,10 @@
 require 'ardm'
-require 'ardm/data_mapper/record'
+require 'ardm/dm/record'
 
 module Ardm
-  Record = Ardm::DataMapper::Record
-  SaveFailureError = ::DataMapper::SaveFailureError
-  RecordNotFound = ::DataMapper::ObjectNotFoundError
-  Property = ::DataMapper::Property
-  Collection = ::DataMapper::Collection
+  Record = Ardm::Dm::Record
+  SaveFailureError = ::Dm::SaveFailureError
+  RecordNotFound = ::Dm::ObjectNotFoundError
+  Property = ::Dm::Property
+  Collection = ::Dm::Collection
 end

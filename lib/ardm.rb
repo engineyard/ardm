@@ -7,20 +7,20 @@ module Ardm
   #
   # @api public
   def self.orm
-    @orm ||= :active_record
+    @orm ||= :ar
   end
 
   # Set which orm to load.
   #
   # @api public
   def self.orm=(orm)
-    if defined?(Ardm::ActiveRecord) || defined?(Ardm::DataMapper)
+    if defined?(Ardm::Ar) || defined?(Ardm::Dm)
       raise "Cannot change Ardm.orm when #{orm} libs are already loaded."
     end
 
     @orm = case orm.to_s
-           when /active_?record/, '' then :active_record
-           when /data_?mapper/       then :data_mapper
+           when /(ar|active_?record)/, '' then :ar
+           when /(dm|data_?mapper)/       then :dm
            else raise "Unknown ENV['ORM']: #{ENV['ORM']}"
            end
   end
@@ -29,14 +29,14 @@ module Ardm
   #
   # @api public
   def self.active_record?
-    orm == :active_record
+    orm == :ar
   end
 
   # Return true if Ardm has loaded DataMapper ORM.
   #
   # @api public
   def self.data_mapper?
-    orm == :data_mapper
+    orm == :dm
   end
 
   # Yield if Ardm has loaded ActiveRecord ORM.

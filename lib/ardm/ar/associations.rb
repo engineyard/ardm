@@ -1,7 +1,7 @@
 
 
 module Ardm
-  module ActiveRecord
+  module Ar
     module Associations
       extend ActiveSupport::Concern
 
@@ -79,10 +79,10 @@ module Ardm
 
           options.delete(:default)
           options.delete(:required)
-          opts = Ardm::ActiveRecord::Associations.convert_options(self, options)
+          opts = Ardm::Ar::Associations.convert_options(self, options)
           super field, *opts
           klass = self
-          Ardm::ActiveRecord::Finalize.on_finalize do
+          Ardm::Ar::Finalize.on_finalize do
             assoc = reflect_on_association(field)
             klass.class_eval do
               # @todo String is a hack... hoping AR can convert strings to integers during save for integer keys.
@@ -107,8 +107,8 @@ module Ardm
             raise ArgumentError, "bad has #{count} options format #{options.inspect}"
           end
 
-          options[:order] = Ardm::ActiveRecord::Query.order(self, options[:order]) if options[:order]
-          opts = Ardm::ActiveRecord::Associations.convert_options(self, options, :through, :order, :source)
+          options[:order] = Ardm::Ar::Query.order(self, options[:order]) if options[:order]
+          opts = Ardm::Ar::Associations.convert_options(self, options, :through, :order, :source)
 
           case count
           when 1      then has_one  name, *opts

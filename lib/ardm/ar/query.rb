@@ -3,10 +3,10 @@ require 'active_support/concern'
 require 'ardm/query/expression'
 require 'ardm/query/operator'
 require 'ardm/query/ext/symbol'
-require 'ardm/active_record/predicate_builder'
+require 'ardm/ar/predicate_builder'
 
 module Ardm
-  module ActiveRecord
+  module Ar
     module Query
       extend ActiveSupport::Concern
 

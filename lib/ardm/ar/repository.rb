@@ -1,7 +1,7 @@
 require 'active_support/concern'
 
 module Ardm
-  module ActiveRecord
+  module Ar
     module Repository
       extend ActiveSupport::Concern
 
@@ -18,7 +18,7 @@ module Ardm
           if block_given?
             yield
           else
-            Ardm::ActiveRecord::Repository::Proxy.new self
+            Ardm::Ar::Repository::Proxy.new self
           end
         end
       end

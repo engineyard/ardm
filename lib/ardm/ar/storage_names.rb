@@ -1,13 +1,13 @@
 require 'active_support/concern'
 
 module Ardm
-  module ActiveRecord
+  module Ar
     module StorageNames
       extend ActiveSupport::Concern
 
       module ClassMethods
         def storage_names
-          Ardm::ActiveRecord::StorageNames::Proxy.new(self)
+          Ardm::Ar::StorageNames::Proxy.new(self)
         end
       end
 

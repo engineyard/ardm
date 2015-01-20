@@ -26,20 +26,20 @@ require 'ardm/support/descendant_set'
 require 'active_record'
 require 'active_record/relation'
 
-require 'ardm/active_record/record'
-require 'ardm/active_record/relation'
-require 'ardm/active_record/data_mapper_constant_proxy'
+require 'ardm/ar/record'
+require 'ardm/ar/relation'
+require 'ardm/ar/data_mapper_constant_proxy'
 
 module Ardm
-  Record = Ardm::ActiveRecord::Record
+  Record = Ardm::Ar::Record
   SaveFailureError = ::ActiveRecord::RecordNotSaved
   RecordNotFound = ::ActiveRecord::RecordNotFound
 
   def self.define_datamapper_constant!
-    require 'ardm/active_record/data_mapper_constant'
+    require 'ardm/ar/data_mapper_constant'
   end
 end
 
 ::ActiveRecord::Relation.class_eval do
-  include Ardm::ActiveRecord::Relation
+  include Ardm::Ar::Relation
 end

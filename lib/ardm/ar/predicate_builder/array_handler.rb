@@ -1,5 +1,5 @@
 module Ardm
-  module ActiveRecord
+  module Ar
     module PredicateBuilder
       class ArrayHandler # :nodoc:
         def call(attribute, value)

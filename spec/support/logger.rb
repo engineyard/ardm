@@ -1,7 +1,7 @@
 if defined?(::DataMapper)
-  module DataMapper::LogListener
+  module ::DataMapper::LogListener
     def log(message)
-      DataMapper.logger.info("#{message.query}")
+      ::DataMapper.logger.info("#{message.query}")
       super
     rescue Exception => e
       ::DataMapper.logger.error "[datamapper] #{e.class.name}: #{e.message}: #{message.inspect}}"
@@ -27,7 +27,7 @@ RSpec.configure do |config|
       require 'active_support/inflector'
       driver = DataObjects.const_get(ActiveSupport::Inflector.camelize('sqlite3'), false)
 
-      DataObjects::Connection.send(:include, DataMapper::LogListener)
+      DataObjects::Connection.send(:include, ::DataMapper::LogListener)
       # FIXME Setting DataMapper::Logger.new($stdout, :off) alone won't work because the #log
       # method is currently only available in DO and needs an explicit DO Logger instantiated.
       # We turn the logger :off because ActiveSupport::Notifications handles displaying log messages
