@@ -1,11 +1,11 @@
 require 'active_record'
 require 'ardm'
-require 'ardm/active_record/base'
+require 'ardm/ar/base'
 
 module Ardm
-  module ActiveRecord
+  module Ar
     class Record < ::ActiveRecord::Base
-      include Ardm::ActiveRecord::Base
+      include Ardm::Ar::Base
 
       self.abstract_class = true
 
@@ -15,7 +15,7 @@ module Ardm
           attr_accessible prop.name
           attr_accessible prop.field
         rescue => e
-          puts "WARNING: `attr_accessible` not found. Include 'protected_attributes' gem in rails >= 4 (or if you need it).\n#{e}" unless $attr_accessible_warning
+          puts "WARNING: `attr_accessible` not found. Include 'protected_attributes' gem in rails >= 4 (if you need it).\n#{e}" unless $attr_accessible_warning
           $attr_accessible_warning = true
         end
         prop

@@ -1,11 +1,15 @@
-Bundler.require(:default, :test)
+#Bundler.require(:default, :test)
+require 'rspec'
 
-ENV['ORM'] ||= 'active_record'
-require 'ardm/env'
+require 'ardm'
+Ardm.orm = ENV['ORM'] || 'active_record'
+Ardm.load
+
+require 'database_cleaner'
 
 Dir["#{Pathname(__FILE__).dirname.expand_path}/{shared,support}/*.rb"].each { |file| require file }
 
-Ardm.active_record do
+Ardm.ar do
   ActiveRecord::Base.configurations = { "ardm" => {
     "database" => "db/test.sqlite",
     "adapter" => "sqlite3"
@@ -20,7 +24,7 @@ Ardm.active_record do
   end
 end
 
-Ardm.data_mapper do
+Ardm.dm do
   Bundler.require(:datamapper)
   DataMapper.setup(:default, "sqlite3://#{File.expand_path("../../db/test.sqlite", __FILE__)}")
   DataMapper.auto_migrate!

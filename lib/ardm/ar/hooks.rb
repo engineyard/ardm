@@ -1,7 +1,7 @@
 require 'active_support/concern'
 
 module Ardm
-  module ActiveRecord
+  module Ar
     module Hooks
       extend ActiveSupport::Concern
 

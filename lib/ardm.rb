@@ -3,65 +3,85 @@ require 'ardm/deprecation'
 module Ardm
   NotImplemented = Class.new(RuntimeError)
 
-  # Check which ORM is loaded in Ardm.
-  #
-  # @api public
-  def self.orm
-    @orm ||= :active_record
-  end
+  class << self
 
-  # Set which orm to load.
-  #
-  # @api public
-  def self.orm=(orm)
-    if defined?(Ardm::ActiveRecord) || defined?(Ardm::DataMapper)
-      raise "Cannot change Ardm.orm when #{orm} libs are already loaded."
+    def load(orm=nil)
+      self.orm = orm if orm
+      require self.lib
     end
 
-    @orm = case orm.to_s
-           when /active_?record/, '' then :active_record
-           when /data_?mapper/       then :data_mapper
-           else raise "Unknown ENV['ORM']: #{ENV['ORM']}"
-           end
-  end
+    # Check which ORM is loaded in Ardm.
+    #
+    # @api public
+    def orm
+      return @orm if @orm
+      self.orm = ENV['ORM']
+      @orm
+    end
 
-  # Return true if Ardm has loaded ActiveRecord ORM.
-  #
-  # @api public
-  def self.active_record?
-    orm == :active_record
-  end
+    # Set which orm to load.
+    #
+    # @api public
+    def orm=(orm)
+      if defined?(Ardm::Ar) || defined?(Ardm::Dm)
+        raise "Cannot change Ardm.orm when #{orm} libs are already loaded."
+      end
 
-  # Return true if Ardm has loaded DataMapper ORM.
-  #
-  # @api public
-  def self.data_mapper?
-    orm == :data_mapper
-  end
+      @orm = case orm.to_s
+             when /(ar|active_?record)/ then :ar
+             when /(dm|data_?mapper)/   then :dm
+             when "" then raise "Specify Ardm.orm by assigning :ar or :dm or by setting ENV['ORM']"
+             else raise "Unknown Ardm.orm. Expected: (ar|dm). Got: #{orm.inspect}"
+             end
+    end
 
-  # Yield if Ardm has loaded ActiveRecord ORM.
-  #
-  # @api public
-  def self.active_record
-    yield if block_given? && active_record?
-  end
+    def lib
+      "ardm/#{orm}"
+    end
 
-  def self.rails3?
-    self.active_record? && ::ActiveRecord::VERSION::STRING >= "3.0" && ::ActiveRecord::VERSION::STRING <= "4.0"
-  end
+    # Return true if Ardm has loaded ActiveRecord ORM.
+    #
+    # @api public
+    def ar?
+      orm == :ar
+    end
+    alias activerecord? ar?
+    alias active_record? ar?
 
-  def self.rails4?
-    self.active_record? && !self.rails3?
-  end
+    # Return true if Ardm has loaded DataMapper ORM.
+    #
+    # @api public
+    def dm?
+      orm == :dm
+    end
+    alias datamapper? dm?
+    alias data_mapper? dm?
 
-  # Yield if Ardm has loaded DataMapper ORM.
-  #
-  # @api public
-  def self.data_mapper
-    yield if block_given? && data_mapper?
-  end
+    # Yield if Ardm has loaded ActiveRecord ORM.
+    #
+    # @api public
+    def ar
+      yield if block_given? && ar?
+    end
+    alias activerecord ar
+    alias active_record ar
 
-  def self.lib
-    "ardm/#{orm}"
+    # Yield if Ardm has loaded DataMapper ORM.
+    #
+    # @api public
+    def dm
+      yield if block_given? && dm?
+    end
+
+    alias datamapper dm
+    alias data_mapper dm
+
+    def rails3?
+      ar? && ::ActiveRecord::VERSION::STRING >= "3.0" && ::ActiveRecord::VERSION::STRING <= "4.0"
+    end
+
+    def rails4?
+      ar? && !rails3?
+    end
   end
 end

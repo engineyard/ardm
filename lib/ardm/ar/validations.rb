@@ -2,7 +2,7 @@ require 'active_support/concern'
 require 'active_model/validations'
 
 module Ardm
-  module ActiveRecord
+  module Ar
     # Extend ActiveRecord to support DataMapper validations
     module Validations
       extend ActiveSupport::Concern
@@ -34,22 +34,22 @@ module Ardm
       module ClassMethods
 
         def validates_belongs_to(*fields)
-          fields, options = Ardm::ActiveRecord::Validations.extract_options(fields)
+          fields, options = Ardm::Ar::Validations.extract_options(fields)
           validates *fields, presence: options
         end
 
         def validates_presence_of(*fields)
-          fields, options = Ardm::ActiveRecord::Validations.extract_options(fields)
+          fields, options = Ardm::Ar::Validations.extract_options(fields)
           validates *fields, presence: options
         end
 
         def validates_length_of(*fields)
-          fields, options = Ardm::ActiveRecord::Validations.extract_options(fields, :in, :within, :maximum, :minimum, :is)
+          fields, options = Ardm::Ar::Validations.extract_options(fields, :in, :within, :maximum, :minimum, :is)
           validates *fields, length: options
         end
 
         def validates_uniqueness_of(*fields)
-          fields, options = Ardm::ActiveRecord::Validations.extract_options(fields, :scope)
+          fields, options = Ardm::Ar::Validations.extract_options(fields, :scope)
           fields = fields.map do |field|
             if property = properties[field]
               property.field
@@ -71,7 +71,7 @@ module Ardm
         end
 
         def validates_within(*fields)
-          fields, options = Ardm::ActiveRecord::Validations.extract_options(fields, :in)
+          fields, options = Ardm::Ar::Validations.extract_options(fields, :in)
           validates *fields, inclusion: options
         end
 
@@ -81,7 +81,7 @@ module Ardm
         # validates_with_method :attr, method: :method_name
         # validates_with_method :method_name, options: "here"
         def validates_with_method(*fields)
-          fields, options = Ardm::ActiveRecord::Validations.extract_options(fields, :method)
+          fields, options = Ardm::Ar::Validations.extract_options(fields, :method)
 
           # validates_with_method :attr, :method_name
           att, meth = *fields

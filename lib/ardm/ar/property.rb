@@ -2,13 +2,13 @@ require 'active_support/concern'
 require 'ardm/property/lookup'
 
 module Ardm
-  module ActiveRecord
+  module Ar
     module Property
       extend ActiveSupport::Concern
 
       included do
         extend Ardm::Property::Lookup
-        extend Ardm::ActiveRecord::Property::ClassMethods
+        extend Ardm::Ar::Property::ClassMethods
 
         instance_variable_set(:@properties, Ardm::PropertySet.new)
         instance_variable_set(:@field_naming_convention, nil)

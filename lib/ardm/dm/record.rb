@@ -1,9 +1,9 @@
 require 'active_support/concern'
 require 'dm-core'
-require 'ardm/data_mapper/collection'
+require 'ardm/dm/collection'
 
 module Ardm
-  module DataMapper
+  module Dm
     class Record
       def self.inherited(base)
         base.send(:include, ::DataMapper::Resource)

@@ -1,5 +1,5 @@
 module Ardm
-  module ActiveRecord
+  module Ar
     module Finalize
       extend ActiveSupport::Concern
 
@@ -11,7 +11,7 @@ module Ardm
 
       module ClassMethods
         def finalize
-          Ardm::ActiveRecord::Finalize.on_finalize.each { |f| f.call }
+          Ardm::Ar::Finalize.on_finalize.each { |f| f.call }
         end
       end
     end
