@@ -30,6 +30,10 @@ Ardm.dm do
   DataMapper.auto_migrate!
 end
 
+Dir["#{Pathname(__FILE__).dirname.expand_path}/fixtures/*.rb"].each { |file| require file }
+
+Ardm::Record.finalize
+
 RSpec.configure do |config|
   config.treat_symbols_as_metadata_keys_with_true_values = true
   if ENV["ORM"] == "active_record"

@@ -3,15 +3,22 @@ module Ardm
     module Finalize
       extend ActiveSupport::Concern
 
+      def self.finalizers
+        @finalizers ||= []
+      end
+
       def self.on_finalize(&block)
-        @on_finalize ||= []
-        @on_finalize << block if block_given?
-        @on_finalize
+        return unless block_given?
+        finalizers << block
+      end
+
+      def self.finalize
+        Ardm::Ar::Finalize.finalizers.each { |f| f.call }
       end
 
       module ClassMethods
         def finalize
-          Ardm::Ar::Finalize.on_finalize.each { |f| f.call }
+          Ardm::Ar::Finalize.finalize
         end
       end
     end

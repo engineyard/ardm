@@ -66,7 +66,7 @@ module Ardm
           end
         end
 
-        def belongs_to(field, *args)
+        def belongs_to(name, *args)
           options = args.shift || {}
 
           if String === options || Class === options # belongs_to :name, 'Class', options: 'here'
@@ -74,20 +74,38 @@ module Ardm
           end
 
           unless Hash === options
-            raise ArgumentError, "bad belongs_to #{field} options format #{options.inspect}"
+            raise ArgumentError, "bad belongs_to #{name} options format #{options.inspect}"
+          end
+
+          if options.has_key?(:key) || options.has_key?(:unique)
+            raise Ardm::NotImplemented, "belongs to :key and :unique are not implemented."
           end
 
           options.delete(:default)
-          options.delete(:required)
+          required = options.delete(:required)
           opts = Ardm::Ar::Associations.convert_options(self, options)
-          super field, *opts
-          klass = self
+          super name, *opts
+
+          model = self
           Ardm::Ar::Finalize.on_finalize do
-            assoc = reflect_on_association(field)
-            klass.class_eval do
-              # @todo String is a hack... hoping AR can convert strings to integers during save for integer keys.
-              property assoc.foreign_key, assoc.primary_key_column.sql_type == "Integer" ? Integer : String, key: false
+            return @child_key if defined?(@child_key)
+
+            properties = model.properties
+            assoc = reflect_on_association(name)
+
+            property_name = assoc.foreign_key
+            target_property = assoc.klass.properties.key.first
+
+            properties[property_name] || begin
+              source_key_options = Ardm::Ext::Hash.only(target_property.options, :length, :precision, :scale, :min, :max).update(
+                :index    => name,
+                :required => (required == false ? false : true),
+                :key      => false,
+                :unique   => false
+              )
+              model.property(property_name, target_property.to_child_key, source_key_options)
             end
+
           end
           nil
         end
