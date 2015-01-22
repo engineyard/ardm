@@ -29,53 +29,58 @@ Lets examine some of the reasons why you might move to ActiveRecord.
 
 ## Installation
 
+Near the top of your config/application.rb, add the following:
+
     require 'ardm'
+    Ardm.orm = ENV['ORM'] || :dm # default
+
+    Ardm.ar do # only executed if ORM is ActiveRecord
+      Bundler.require(:active_record) # libs related to active record
+      require "active_record/railtie"
+    end
+    Ardm.dm do # only executed if ORM is DataMapper
+      Bundler.require(:data_mapper) # libs related to data mapper
+    end
+    Ardm.setup # this requires the Ardm shim code
+
+Next you need to change add a base class to EVERY model that previously
+included DataMapper::Resource.
+
+This is very tedious but there's no way around it. All ActiveRecord
+models must inherit from ActiveRecord::Base, so Ardm creates an interchangeable
+base class that can be either ActiveRecord or DataMapper.
+
+If your model is STI, add it to the base model.
+
+I'm sorry, it's the only way.
+
+    app/models/my_model.rb
+
+    class MyModel < Ardm::Record # <--- add this
+      include DataMapper::Resource # you can remove this (it should also be shimmed)
+    end
 
 Run your project using the ORM environment variable.
 
-    ORM=activerecord bundle exec rake spec
-    ORM=datamapper bundle exec rake spec
+    # Try to get this one working now with the changes above.
+    ORM=dm bundle exec rake spec
 
-## Incremental migration from DataMapper to ActiveRecord
+    # This will fail horribly
+    ORM=ar bundle exec rake spec
 
-ActiveRecord requires your models to inherit from ActiveRecord::Base, which makes
-it difficult to approach this migration incrementally. All or nothing is a scary
-way to switch ORMs. To solve this, Ardm supplies Ardm::Record.
+With this new base clase and the ORM environment variable, you can switch
+between ActiveRecord and DataMapper by flipping the ORM variable.
 
-Ardm::Record will be the new base class. You'll need to search and replace
-all models that include DataMapper::Resource, remove it, and add Ardm::Record
-as the base class. If your model is STI, add it to the base model and remove
-DataMapper::Resource from all models.
-
-Example:
-
-    class MyModel
-      include DataMapper::Resource
-      # ...
-    end
-
-    # The model above changes to:
-
-    class MyModel < Ardm::Record
-      # ...
-    end
-
-With this new base clase you can switch between ActiveRecord and DataMapper
-by flipping a swith in your application. This approach allows you to continue
-developing your application in DataMapper while you work on removing all
-the "datamapper-isms" from your code. This library attempts to take care of
-most DataMapper features, but there are probably tons of small variations
-that are not accounted for.
+This approach allows you to continue developing your application in
+DataMapper while you work on removing all the "datamapper-isms" from your
+code. This library attempts to take care of most DataMapper features, but
+there are probably tons of small variations that are not accounted for.
 
 ## General Strategy
 
-This is a complex thing to approach. I'm hoping this project can make this move
-into a repeatable strategy rather than everyone needing to create their own
-unique solution.
-
-1. Get the application running with Ardm installed. Don't even think about
-   ActiveRecord until you have Ardm working in DataMapper mode and you can
-   deploy your application normally with ardm installed.
+1. Get the application running in DataMapper with Ardm installed. Don't even
+   think about ActiveRecord until you have Ardm working in DataMapper mode and
+   you can deploy your application normally with ardm installed.
 2. Start to remove references to `DataMapper` by using the conversions
    mentioned below. The idea is to remove the `DataMapper` constant completely
    so you can run without `dm-core` when in ActiveRecord mode.
@@ -89,11 +94,15 @@ unique solution.
    DataMapper specific code for ActiveRecord code. You can branch around
    picky code with the `Ardme.activerecord?` and `Ardm.datamapper?` helpers.
 
+This is a complex thing to approach. I hope Ardm will make this change
+into a repeatable strategy rather than everyone needing to create their own
+unique solution.
+
 ## Conversions
 
 Things that access DataMapper directly can be replaced with Ardm invocations:
 
-    DataMapper.finalize    =>  Ardm::Record.finalize (no-op in AR mode)
+    DataMapper.finalize    =>  Ardm::Record.finalize # this is still important for Ardm
     DataMapper.repository  =>  Ardm::Record.repository
     DataMapper.logger      =>  Ardm::Record.logger
 
@@ -110,12 +119,9 @@ adapters for accessing the same data through ActiveRecord.
 If you run into code that is particularly difficult to convert, you can
 duplicate the code and write a different version for each ORM:
 
-    if Ardm.activerecord?
-      Thing.where(Thing.arel_table[:field].matches('something'))
-    else
-      # This is just an example. This should actually work fine in Ardm.
-      Thing.all(:field.like => 'something')
-    end
+    Ardm.ar { Thing.where(Thing.arel_table[:field].matches('something')) }
+    # This is just an example. This should actually work fine in Ardm.
+    Ardm.dm { Thing.all(:field.like => 'something') }
 
 ## Copyright
 
