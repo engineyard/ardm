@@ -5,17 +5,40 @@ module Ardm
 
   class << self
 
-    def load(orm=nil)
+    # Setup the ORM using orm arg or $ORM, then require the correct shim libs.
+    #
+    # If an ORM is not specified as an argument, ENV['ORM'] will be used.
+    # If $ORM is not set, then Ardm will raise.
+    #
+    # Execute the block if one is given. This is a good time to require
+    # active_record or dm-core using Ardm.ar or Ardm.dm blocks.
+    #
+    #     Ardm.setup ENV['ORM'] do
+    #       Ardm.ar do
+    #         Bundler.require(:active_record)
+    #         require "active_record/railtie"
+    #       end
+    #       Ardm.dm { Bundler.require(:data_mapper) }
+    #     end
+    #
+    # The Ardm shim libs will be required after the block returns.
+    #
+    # @api public
+    def setup(orm=nil)
       self.orm = orm if orm
-      require self.lib
+      yield self if block_given?
+      require lib
     end
 
     # Check which ORM is loaded in Ardm.
     #
     # @api public
     def orm
-      return @orm if @orm
-      self.orm = ENV['ORM']
+      if @orm
+        return @orm
+      else
+        self.orm = ENV['ORM']
+      end
       @orm
     end
 
@@ -23,16 +46,23 @@ module Ardm
     #
     # @api public
     def orm=(orm)
-      if defined?(Ardm::Ar) || defined?(Ardm::Dm)
-        raise "Cannot change Ardm.orm when #{orm} libs are already loaded."
+      neworm =
+        case orm.to_s
+        when /(ar|active_?record)/ then :ar
+        when /(dm|data_?mapper)/   then :dm
+        when "" then raise "Specify Ardm.orm by assigning :ar or :dm or by setting ENV['ORM']"
+        else raise "Unknown Ardm.orm. Expected: (ar|dm). Got: #{orm.inspect}"
+        end
+
+      if @orm == neworm
+        return @orm
       end
 
-      @orm = case orm.to_s
-             when /(ar|active_?record)/ then :ar
-             when /(dm|data_?mapper)/   then :dm
-             when "" then raise "Specify Ardm.orm by assigning :ar or :dm or by setting ENV['ORM']"
-             else raise "Unknown Ardm.orm. Expected: (ar|dm). Got: #{orm.inspect}"
-             end
+      if defined?(Ardm::Ar) || defined?(Ardm::Dm)
+        raise "Cannot change Ardm.orm when #{self.orm} libs are already loaded."
+      end
+
+      @orm = neworm
     end
 
     def lib

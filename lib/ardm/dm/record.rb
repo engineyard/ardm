@@ -6,8 +6,28 @@ module Ardm
   module Dm
     class Record
       def self.inherited(base)
-        base.send(:include, ::DataMapper::Resource)
+        @on_inherited.each { |block| base.class_eval(&block) }
       end
+
+      def self.on_inherited(&block)
+        if Ardm::Dm::Record == self
+          @on_inherited ||= []
+          @on_inherited << block
+          @on_inherited
+        else
+          class_eval(&block)
+        end
+      end
+
+      class << self
+        alias __include_after_inherited__ include
+      end
+
+      def self.include(mod)
+        on_inherited { __include_after_inherited__ mod }
+      end
+
+      include ::DataMapper::Resource
 
       def self.finalize
         ::DataMapper.finalize

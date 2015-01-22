@@ -29,9 +29,11 @@ require 'active_record/relation'
 require 'ardm/ar/record'
 require 'ardm/ar/relation'
 require 'ardm/ar/data_mapper_constant_proxy'
+require 'ardm/ar/validations'
 
 module Ardm
   Record           = Ardm::Ar::Record
+  Validations      = Ardm::Ar::Validations
   SaveFailureError = ::ActiveRecord::RecordNotSaved
   RecordNotFound   = ::ActiveRecord::RecordNotFound
 

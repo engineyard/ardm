@@ -3,7 +3,7 @@ require 'rspec'
 
 require 'ardm'
 Ardm.orm = ENV['ORM'] || 'active_record'
-Ardm.load
+Ardm.setup
 
 require 'database_cleaner'
 
