@@ -6,7 +6,12 @@ require 'ardm/dm/collection'
 
 module Ardm
   Record           = Ardm::Dm::Record
-  Validations      = ::DataMapper::Validations
+  begin
+    Validations      = ::DataMapper::Validations
+  rescue NameError
+    # DataMapper::Validations might not be included.
+  end
+
   SaveFailureError = ::DataMapper::SaveFailureError
   RecordNotFound   = ::DataMapper::ObjectNotFoundError
   Property         = ::DataMapper::Property
