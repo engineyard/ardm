@@ -15,9 +15,13 @@ module Ardm
 
         if Hash === fields.last
           ar = fields.pop.dup
-          ar[:on]      = ar.delete(:when) if ar[:when] && [:create, :update].include?(ar[:when])
-          ar[:maximum] = ar.delete(:max)  if ar[:max]
-          ar[:in]      = ar.delete(:set)  if ar[:set]
+          w = Array(ar.delete(:when)).first
+          if w && [:create, :update].include?(w)
+            ar[:on]    = w
+          end
+          ar[:maximum] = ar.delete(:max) if ar[:max]
+          ar[:minimum] = ar.delete(:min) if ar[:min]
+          ar[:in]      = ar.delete(:set) if ar[:set]
 
           removed = ar.slice!(*keep)
           unless removed.empty?
@@ -40,7 +44,19 @@ module Ardm
 
         def validates_presence_of(*fields)
           fields, options = Ardm::Ar::Validations.extract_options(fields)
-          validates *fields, presence: options
+
+          boolean_fields, non_boolean_fields = fields.partition { |f| self.properties[f.to_sym].is_a?(Ardm::Property::Boolean) }
+
+          if non_boolean_fields.any?
+            validates(*non_boolean_fields, presence: options)
+          end
+
+          if boolean_fields.any?
+            if options.any?
+              $stderr.puts "validates_presence_of options ignored: #{options.inspect}"
+            end
+            validates(*boolean_fields, inclusion: {in: [true, false]})
+          end
         end
 
         def validates_length_of(*fields)
@@ -97,11 +113,21 @@ module Ardm
           end
         end
 
-        def validates_with_block(att=nil, &block)
-          validate do |record|
-            val, message = instance_eval(&block)
-            unless val
-              errors.add(att, message)
+        def validates_with_block(*args, &block)
+          options   = args.extract_options!
+          attribute = args.shift
+
+          validate(options) do |_|
+            is_valid, message = instance_eval(&block)
+
+            unless is_valid
+              attribute ||= :base
+
+              if attribute.to_sym == :base
+                raise "message is blank #{args.inspect} #{self.inspect} #{block.inspect}" if message.blank?
+              end
+
+              errors.add(attribute, message)
             end
           end
         end
