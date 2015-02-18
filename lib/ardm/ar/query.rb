@@ -83,6 +83,20 @@ module Ardm
           all(find_params).first_or_initialize
         end
 
+        def all(*args)
+          scope = if current_scope
+            current_scope.clone
+          else
+            default_scoped
+          end
+
+          if args.empty?
+            scope
+          else
+            scope.where(*args)
+          end
+        end
+
         #def exist?(options={})
         #  puts "#{self}.exist?(#{options.inspect})"
         #  puts caller[0..10]

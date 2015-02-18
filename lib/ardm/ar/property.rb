@@ -125,14 +125,20 @@ module Ardm
               property.options[:scale]
             )
 
-            column = ::ActiveRecord::ConnectionAdapters::Column.new(
+            cast_type = if property.dump_as == TrueClass
+              ::ActiveRecord::Type::Boolean
+            else
+              "::ActiveRecord::Type::#{property.dump_as}".constantize
+            end.new(property.options.slice(:precision, :scale, :limit))
+
+            column = ::ActiveRecord::ConnectionAdapters::Mysql2Adapter::Column.new(
               property.field.to_s, #property.name.to_s,
               nil,#property.dump(property.default),
+              cast_type,
               sql_type,
               property.allow_nil?
             )
 
-            column.primary = property.key?
             column
           end
         end
