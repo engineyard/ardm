@@ -23,6 +23,45 @@ describe Ardm::Record do
     expect(@user).to respond_to(:raise_on_save_failure)
   end
 
+  describe "hooks" do
+    before do
+      @user_model.class_eval do
+        attr_accessor :custom_hook_call_count, :custom_method_call_count, :called_methods
+
+        before :custom_method do
+          @called_methods ||= []
+          @called_methods << "before_custom_method"
+          @custom_hook_call_count ||= 0
+          @custom_hook_call_count += 1
+        end
+
+        def custom_method
+          @called_methods ||= []
+          @called_methods << "custom_method"
+          @custom_method_call_count ||= 0
+          @custom_method_call_count += 1
+        end
+      end
+
+      @user = @user_model.new
+    end
+
+    it 'should call custom hook expected number of times' do
+      @user.custom_method
+      expect(@user.custom_hook_call_count).to eq(1)
+    end
+
+    it 'should call custom method expected number of times' do
+      @user.custom_method
+      expect(@user.custom_method_call_count).to eq(1)
+    end
+
+    it 'should call before_custom_method hook then call custom_method' do
+      @user.custom_method
+      expect(@user.called_methods).to eq(["before_custom_method", "custom_method"])
+    end
+  end
+
   describe '#raise_on_save_failure' do
     after do
       # reset to the default value
