@@ -45,3 +45,24 @@ end
 ::ActiveRecord::Relation.class_eval do
   include Ardm::Ar::Relation
 end
+
+ActiveRecord::Scoping::Named::ClassMethods.class_eval do
+  def all(options = {})
+    scope_of_all = if current_scope
+                     current_scope.clone
+                   else
+                     default_scoped
+                   end
+    if options.any?
+      scope_of_all.all.all(options)
+    else
+      scope_of_all
+    end
+  end
+end
+
+# ActiveRecord::ConnectionAdapters::Column.class_eval do
+#   def default=(arg)
+#     @default = arg
+#   end
+# end

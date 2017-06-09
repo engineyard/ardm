@@ -113,28 +113,61 @@ module Ardm
         end
 
         def columns
-          @columns ||= _ardm_load_columns
+          @columns ||= _ardm_load_columns(super)
         end
 
-        def _ardm_load_columns
-          properties.map do |property|
+        def _ardm_load_columns(ar_columns)
+          to_return = ar_columns
+          properties.each do |property|
             sql_type = connection.type_to_sql(
               property.dump_as.name.to_sym,
               property.options[:limit],
               property.options[:precision],
               property.options[:scale]
             )
+            if column = ar_columns.detect{|c| c.name.to_s == property.name.to_s}
+              #TODO: property.key?
+              err_prefix = "WARNING: DM/AR mismatch for #{self.name}.#{property.name.to_s} on"
 
-            column = ::ActiveRecord::ConnectionAdapters::Column.new(
-              property.field.to_s, #property.name.to_s,
-              nil,#property.dump(property.default),
-              sql_type,
-              property.allow_nil?
-            )
+              #TODO: do some fuzzy matching so we only get warnings when there is a clear conflict:
+              # if column.sql_type != sql_type
+              # puts "#{err_prefix} sql_type #{sql_type} vs #{column.sql_type}"
+              # end
 
-            column.primary = property.key?
-            column
+              if column.null != property.allow_nil?
+                puts "#{err_prefix} allow_nil #{property.allow_nil?} vs #{column.null}"
+              end
+
+              #TODO: is this needed, or does default-setting get handled elsewhere?
+              # if column.default != property.default
+              #   puts "#{err_prefix} default #{property.default} vs #{column.default}"
+              # end
+              # column.default = property.default
+
+            else
+              puts "WARNING: DM defines property #{self.name}.#{property.name.to_s} but AR found no corresponding column"
+            end
           end
+          to_return
+
+          # WAS:
+          # sql_type = connection.type_to_sql(
+          #   property.dump_as.name.to_sym,
+          #   property.options[:limit],
+          #   property.options[:precision],
+          #   property.options[:scale]
+          # )
+          #
+          # column = ::ActiveRecord::ConnectionAdapters::Column.new(
+          #   property.field.to_s, #property.name.to_s, #name
+          #   nil,#property.dump(property.default), #default
+          #   property.cast_type,
+          #   sql_type, #sql_type
+          #   property.allow_nil? #null
+          # )
+          #
+          # column.primary = property.key?
+          # column
         end
 
         # Hook into the query system when we would be finding composed_of
@@ -309,6 +342,9 @@ module Ardm
           end
           read_attribute property.field
         end
+      rescue => e
+        puts "ERROR on attribute_get #{self.class.name}.#{name}"
+        raise e
       end
 
       # This not the same as write_attribute in AR
