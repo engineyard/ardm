@@ -11,9 +11,18 @@ module Ardm
         alias_method :update_without_ardm, :update
         alias_method :first_without_ardm, :first
         alias_method :first_without_ardm!, :first!
+        alias_method :equal_without_ardm!, :==
 
         # we need to overrite the implementation in the class
         class_eval do
+          def ==(other)
+            result = self.equal_without_ardm!(other)
+            if !result && other.is_a?(Relation)
+              result ||= self.equal_without_ardm!(other.to_a)
+            end
+            result
+          end
+
           def update(*a)
             if a.size == 1
               # need to translate attributes
@@ -104,7 +113,11 @@ module Ardm
           if value.is_a?(ActiveRecord::Relation)
             value = value.to_a
           end
-          if assoc = relation.reflect_on_association(key)
+          key_to_reflect_on = key
+          if key.is_a?(Ardm::Query::Operator)
+            key_to_reflect_on = key.target
+          end
+          if assoc = relation.reflect_on_association(key_to_reflect_on)
             conditions.delete(key)
             # strip out assocations
             case assoc.macro
@@ -130,11 +143,16 @@ module Ardm
               end
 
               relation = if value.is_a?(::ActiveRecord::Base)
-                           relation.where(parent_key => value.send(assoc.foreign_key))
+                           relation.where(parent_key => value.send(foreign_key))
                          elsif value.is_a?(::ActiveRecord::Relation)
                            relation.where(parent_key => value.select(foreign_key))
                          elsif value.nil?
-                           relation.where.not(parent_key => foreign_class.select(foreign_key).where.not(foreign_key => value))
+                           relation.where.not(parent_key => foreign_class.select(foreign_key).compact.map(&foreign_key).to_a)
+                           #should EQ:
+                           # relation.select{|o| o.send(assoc.name) == value}
+                         elsif value.is_a?(::Array) && value.first.is_a?(::ActiveRecord::Base)
+                           foreign_key_values = value.map(&foreign_key.to_sym)
+                           relation.where(parent_key => foreign_key_values)
                          else
                            relation.where(parent_key => foreign_class.select(foreign_key).where(value))
                          end
@@ -199,6 +217,11 @@ module Ardm
 
       def query
         self.to_sql
+      end
+
+      def ==(other)
+        puts "COMPARING to #{other}"
+        super(other)
       end
 
       def destroy!
