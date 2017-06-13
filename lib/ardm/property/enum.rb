@@ -9,6 +9,8 @@ module Ardm
       load_as ::Object
       dump_as ::Integer
 
+      class InvalidValueError < StandardError; end
+
       def initialize(model, name, options = {})
         @flag_map = {}
 
@@ -25,14 +27,18 @@ module Ardm
       end
 
       def load(value)
-        flag_map[value.to_i]
+        flag_map[value.to_i] || value
       end
 
       def dump(value)
-        case value
-        when ::Array then value.collect { |v| dump(v) }
-        else              flag_map.invert[typecast(value)]
+        result =  case value
+                  when ::Array then value.collect { |v| dump(v) }
+                  else              flag_map.invert[typecast(value)]
+                  end
+        if value && !result
+          raise InvalidValueError.new("Invalid value for ENUM #{self.model.name}.#{name}, given: #{value}")
         end
+        result
       end
 
       def typecast(value)

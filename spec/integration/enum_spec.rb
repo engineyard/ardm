@@ -57,22 +57,13 @@ try_spec do
 
     describe 'with value unknown to enumeration property' do
       before do
-        @resource = Ardm::Fixtures::Ticket.new(:status => :undecided)
-        @resource.valid?
+        @resource = Ardm::Fixtures::Ticket.new
       end
 
-      # TODO: consider sharing shared spec exampels with dm-validations,
-      #       which has 'invalid model' shared group
-      it 'is invalid (auto validation for :within kicks in)' do
-        expect(@resource).not_to be_valid
-      end
-
-      it 'has errors' do
-        expect(@resource.errors).not_to be_empty
-      end
-
-      it 'has a meaningful error message on invalid property' do
-        expect(@resource.errors[:status]).to include('must be one of unconfirmed, confirmed, assigned, resolved, not_applicable')
+      it "raises" do
+        expect { @resource.status = :undecided }.to(raise_error(Ardm::Property::Enum::InvalidValueError) do |error|
+          expect(error.message).to eq("Invalid value for ENUM Ardm::Fixtures::Ticket.status, given: undecided")
+        end)
       end
     end
   end

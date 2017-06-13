@@ -101,6 +101,9 @@ module Ardm
         end
 
         conditions.each do |key, value|
+          if value.is_a?(ActiveRecord::Relation)
+            value = value.to_a
+          end
           if assoc = relation.reflect_on_association(key)
             conditions.delete(key)
             # strip out assocations
@@ -192,6 +195,10 @@ module Ardm
         else
           super
         end
+      end
+
+      def query
+        self.to_sql
       end
 
       def destroy!
