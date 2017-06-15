@@ -11,14 +11,15 @@ module Ardm
         alias_method :update_without_ardm, :update
         alias_method :first_without_ardm, :first
         alias_method :first_without_ardm!, :first!
-        alias_method :equal_without_ardm!, :==
+        alias_method :equal_without_ardm, :==
+        alias_method :method_missing_without_ardm, :method_missing
 
         # we need to overrite the implementation in the class
         class_eval do
           def ==(other)
-            result = self.equal_without_ardm!(other)
+            result = self.equal_without_ardm(other)
             if !result && other.is_a?(Relation)
-              result ||= self.equal_without_ardm!(other.to_a)
+              result ||= self.equal_without_ardm(other.to_a)
             end
             result
           end
@@ -69,13 +70,18 @@ module Ardm
           def first_or_initialize(attributes = nil, options = {}, &block)
             all(attributes).first || all(attributes).create(options, &block)
           end
-        end
-      end
 
-      def method_missing(meth, *a, &b)
-        super
-      rescue => e
-        raise NoMethodError, "Relation chain? #{self}.#{meth}\n#{e}"
+          def method_missing(method, *args, &block)
+            if assoc = self.model.reflect_on_association(method)
+              puts "WARNING: suspected query chain (not supported) a #{self.model.name} #{assoc.macro} '#{method}'"
+              puts caller[0,3]
+              if ENV["RAISE_ON_QUERY_CHAIN_CALLS"]
+                raise "WARNING: suspected query chain (not supported) a #{self.model.name} #{assoc.macro} '#{method}'"
+              end
+            end
+            method_missing_without_ardm(method, *args, &block)
+          end
+        end
       end
 
       def all(options={})
@@ -120,7 +126,6 @@ module Ardm
           if assoc = relation.reflect_on_association(key_to_reflect_on)
             conditions.delete(key)
             # strip out assocations
-            puts "assoc.macro #{assoc.macro} -- #{options.inspect}"
             case assoc.macro
             when :belongs_to
               if key.is_a?(Ardm::Query::Operator)
@@ -167,7 +172,10 @@ module Ardm
                            relation.where(parent_key => foreign_class.select(foreign_key).where(value))
                          end
             when :has_many
-              foreign_class = assoc.options[:class_name].constantize
+              if assoc.options[:through]
+                raise "Unsupported query on has_many through (#{options.inspect})"
+              end
+              foreign_class = assoc.options[:class_name] && assoc.options[:class_name].constantize
               foreign_key   = assoc.foreign_key
               parent_key    = assoc.options[:child_key] || klass.primary_key
 
@@ -179,6 +187,14 @@ module Ardm
                            relation.where(id: foreign_class.where(parent_key => value.select(parent_key).to_a).map(&foreign_key))
                          elsif value.is_a?(Array)
                            relation.where(id: foreign_class.where(parent_key => value.map{|v| v.send(parent_key)}).map(&foreign_key))
+                         elsif value.nil?
+                           raise "Unsupported query on has_many (#{options.inspect})"
+                           #better to fail than return the wrong thing
+                           # if key.is_a?(Ardm::Query::Operator) && (key.operator == :not_eq)
+                           #   relation.where(parent_key => foreign_class.select(foreign_key).compact.map(&foreign_key).to_a)
+                           # else
+                           #   relation.where.not(parent_key => foreign_class.select(foreign_key).compact.map(&foreign_key).to_a)
+                           # end
                          else
                            relation.where(parent_key => foreign_class.select(foreign_class.primary_key).where.not(foreign_key => value))
                          end
