@@ -120,18 +120,24 @@ module Ardm
           if assoc = relation.reflect_on_association(key_to_reflect_on)
             conditions.delete(key)
             # strip out assocations
+            puts "assoc.macro #{assoc.macro} -- #{options.inspect}"
             case assoc.macro
             when :belongs_to
-              id = value.is_a?(Hash) ? value.with_indifferent_access[:id] : value
-              relation = if value.is_a?(::ActiveRecord::Relation)
-                           if value.values.empty?
-                             relation.where.not(assoc.foreign_key => nil)
+              if key.is_a?(Ardm::Query::Operator)
+                #TODO: might not work for all types of value... but works when value is nil (existing DM specs drive development)
+                relation = key.to_arel(self, value).scope
+              else
+                id = value.is_a?(Hash) ? value.with_indifferent_access[:id] : value
+                relation = if value.is_a?(::ActiveRecord::Relation)
+                             if value.values.empty?
+                               relation.where.not(assoc.foreign_key => nil)
+                             else
+                               relation.where(assoc.foreign_key => value)
+                             end
                            else
-                             relation.where(assoc.foreign_key => value)
+                             relation.where(assoc.foreign_key => id)
                            end
-                         else
-                           relation.where(assoc.foreign_key => id)
-                         end
+              end
             when :has_one
               foreign_class = assoc.options[:class_name].constantize
               foreign_key   = assoc.foreign_key
@@ -147,7 +153,11 @@ module Ardm
                          elsif value.is_a?(::ActiveRecord::Relation)
                            relation.where(parent_key => value.select(foreign_key))
                          elsif value.nil?
-                           relation.where.not(parent_key => foreign_class.select(foreign_key).compact.map(&foreign_key).to_a)
+                           if key.is_a?(Ardm::Query::Operator) && (key.operator == :not_eq)
+                             relation.where(parent_key => foreign_class.select(foreign_key).compact.map(&foreign_key).to_a)
+                           else
+                             relation.where.not(parent_key => foreign_class.select(foreign_key).compact.map(&foreign_key).to_a)
+                           end
                            #should EQ:
                            # relation.select{|o| o.send(assoc.name) == value}
                          elsif value.is_a?(::Array) && value.first.is_a?(::ActiveRecord::Base)
@@ -161,8 +171,14 @@ module Ardm
               foreign_key   = assoc.foreign_key
               parent_key    = assoc.options[:child_key] || klass.primary_key
 
-              relation = if value.is_a?(::ActiveRecord::Relation)
-                           relation.where(foreign_key => value)
+              relation = if value.is_a?(::ActiveRecord::Base)
+                           relation.where(id: foreign_class.where(parent_key => value.send(parent_key)).map(&foreign_key))
+                         elsif value.is_a?(Hash)
+                           relation.where(id: foreign_class.where(parent_key => value[parent_key.to_s]).map(&foreign_key))
+                         elsif value.is_a?(::ActiveRecord::Relation)
+                           relation.where(id: foreign_class.where(parent_key => value.select(parent_key).to_a).map(&foreign_key))
+                         elsif value.is_a?(Array)
+                           relation.where(id: foreign_class.where(parent_key => value.map{|v| v.send(parent_key)}).map(&foreign_key))
                          else
                            relation.where(parent_key => foreign_class.select(foreign_class.primary_key).where.not(foreign_key => value))
                          end

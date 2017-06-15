@@ -588,8 +588,6 @@ shared_examples 'Finder Interface' do
         end
 
         it 'should be expected Resources' do
-          require 'pry'
-          binding.pry
           expect(@return).to eq([ @original, @article ])
         end
 
@@ -618,7 +616,7 @@ shared_examples 'Finder Interface' do
           expect(@return).to be_kind_of(Ardm::Collection)
         end
 
-        it 'should be expected Resources' do
+        it 'should be expected Resources', focus: true do
           expect(@return).to eq([ @article ])
         end
 
@@ -660,7 +658,7 @@ shared_examples 'Finder Interface' do
           expect(@return).to be_kind_of(Ardm::Collection)
         end
 
-        it 'should be expected Resources' do
+        it 'should be expected Resources', focus: true do
           expect(@return).to eq([ @article ])
         end
 
